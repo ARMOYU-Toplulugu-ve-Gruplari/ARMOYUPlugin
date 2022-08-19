@@ -10,7 +10,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
     }
     //getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
-
+    //commit test
     @Override
     public void onDisable() {
         // Plugin shutdown logic
