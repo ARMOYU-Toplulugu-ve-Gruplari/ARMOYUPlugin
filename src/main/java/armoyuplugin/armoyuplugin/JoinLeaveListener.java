@@ -1,4 +1,4 @@
-package pluginogreniyorum.pluginogreniyorum;
+package armoyuplugin.armoyuplugin;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -10,15 +10,14 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class JoinLeaveListener implements Listener {
 
 
-//oĞUZXHAN ORADA MISIN
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
         Player player = e.getPlayer();
 
             if (player.hasPlayedBefore()){
-                e.setJoinMessage(ChatColor.YELLOW + player.getDisplayName()+ ChatColor.RED + " Hoşgeldin");
+                e.setJoinMessage(ChatColor.YELLOW + player.getDisplayName()+ ChatColor.RED + " Sunucumuza Hoşgeldiniz...");
             }else{
-                e.setJoinMessage(ChatColor.YELLOW + player.getDisplayName()+ ChatColor.RED + "Tekrar Wellcome Back");
+                e.setJoinMessage(ChatColor.YELLOW + player.getDisplayName()+ ChatColor.RED + "Seni Yeniden");
             }
     }
 

@@ -7,12 +7,13 @@ public final class ARMOYUPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        System.out.println("[ARMOYU] ----Aktif----");
+        getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
 
     }
-    //getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
     //commit test
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        System.out.println("[ARMOYU] ----Devre Dışı----");
     }
 }
