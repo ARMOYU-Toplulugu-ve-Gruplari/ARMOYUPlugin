@@ -15,6 +15,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
         getCommand("feed").setExecutor(komutbilgi);
 
     }
+    //asd
     //commit test
     ///dursun ali plugin
     //ben buraya birseyler yazıyom işte
