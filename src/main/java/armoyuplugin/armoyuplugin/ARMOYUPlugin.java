@@ -10,6 +10,10 @@ public final class ARMOYUPlugin extends JavaPlugin {
         System.out.println("[ARMOYU] ----Aktif----");
         getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
 
+        Komutlar komutbilgi = new Komutlar();
+        getCommand("heal").setExecutor(komutbilgi);
+        getCommand("feed").setExecutor(komutbilgi);
+
     }
     //commit test
     @Override
