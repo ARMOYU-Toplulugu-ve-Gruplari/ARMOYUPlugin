@@ -1,0 +1,8 @@
+name: ARMOYUPlugin
+version: '${project.version}'
+main: armoyuplugin.armoyuplugin.ARMOYUPlugin
+api-version: 1.19
+prefix: ARMOYU
+authors: [ ARMOYU ]
+description: Resmi ARMOYU Botu
+website: https://aramizdakioyuncu.com
