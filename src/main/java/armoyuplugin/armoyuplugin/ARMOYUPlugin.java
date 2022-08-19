@@ -12,6 +12,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
     }
     //commit test
+    ///dursun ali plugin
     @Override
     public void onDisable() {
         System.out.println("[ARMOYU] ----Devre Dışı----");
