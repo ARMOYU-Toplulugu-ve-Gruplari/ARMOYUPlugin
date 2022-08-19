@@ -16,7 +16,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
         getCommand("giris").setExecutor(komutbilgi);
 
     }
-
+//TEST
     @Override
     public void onDisable() {
         System.out.println("[ARMOYU] ----Devre Dışı----");

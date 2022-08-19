@@ -54,7 +54,6 @@ public class Komutlar  implements CommandExecutor {
                     }
                     in.close();
                     // System.out.println(response);
-
                     int kontrol = response.charAt(12);
                     if (kontrol == 49){
                         oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "Giriş Başarılı");

@@ -25,7 +25,6 @@ public class JoinLeaveListener implements Listener {
     @EventHandler
     public void onLeave(PlayerQuitEvent e){
         Player player = e.getPlayer();
-        
         e.setQuitMessage(ChatColor.YELLOW + player.getDisplayName()+ ChatColor.RED + " arkadaş sunucudan çıktı");
     }
 
