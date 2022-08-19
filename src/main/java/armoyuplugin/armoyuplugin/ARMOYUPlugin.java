@@ -9,7 +9,6 @@ public final class ARMOYUPlugin extends JavaPlugin {
         // Plugin startup logic
         System.out.println("[ARMOYU] ----Aktif----");
         getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
-
         Komutlar komutbilgi = new Komutlar();
         getCommand("heal").setExecutor(komutbilgi);
         getCommand("feed").setExecutor(komutbilgi);
