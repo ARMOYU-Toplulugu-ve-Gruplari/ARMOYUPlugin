@@ -9,7 +9,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
         // Plugin startup logic
 
     }
-    //github push test
+
     @Override
     public void onDisable() {
         // Plugin shutdown logic
