@@ -6,11 +6,16 @@ prefix: ARMOYU
 authors: [ ARMOYU ]
 description: Resmi ARMOYU Botu
 website: https://aramizdakioyuncu.com
+commands:
   heal:
     description: Can Verir
     usage: /<command>
-    aliases:[can,canver,canlan]
+    aliases: [can,canver,canlan]
   feed:
     description: yemek Verir
     usage: /<command>
-    aliases:[ye,yemek,ac]
+    aliases: [ye,yemek,ac]
+  giris:
+    description: sunucuda herket etmene müsade eder
+    usage: /<command>
+    aliases: [giris,oturum,login,otog]

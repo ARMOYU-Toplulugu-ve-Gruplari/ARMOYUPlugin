@@ -13,11 +13,9 @@ public final class ARMOYUPlugin extends JavaPlugin {
         Komutlar komutbilgi = new Komutlar();
         getCommand("heal").setExecutor(komutbilgi);
         getCommand("feed").setExecutor(komutbilgi);
+        getCommand("giris").setExecutor(komutbilgi);
 
     }
-    //commit test
-    ///dursun ali plugin
-    //ben buraya birseyler yazıyom işte
 
     @Override
     public void onDisable() {
