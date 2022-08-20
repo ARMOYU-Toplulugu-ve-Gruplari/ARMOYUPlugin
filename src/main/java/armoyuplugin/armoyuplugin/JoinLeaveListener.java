@@ -77,7 +77,6 @@ public class JoinLeaveListener extends Komutlar implements Listener {
 
         try {
             String url = "https://aramizdakioyuncu.com/botlar/ana-arama-motoru.php?ozellik=tamarama&deger="+player.getDisplayName();
-            System.out.println(url);
             URL obj = new URL(url);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -156,14 +155,44 @@ public class JoinLeaveListener extends Komutlar implements Listener {
     @EventHandler
     public void onLeave(PlayerQuitEvent e){
         Player player = e.getPlayer();
+        double x = player.getLocation().getX();
+        double y = player.getLocation().getX();
+        double z = player.getLocation().getX();
+        System.out.println(x + " ," + y + " ," + z);
+
         e.setQuitMessage(ChatColor.YELLOW +"Aktif Oyuncular: "+ Bukkit.getOnlinePlayers().size() + "/20");
-        JsonUtility.updateNote(player.getDisplayName(),false);
-        try {
-            JsonUtility.saveNotes();
-        } catch (IOException ERR) {
-            System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
-            ERR.printStackTrace();
+
+
+        //Listeyi (oyuncular.json) yeniden çekiyoruz
+        try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+
+        //Oyuncu hiç oyuna girmiş mi kontrol
+        List<Players> findAllNotes = JsonUtility.findAllNotes();
+        for (int i = 0; i < findAllNotes.size(); i++) {
+            Players oyuncucek = findAllNotes.get(i);
+            if (oyuncucek.getOyuncuadi().equalsIgnoreCase(player.getDisplayName())){
+                if (oyuncucek.getHareket()){
+
+                    JsonUtility.updateNotexyz(player.getDisplayName(),x,y,z);
+                    try {
+                        JsonUtility.saveNotes();
+                    } catch (IOException ERR) {
+                        System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
+                        ERR.printStackTrace();
+                    }
+                }
+
+            }
         }
+
+//        JsonUtility.updateNote(player.getDisplayName(),false);
+
+//        try {
+//            JsonUtility.saveNotes();
+//        } catch (IOException ERR) {
+//            System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
+//            ERR.printStackTrace();
+//        }
     }
 
 }

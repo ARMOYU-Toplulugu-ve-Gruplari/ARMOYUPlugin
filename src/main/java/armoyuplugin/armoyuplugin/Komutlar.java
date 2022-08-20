@@ -47,8 +47,6 @@ public class Komutlar  implements CommandExecutor {
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
                     int responseCode = con.getResponseCode();
-                    System.out.println("\nSending 'GET' request to URL : "+ url);
-                    System.out.println("Response Code: " + responseCode);
 
                     BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     String inputLine;
