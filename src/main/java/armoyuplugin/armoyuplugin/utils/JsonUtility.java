@@ -7,6 +7,7 @@ import armoyuplugin.armoyuplugin.models.Players;
 
 import armoyuplugin.armoyuplugin.models.Playerxyz;
 import com.google.gson.Gson;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.io.*;
@@ -21,9 +22,8 @@ public class JsonUtility {
 
     public static Players createNote(Player p, String mesaj,boolean hareket){
 
-        Players note = new Players(p.getDisplayName(), mesaj,hareket,00,00,00);
+        Players note = new Players(p.getDisplayName(), mesaj,hareket,00,00,00,p.getWorld().toString());
         notes.add(note);
-
         return note;
     }
 
@@ -40,11 +40,20 @@ public class JsonUtility {
             Reader reader = new FileReader(file);
             Players[] n = gson.fromJson(reader, Players[].class);
             notes = new ArrayList<>(Arrays.asList(n));
-            notes = new ArrayList<>(Arrays.asList(n));
         }
 
     }
+    public static void loadNotesxyz() throws IOException {
 
+        Gson gson = new Gson();
+        File file = new File(ARMOYUPlugin.getPlugin().getDataFolder().getAbsolutePath() + "/oyuncular.json");
+        if (file.exists()){
+            Reader reader = new FileReader(file);
+            Playerxyz[] n = gson.fromJson(reader, Playerxyz[].class);
+            notes1 = new ArrayList<>(Arrays.asList(n));
+        }
+
+    }
     public static void saveNotes() throws IOException {
 
         Gson gson = new Gson();
@@ -59,7 +68,20 @@ public class JsonUtility {
         System.out.println("[ARMOYU] Veri Güncellendi.");
 
     }
+    public static void saveNotesxyz() throws IOException {
 
+        Gson gson = new Gson();
+        System.out.println(ARMOYUPlugin.getPlugin().getDataFolder().getAbsolutePath());
+        File file = new File(ARMOYUPlugin.getPlugin().getDataFolder().getAbsolutePath() + "/oyuncular.json");
+        file.getParentFile().mkdir();
+        file.createNewFile();
+        Writer writer = new FileWriter(file, false);
+        gson.toJson(notes1, writer);
+        writer.flush();
+        writer.close();
+        System.out.println("[ARMOYU] XYZ Veri Güncellendi.");
+
+    }
     public static Players updateNote(String oyuncuadi,boolean hareket){
         for (Players note : notes) {
             if (note.getOyuncuadi().equalsIgnoreCase(oyuncuadi)) {
@@ -69,12 +91,17 @@ public class JsonUtility {
         return null;
     }
 
-    public static Playerxyz updateNotexyz(String oyuncuadi, double x, double y , double z){
-        for (Playerxyz note : notes1) {
-            if (note.getOyuncuadi().equalsIgnoreCase(oyuncuadi)) {
-                note.setX(x);
-                note.setY(y);
-                note.setZ(z);
+    public static Playerxyz updateNotexyz(String oyuncuadi,boolean hareket, double x, double y , double z, String location){
+        for (Playerxyz note1 : notes1) {
+            System.out.println("----------------------");
+
+            if (note1.getOyuncuadi().equalsIgnoreCase(oyuncuadi)) {
+                note1.setHareket(hareket);
+                note1.setX(x);
+                note1.setY(y);
+                note1.setZ(z);
+                note1.setLocation(location);
+
             }
         }
         return null;

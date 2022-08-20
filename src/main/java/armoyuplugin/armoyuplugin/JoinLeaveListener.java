@@ -156,8 +156,8 @@ public class JoinLeaveListener extends Komutlar implements Listener {
     public void onLeave(PlayerQuitEvent e){
         Player player = e.getPlayer();
         double x = player.getLocation().getX();
-        double y = player.getLocation().getX();
-        double z = player.getLocation().getX();
+        double y = player.getLocation().getY();
+        double z = player.getLocation().getZ();
         System.out.println(x + " ," + y + " ," + z);
 
         e.setQuitMessage(ChatColor.YELLOW +"Aktif Oyuncular: "+ Bukkit.getOnlinePlayers().size() + "/20");
@@ -165,6 +165,7 @@ public class JoinLeaveListener extends Komutlar implements Listener {
 
         //Listeyi (oyuncular.json) yeniden çekiyoruz
         try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+        try { JsonUtility.loadNotesxyz(); } catch (IOException err) {    err.printStackTrace();   }
 
         //Oyuncu hiç oyuna girmiş mi kontrol
         List<Players> findAllNotes = JsonUtility.findAllNotes();
@@ -173,9 +174,10 @@ public class JoinLeaveListener extends Komutlar implements Listener {
             if (oyuncucek.getOyuncuadi().equalsIgnoreCase(player.getDisplayName())){
                 if (oyuncucek.getHareket()){
 
-                    JsonUtility.updateNotexyz(player.getDisplayName(),x,y,z);
+                    JsonUtility.updateNotexyz(player.getDisplayName(),false,x,y,z, player.getLocation().toString());
+                    System.out.println(player.getDisplayName() + "Giriş yapmış" +x);
                     try {
-                        JsonUtility.saveNotes();
+                        JsonUtility.saveNotesxyz();
                     } catch (IOException ERR) {
                         System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
                         ERR.printStackTrace();
