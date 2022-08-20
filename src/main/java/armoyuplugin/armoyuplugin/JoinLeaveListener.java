@@ -1,6 +1,8 @@
 package armoyuplugin.armoyuplugin;
 
+import armoyuplugin.armoyuplugin.commands.CreateNoteCommand;
 import armoyuplugin.armoyuplugin.models.Note;
+import armoyuplugin.armoyuplugin.models.Players;
 import armoyuplugin.armoyuplugin.utils.JsonUtility;
 import armoyuplugin.armoyuplugin.utils.NoteStorageUtility;
 import com.google.gson.JsonElement;
@@ -19,10 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
+import java.io.*;
 import java.util.List;
 
 public class JoinLeaveListener extends Komutlar implements Listener {
@@ -67,15 +66,32 @@ public class JoinLeaveListener extends Komutlar implements Listener {
         Player player = e.getPlayer();
 
         e.setJoinMessage(ChatColor.YELLOW + player.getDisplayName()+ ChatColor.RED + " Sunucumuza Hoşgeldiniz...");
-        System.out.println(player.getDisplayName());
+
+        //Listeyi (oyuncular.json) yeniden çekiyoruz
+        try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
 
 
-        List<Note> findAllNotes = JsonUtility.findAllNotes();
+        //Oyuncu hiç oyuna girmiş mi kontrol
+        boolean oyuncukontrol = false;
+        List<Players> findAllNotes = JsonUtility.findAllNotes();
         for (int i = 0; i < findAllNotes.size(); i++) {
-            Note note = findAllNotes.get(i);
-            System.out.println(note.getPlayerName());
-            if (note.getPlayerName().equalsIgnoreCase("berkaytikenoglu")){
-                System.out.println(note.getMessage());
+            Players oyuncucek = findAllNotes.get(i);
+            if (oyuncucek.getOyuncuadi().equalsIgnoreCase(player.getDisplayName())){
+                oyuncukontrol = true;
+                System.out.println("[ARMOYU] "+oyuncucek.getOyuncuadi() + ": " +oyuncucek.getMesaj() +","+ oyuncucek.getHareket());
+            }
+        }
+
+        //Yeni oyuncu ise
+        if (oyuncukontrol == false){
+            System.out.println("[ARMOYU] "+"YENİ OYUNCU GİRDİ");
+            JsonUtility.createNote(player, "Paris",true);
+            try {
+                JsonUtility.saveNotes();
+                System.out.println("[ARMOYU] "+"Kaydettik");
+            } catch (IOException ERR) {
+                System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
+                ERR.printStackTrace();
             }
 
         }

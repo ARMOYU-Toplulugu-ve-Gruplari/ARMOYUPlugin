@@ -1,25 +1,29 @@
 package armoyuplugin.armoyuplugin.models;
 
 
+import java.util.UUID;
 
 public class Players {
-    public Players(String id, String oyuncuadi, boolean harket) {
-        this.id = id;
-        this.oyuncuadi = oyuncuadi;
-        this.harket = harket;
-    }
 
-    private String id;
+    private String oyuncuID;
     private String oyuncuadi;
-    private boolean harket;
+    private boolean hareket;
+    private String mesaj;
 
-    public String getId() {
-        return id;
+
+
+    public Players(String id, String oyuncuadi, boolean harket) {
+        this.oyuncuadi = oyuncuadi;
+        this.hareket = hareket;
+        this.mesaj = mesaj;
+        this.oyuncuID = UUID.randomUUID().toString();
     }
 
-    public void setId(String id) {
-        this.id = id;
+
+    public String getoyuncuID() {
+        return oyuncuID;
     }
+
 
     public String getOyuncuadi() {
         return oyuncuadi;
@@ -29,15 +33,23 @@ public class Players {
         this.oyuncuadi = oyuncuadi;
     }
 
-    public boolean isHarket() {
-        return harket;
+
+    public boolean getHareket() {
+        return hareket;
     }
 
-    public void setHarket(boolean harket) {
-        this.harket = harket;
+    public void setHareket(boolean hareket) {
+        this.hareket = hareket;
     }
 
 
+    public String getMesaj() {
+        return mesaj;
+    }
+
+    public void setMesaj(String mesaj) {
+        this.mesaj = mesaj;
+    }
 
 
 }

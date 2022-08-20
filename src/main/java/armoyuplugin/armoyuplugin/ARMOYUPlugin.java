@@ -3,6 +3,7 @@ package armoyuplugin.armoyuplugin;
 import armoyuplugin.armoyuplugin.commands.CreateNoteCommand;
 import armoyuplugin.armoyuplugin.commands.NoteMenuCommand;
 import armoyuplugin.armoyuplugin.menu.PlayerMenuUtility;
+import armoyuplugin.armoyuplugin.utils.JsonUtility;
 import armoyuplugin.armoyuplugin.utils.NoteStorageUtility;
 import me.kodysimpson.simpapi.command.CommandList;
 import me.kodysimpson.simpapi.command.CommandManager;
@@ -46,7 +47,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
             e.printStackTrace();
         }
 
-
+        try { JsonUtility.loadNotes(); } catch (IOException e) {    e.printStackTrace();   }
     }
     @Override
     public void onDisable() {
