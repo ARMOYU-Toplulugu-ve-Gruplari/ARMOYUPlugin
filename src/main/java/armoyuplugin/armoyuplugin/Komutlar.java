@@ -15,11 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Komutlar  implements CommandExecutor {
-    public boolean a = true;
-
-    public boolean isA() {
-        return a;
-    }
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -65,10 +60,10 @@ public class Komutlar  implements CommandExecutor {
                     int kontrol = response.charAt(12);
                     if (kontrol == 49){
                         oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "Giriş Başarılı");
-                        a = false;
+
                     }else {
                         oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "Hatalı GİRİŞ");
-                        a = true;
+
                     }
                 }catch (Exception e){System.out.println(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");}
             }
