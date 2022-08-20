@@ -1,7 +1,10 @@
 package armoyuplugin.armoyuplugin;
 
+import armoyuplugin.armoyuplugin.models.Players;
 import armoyuplugin.armoyuplugin.utils.JsonUtility;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 public class Komutlar  implements CommandExecutor {
 
@@ -62,6 +66,12 @@ public class Komutlar  implements CommandExecutor {
                         try {
                             JsonUtility.saveNotes();
                             System.out.println("[ARMOYU] "+"Kaydettik");
+                            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+                            List<Players> findAllNotes = JsonUtility.findAllNotes();
+                            for (int i = 0; i < findAllNotes.size(); i++) {
+                                Players oyuncucek = findAllNotes.get(i);
+                                oyuncu.teleport(new Location(Bukkit.getWorld(oyuncucek.getLocation()),oyuncucek.getX(),oyuncucek.getY(),oyuncucek.getZ()));
+                                    }
                         } catch (IOException ERR) {
                             System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
                             ERR.printStackTrace();

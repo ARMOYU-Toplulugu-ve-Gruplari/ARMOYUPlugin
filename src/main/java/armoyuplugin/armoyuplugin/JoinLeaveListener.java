@@ -6,6 +6,8 @@ import armoyuplugin.armoyuplugin.utils.JsonUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -72,8 +74,12 @@ public class JoinLeaveListener extends Komutlar implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
+
+
         Player player = e.getPlayer();
+        String dünya = "world";
         e.setJoinMessage(ChatColor.YELLOW +"Aktif Oyuncular: "+ Bukkit.getOnlinePlayers().size() + "/20");
+        player.teleport(new Location(Bukkit.getWorld(dünya),0,0,0));
 
         try {
             String url = "https://aramizdakioyuncu.com/botlar/ana-arama-motoru.php?ozellik=tamarama&deger="+player.getDisplayName();
@@ -173,8 +179,14 @@ public class JoinLeaveListener extends Komutlar implements Listener {
             Players oyuncucek = findAllNotes.get(i);
             if (oyuncucek.getOyuncuadi().equalsIgnoreCase(player.getDisplayName())){
                 if (oyuncucek.getHareket()){
-
-                    JsonUtility.updateNotexyz(player.getDisplayName(),false,x,y,z, player.getLocation().toString());
+                    String k = "world";
+                    if (player.getLocation().toString().contains("world_nether")){
+                        k = "world_nether";
+                    }
+                    else if (player.getLocation().toString().contains("world_the_end")){
+                        k = "world_the_end";
+                    }
+                    JsonUtility.updateNotexyz(player.getDisplayName(),false,x,y,z, k);
                     System.out.println(player.getDisplayName() + "Giriş yapmış" +x);
                     try {
                         JsonUtility.saveNotesxyz();

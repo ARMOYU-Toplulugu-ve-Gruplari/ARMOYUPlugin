@@ -20,8 +20,14 @@ public class JsonUtility {
     private static ArrayList<Playerxyz> notes1 = new ArrayList<Playerxyz>();
 
     public static Players createNote(Player p, String mesaj,boolean hareket){
-
-        Players note = new Players(p.getDisplayName(), mesaj,hareket,00,00,00,p.getWorld().toString());
+        String k = "world";
+        if (p.getLocation().toString().contains("world_nether")){
+            k = "world_nether";
+        }
+        else if (p.getLocation().toString().contains("world_end")){
+            k = "world_end";
+        }
+        Players note = new Players(p.getDisplayName(), mesaj,hareket,00,00,00,k);
         notes.add(note);
         return note;
     }
