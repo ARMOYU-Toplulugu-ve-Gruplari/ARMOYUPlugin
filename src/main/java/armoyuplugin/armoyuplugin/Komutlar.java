@@ -1,5 +1,6 @@
 package armoyuplugin.armoyuplugin;
 
+import armoyuplugin.armoyuplugin.utils.JsonUtility;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -35,13 +37,12 @@ public class Komutlar  implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("giris")) {
 
-            if (args.length != 2) {
+            if (args.length != 1) {
                 oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " +ChatColor.YELLOW + "Hatalı Kullanım Yaptınız");
             }else{
-                System.out.println(ChatColor.RED +"[ARMOYU] " +"Kullanıcı Adı :" + args[0]);
-                System.out.println(ChatColor.RED +"[ARMOYU] " +"Parolası:" + args[1]);
+
                 try {
-                    String url = "https://aramizdakioyuncu.com/botlar/c99e178d83cdfea3c167bc1d15f9b47ff8f80145/"+args[0]+"/"+args[1]+"/0/0/0/";
+                    String url = "https://aramizdakioyuncu.com/botlar/c99e178d83cdfea3c167bc1d15f9b47ff8f80145/"+oyuncu.getDisplayName()+"/"+args[0]+"/0/0/0/";
                     URL obj = new URL(url);
                     HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -59,6 +60,14 @@ public class Komutlar  implements CommandExecutor {
                     // System.out.println(response);
                     int kontrol = response.charAt(12);
                     if (kontrol == 49){
+                        JsonUtility.updateNote(oyuncu.getDisplayName(),true);
+                        try {
+                            JsonUtility.saveNotes();
+                            System.out.println("[ARMOYU] "+"Kaydettik");
+                        } catch (IOException ERR) {
+                            System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
+                            ERR.printStackTrace();
+                        }
                         oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "Giriş Başarılı");
 
                     }else {

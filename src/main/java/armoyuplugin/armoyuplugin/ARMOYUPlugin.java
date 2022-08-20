@@ -23,6 +23,8 @@ public final class ARMOYUPlugin extends JavaPlugin {
         System.out.println("[ARMOYU] ----Aktif----");
         getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
         plugin = this;
+        Komutlar komutlar = new Komutlar();
+        getCommand("giris").setExecutor(komutlar);
 
         try {
             CommandManager.createCoreCommand(this, "note", "Create and list notes", "/note", new CommandList() {

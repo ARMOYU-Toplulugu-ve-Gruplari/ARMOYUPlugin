@@ -3,6 +3,7 @@ package armoyuplugin.armoyuplugin.utils;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
 
+import armoyuplugin.armoyuplugin.models.Note;
 import armoyuplugin.armoyuplugin.models.Players;
 import com.google.gson.Gson;
 import org.bukkit.entity.Player;
@@ -55,6 +56,15 @@ public class JsonUtility {
         writer.close();
         System.out.println("Notes saved.");
 
+    }
+
+    public static Players updateNote(String oyuncuadi,boolean hareket){
+        for (Players note : notes) {
+            if (note.getOyuncuadi().equalsIgnoreCase(oyuncuadi)) {
+                note.setHareket(hareket);
+            }
+        }
+        return null;
     }
 
 }

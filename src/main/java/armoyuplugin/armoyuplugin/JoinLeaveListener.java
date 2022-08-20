@@ -27,24 +27,22 @@ import java.util.List;
 public class JoinLeaveListener extends Komutlar implements Listener {
     @EventHandler
     public void onmove(PlayerMoveEvent event) {
-        try {
+        //Listeyi (oyuncular.json) yeniden çekiyoruz
+        try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
 
-         File input = new File("plugins/user.json");
-          JsonElement fileElement = JsonParser.parseReader(new FileReader(input));
-           JsonObject fileObject = fileElement.getAsJsonObject();
-
-
-            if (fileObject.get("hareket").getAsBoolean()){
-                event.setCancelled(true);
-                System.out.println(fileObject.get("hareket"));
+        Player player = event.getPlayer();
+        //Oyuncu hiç oyuna girmiş mi kontrol
+        List<Players> findAllNotes = JsonUtility.findAllNotes();
+        for (int i = 0; i < findAllNotes.size(); i++) {
+            Players oyuncucek = findAllNotes.get(i);
+            if (oyuncucek.getOyuncuadi().equalsIgnoreCase(player.getDisplayName())){
+                if (oyuncucek.getHareket()){
+                System.out.println("[ARMOYU] "+oyuncucek.getOyuncuadi() + ": " +oyuncucek.getMesaj() +","+ oyuncucek.getHareket());
+                event.setCancelled(false);}
+                else
+                    event.setCancelled(true);
             }
-            else {
-                event.setCancelled(false);
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-       }
+        }
 
     }
 
@@ -85,7 +83,7 @@ public class JoinLeaveListener extends Komutlar implements Listener {
         //Yeni oyuncu ise
         if (oyuncukontrol == false){
             System.out.println("[ARMOYU] "+"YENİ OYUNCU GİRDİ");
-            JsonUtility.createNote(player, "Paris",true);
+            JsonUtility.createNote(player, player.getDisplayName(), false);
             try {
                 JsonUtility.saveNotes();
                 System.out.println("[ARMOYU] "+"Kaydettik");
@@ -103,6 +101,14 @@ public class JoinLeaveListener extends Komutlar implements Listener {
     public void onLeave(PlayerQuitEvent e){
         Player player = e.getPlayer();
         e.setQuitMessage(ChatColor.YELLOW + player.getDisplayName()+ ChatColor.RED + " isimli oyuncu sunucudan çıktı");
+        JsonUtility.updateNote(player.getDisplayName(),false);
+        try {
+            JsonUtility.saveNotes();
+            System.out.println("[ARMOYU] "+"Kaydettik");
+        } catch (IOException ERR) {
+            System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
+            ERR.printStackTrace();
+        }
     }
 
 }
