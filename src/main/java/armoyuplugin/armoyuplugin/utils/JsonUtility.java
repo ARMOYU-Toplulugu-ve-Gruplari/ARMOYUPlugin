@@ -38,7 +38,7 @@ public class JsonUtility {
             Reader reader = new FileReader(file);
             Players[] n = gson.fromJson(reader, Players[].class);
             notes = new ArrayList<>(Arrays.asList(n));
-            System.out.println("Notes loaded.");
+//            System.out.println("Notes loaded.");
         }
 
     }
@@ -54,7 +54,7 @@ public class JsonUtility {
         gson.toJson(notes, writer);
         writer.flush();
         writer.close();
-        System.out.println("Notes saved.");
+        System.out.println("[ARMOYU] Veri Güncellendi.");
 
     }
 

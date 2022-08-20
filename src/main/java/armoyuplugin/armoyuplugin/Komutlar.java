@@ -74,7 +74,10 @@ public class Komutlar  implements CommandExecutor {
                         oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "Hatalı GİRİŞ");
 
                     }
-                }catch (Exception e){System.out.println(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");}
+                }catch (Exception e){
+                    System.out.println(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");
+                    oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "Sunucu ile Bağlantı Kurulamadı");
+                }
             }
             return true;
         }

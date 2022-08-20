@@ -1,30 +1,54 @@
 package armoyuplugin.armoyuplugin;
 
-import armoyuplugin.armoyuplugin.commands.CreateNoteCommand;
-import armoyuplugin.armoyuplugin.models.Note;
 import armoyuplugin.armoyuplugin.models.Players;
 import armoyuplugin.armoyuplugin.utils.JsonUtility;
-import armoyuplugin.armoyuplugin.utils.NoteStorageUtility;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.event.player.*;
+
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 
 public class JoinLeaveListener extends Komutlar implements Listener {
+    @EventHandler
+    public void ondrop(PlayerDropItemEvent event){
+        Player player = event.getPlayer();
+        //Oyuncu hiç oyuna girmiş mi kontrol
+        List<Players> findAllNotes = JsonUtility.findAllNotes();
+        for (int i = 0; i < findAllNotes.size(); i++) {
+            Players oyuncucek = findAllNotes.get(i);
+            if (oyuncucek.getOyuncuadi().equalsIgnoreCase(player.getDisplayName())){
+                if (oyuncucek.getHareket()){
+                    event.setCancelled(false);}
+                else
+                    event.setCancelled(true);
+            }
+        }
+    }
+    @EventHandler
+    public void onchat(AsyncPlayerChatEvent event){
+        Player player = event.getPlayer();
+        //Oyuncu hiç oyuna girmiş mi kontrol
+        List<Players> findAllNotes = JsonUtility.findAllNotes();
+        for (int i = 0; i < findAllNotes.size(); i++) {
+            Players oyuncucek = findAllNotes.get(i);
+            if (oyuncucek.getOyuncuadi().equalsIgnoreCase(player.getDisplayName())){
+                if (oyuncucek.getHareket()){
+                    event.setCancelled(false);}
+                else
+                    event.setCancelled(true);
+            }
+        }
+    }
+
     @EventHandler
     public void onmove(PlayerMoveEvent event) {
         //Listeyi (oyuncular.json) yeniden çekiyoruz
@@ -37,10 +61,10 @@ public class JoinLeaveListener extends Komutlar implements Listener {
             Players oyuncucek = findAllNotes.get(i);
             if (oyuncucek.getOyuncuadi().equalsIgnoreCase(player.getDisplayName())){
                 if (oyuncucek.getHareket()){
-                System.out.println("[ARMOYU] "+oyuncucek.getOyuncuadi() + ": " +oyuncucek.getMesaj() +","+ oyuncucek.getHareket());
-                event.setCancelled(false);}
-                else
+                    event.setCancelled(false);}
+                else{
                     event.setCancelled(true);
+                }
             }
         }
 
@@ -48,6 +72,39 @@ public class JoinLeaveListener extends Komutlar implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
+        Player player = e.getPlayer();
+        e.setJoinMessage(ChatColor.YELLOW +"Aktif Oyuncular: "+ Bukkit.getOnlinePlayers().size() + "/20");
+
+        try {
+            String url = "https://aramizdakioyuncu.com/botlar/ana-arama-motoru.php?ozellik=tamarama&deger="+player.getDisplayName();
+            System.out.println(url);
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null){
+                response.append(inputLine);
+            }
+            in.close();
+
+            int kontrol = response.charAt(0);
+            if (kontrol != 110){
+                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "Siteye Kayıtlı");
+                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "/giris <sifreniz>");
+            }else{
+                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.DARK_PURPLE + "SİTEYE KAYDOLUN");
+                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "https://aramizdakioyuncu.com/kayit-ol");
+            }
+        }catch (Exception ERR){
+            player.sendMessage(ChatColor.YELLOW + player.getDisplayName() + ChatColor.RED + " Sunucu Bağlanısı Kurulamadı");
+            System.out.println(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");
+        }
+
+
+
+
 
         try {
             File yourFile = new File(ARMOYUPlugin.getPlugin().getDataFolder().getAbsolutePath() + "/oyuncular.json");
@@ -59,14 +116,13 @@ public class JoinLeaveListener extends Komutlar implements Listener {
 
         }catch (Exception error){
             System.out.println("[ARMOYU] oyuncular.json dosyası oluşturulamadı!");
+
         }
 
-        Player player = e.getPlayer();
-
-        e.setJoinMessage(ChatColor.YELLOW + player.getDisplayName()+ ChatColor.RED + " Sunucumuza Hoşgeldiniz...");
 
         //Listeyi (oyuncular.json) yeniden çekiyoruz
         try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+
 
 
         //Oyuncu hiç oyuna girmiş mi kontrol
@@ -76,7 +132,6 @@ public class JoinLeaveListener extends Komutlar implements Listener {
             Players oyuncucek = findAllNotes.get(i);
             if (oyuncucek.getOyuncuadi().equalsIgnoreCase(player.getDisplayName())){
                 oyuncukontrol = true;
-                System.out.println("[ARMOYU] "+oyuncucek.getOyuncuadi() + ": " +oyuncucek.getMesaj() +","+ oyuncucek.getHareket());
             }
         }
 
@@ -86,7 +141,6 @@ public class JoinLeaveListener extends Komutlar implements Listener {
             JsonUtility.createNote(player, player.getDisplayName(), false);
             try {
                 JsonUtility.saveNotes();
-                System.out.println("[ARMOYU] "+"Kaydettik");
             } catch (IOException ERR) {
                 System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
                 ERR.printStackTrace();
@@ -94,17 +148,18 @@ public class JoinLeaveListener extends Komutlar implements Listener {
 
         }
 
+
+
     }
 
 
     @EventHandler
     public void onLeave(PlayerQuitEvent e){
         Player player = e.getPlayer();
-        e.setQuitMessage(ChatColor.YELLOW + player.getDisplayName()+ ChatColor.RED + " isimli oyuncu sunucudan çıktı");
+        e.setQuitMessage(ChatColor.YELLOW +"Aktif Oyuncular: "+ Bukkit.getOnlinePlayers().size() + "/20");
         JsonUtility.updateNote(player.getDisplayName(),false);
         try {
             JsonUtility.saveNotes();
-            System.out.println("[ARMOYU] "+"Kaydettik");
         } catch (IOException ERR) {
             System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
             ERR.printStackTrace();
