@@ -10,17 +10,38 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.List;
 
 public class Komutlar  implements CommandExecutor {
+    ////////////////////////////JSON ÇEKME FONKSİYON BAŞLANGIÇ////////////////////////////
+    private static String readAll(Reader rd) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return sb.toString();
+    }
+
+    public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+        InputStream is = new URL(url).openStream();
+        try {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String jsonText = readAll(rd);
+            JSONObject json = new JSONObject(jsonText);
+            return json;
+        } finally {
+            is.close();
+        }
+    }
+    ////////////////////////////JSON ÇEKME FONKSİYON BİTTİ////////////////////////////
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -46,32 +67,33 @@ public class Komutlar  implements CommandExecutor {
             }else{
 
                 try {
-                    String url = "https://aramizdakioyuncu.com/botlar/c99e178d83cdfea3c167bc1d15f9b47ff8f80145/"+oyuncu.getDisplayName()+"/"+args[0]+"/0/0/0/";
-                    URL obj = new URL(url);
-                    HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/c99e178d83cdfea3c167bc1d15f9b47ff8f80145/"+oyuncu.getDisplayName()+"/"+args[0]+"/0/0/0/");
+                    System.out.println(json.get("kontrol"));
 
-                    int responseCode = con.getResponseCode();
+                    if (json.get("kontrol").equals("1")){
 
-                    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    String inputLine;
-                    StringBuffer response = new StringBuffer();
-                    while ((inputLine = in.readLine()) != null){
-                        response.append(inputLine);
-                    }
-                    in.close();
-                    // System.out.println(response);
-                    int kontrol = response.charAt(12);
-                    if (kontrol == 49){
-                        JsonUtility.updateNote(oyuncu.getDisplayName(),true);
+                        JsonUtility.updateNote(oyuncu.getDisplayName() ,json.get("varsaygrupkisa").toString(),true);
+
                         try {
                             JsonUtility.saveNotes();
-                            System.out.println("[ARMOYU] "+"Kaydettik");
+
                             try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
                             List<Players> findAllNotes = JsonUtility.findAllNotes();
                             for (int i = 0; i < findAllNotes.size(); i++) {
                                 Players oyuncucek = findAllNotes.get(i);
-                                oyuncu.teleport(new Location(Bukkit.getWorld(oyuncucek.getLocation()),oyuncucek.getX(),oyuncucek.getY(),oyuncucek.getZ()));
+                                if(oyuncucek.getOyuncuadi().equals(oyuncu.getDisplayName())){
+
+                                    if (oyuncucek.getX() == 0.0 && oyuncucek.getY() == 0.0 && oyuncucek.getZ() == 0.0){
+                                        oyuncu.teleport(new Location(Bukkit.getWorld(oyuncucek.getLocation()),-8,76,-8));
+                                    }else{
+                                        oyuncu.teleport(new Location(Bukkit.getWorld(oyuncucek.getLocation()),oyuncucek.getX(),oyuncucek.getY(),oyuncucek.getZ()));
                                     }
+
+                                    int aclik = (int) oyuncucek.getAclik();
+                                    oyuncu.setFoodLevel(aclik);
+                                    oyuncu.setHealth(oyuncucek.getSaglik());
+                                }
+                            }
                         } catch (IOException ERR) {
                             System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
                             ERR.printStackTrace();
@@ -82,10 +104,12 @@ public class Komutlar  implements CommandExecutor {
                         oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "Hatalı GİRİŞ");
 
                     }
-                }catch (Exception e){
+
+                }catch (Exception aa){
                     System.out.println(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");
                     oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "Sunucu ile Bağlantı Kurulamadı");
                 }
+
             }
             return true;
         }

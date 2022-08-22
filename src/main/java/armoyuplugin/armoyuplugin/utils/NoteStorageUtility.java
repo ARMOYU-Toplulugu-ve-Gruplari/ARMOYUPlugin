@@ -64,7 +64,7 @@ public class NoteStorageUtility {
             Reader reader = new FileReader(file);
             Note[] n = gson.fromJson(reader, Note[].class);
             notes = new ArrayList<>(Arrays.asList(n));
-            System.out.println("Notes loaded.");
+
         }
 
     }

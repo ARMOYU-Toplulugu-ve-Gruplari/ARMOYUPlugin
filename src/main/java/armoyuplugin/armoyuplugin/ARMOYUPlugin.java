@@ -30,11 +30,11 @@ public final class ARMOYUPlugin extends JavaPlugin {
             CommandManager.createCoreCommand(this, "note", "Create and list notes", "/note", new CommandList() {
                 @Override
                 public void displayCommandList(Player p, List<SubCommand> subCommandList) {
-                    p.sendMessage("--------------------------------");
+                    p.sendMessage("-----------------ARMOYU BOT-----------------");
                     for (SubCommand subcommand : subCommandList){
                         p.sendMessage(subcommand.getSyntax() + " - " + subcommand.getDescription());
                     }
-                    p.sendMessage("--------------------------------");
+                    p.sendMessage("-----------------ARMOYU BOT-----------------");
                 }
             }, CreateNoteCommand.class, NoteMenuCommand.class);
         } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -43,13 +43,18 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
         MenuManager.setup(getServer(), this, PlayerMenuUtility.class);
 
-        try {
-            NoteStorageUtility.loadNotes();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {NoteStorageUtility.loadNotes();} catch (IOException e) {e.printStackTrace(); }
+//        try { JsonUtility.loadNotes(); } catch (IOException e) {    e.printStackTrace(); }
 
-        try { JsonUtility.loadNotes(); } catch (IOException e) {    e.printStackTrace();   }
+        try { JsonUtility.loadNotesxyz(); } catch (IOException e) {    e.printStackTrace(); }
+            
+            JsonUtility.updatereload();
+            try {
+                JsonUtility.saveNotesxyz();
+            }catch (Exception ERR){
+                System.out.println("[ARMOYU] Json Dosyasındaki Verileri Güncellenmedi");
+            }
+
     }
     @Override
     public void onDisable() {

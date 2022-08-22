@@ -7,7 +7,10 @@ public class Players {
 
     private String oyuncuID;
     private String oyuncuadi;
+    private String klan;
     private boolean hareket;
+    private double aclik;
+    private double saglik;
     private double x;
     private double y;
     private double z;
@@ -15,10 +18,13 @@ public class Players {
 
 
 
-    public Players(String id, String oyuncuadi, boolean harket,double x, double y, double z,String location) {
+    public Players(String oyuncuadi, String klan,boolean hareket,double aclik,double saglik,double x, double y, double z,String location) {
         this.oyuncuID = UUID.randomUUID().toString();
         this.oyuncuadi = oyuncuadi;
+        this.klan = klan;
         this.hareket = hareket;
+        this.aclik = aclik;
+        this.saglik = saglik;
         this.location = location;
     }
 
@@ -35,6 +41,14 @@ public class Players {
         this.oyuncuadi = oyuncuadi;
     }
 
+    public String getKlan() {
+        return klan;
+    }
+
+    public void setKlan(String klan) {
+        this.klan = klan;
+    }
+
 
     public boolean getHareket() {
         return hareket;
@@ -44,6 +58,21 @@ public class Players {
         this.hareket = hareket;
     }
 
+    public double getAclik() {
+        return aclik;
+    }
+
+    public void setAclik(double aclik) {
+        this.aclik = aclik;
+    }
+
+    public double getSaglik() {
+        return saglik;
+    }
+
+    public void setSaglik(int saglik) {
+        this.saglik = saglik;
+    }
 
     public double getX() {
         return x;
