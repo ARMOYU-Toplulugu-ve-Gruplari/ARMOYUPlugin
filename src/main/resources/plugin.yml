@@ -18,4 +18,4 @@ commands:
   giris:
     description: sunucuda herket etmene müsade eder
     usage: /<command>
-    aliases: [giris,oturum,login,otog]
+    aliases: [giris,login]

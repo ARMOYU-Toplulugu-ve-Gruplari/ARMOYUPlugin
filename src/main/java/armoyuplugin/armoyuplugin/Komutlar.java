@@ -2,6 +2,7 @@ package armoyuplugin.armoyuplugin;
 
 import armoyuplugin.armoyuplugin.models.Players;
 import armoyuplugin.armoyuplugin.utils.JsonUtility;
+import com.google.gson.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,11 +13,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.JSONArray;
 
 import java.io.*;
+import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
 
 public class Komutlar  implements CommandExecutor {
@@ -68,7 +73,14 @@ public class Komutlar  implements CommandExecutor {
 
                 try {
                     JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/c99e178d83cdfea3c167bc1d15f9b47ff8f80145/"+oyuncu.getDisplayName()+"/"+args[0]+"/0/0/0/");
-                    System.out.println(json.get("kontrol"));
+
+
+                    System.out.println(json.get("niteliklioyunlar").toString());
+
+                    System.out.println(json.length());
+
+
+
 
                     if (json.get("kontrol").equals("1")){
 

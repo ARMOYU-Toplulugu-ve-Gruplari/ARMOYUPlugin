@@ -50,6 +50,38 @@ public class JoinLeaveListener extends Komutlar implements Listener {
 
 
 
+    //Giriş yapmadıysa komutları engelleme
+    @EventHandler
+    public void onEvent(PlayerCommandPreprocessEvent e) {
+        Player player = e.getPlayer();
+
+
+            List<Players> findAllNotes = JsonUtility.findAllNotes();
+            for (int i = 0; i < findAllNotes.size(); i++) {
+                Players oyuncucek = findAllNotes.get(i);
+
+                if (oyuncucek.getOyuncuadi().equals(player.getDisplayName())){
+
+                    if (oyuncucek.getHareket()){
+                        //Giriş yaptığında
+                        e.setCancelled(false);
+                    }else{
+                        //Giriş yapmadığında
+                        if (e.getMessage().startsWith("/") && !(e.getMessage().startsWith("/giris")  || e.getMessage().startsWith("/login"))) {
+                            e.setCancelled(true);
+                            player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "giriş yapmak için /login <sifre>");
+                        }else{
+                            e.setCancelled(false);
+                        }
+
+                    }
+                }
+            }
+        }
+
+
+
+
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent e){
         Player player = e.getPlayer();
