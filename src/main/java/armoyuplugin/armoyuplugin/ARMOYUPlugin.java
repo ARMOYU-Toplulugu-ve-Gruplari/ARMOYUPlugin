@@ -27,7 +27,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Bukkit.getLogger().info("engin g.o.a.t");
+
         Bukkit.getLogger().info(ARMOYUMESAJ + "----Aktif---- aramizdakioyuncu.com");
         getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
         plugin = this;
