@@ -223,14 +223,14 @@ public class Komutlar  implements CommandExecutor {
                     String durum = json.get("durum").toString();
                     String aciklama = json.get("aciklama").toString();
 
-                    if(durum.equals(1)){
+                    if(durum.equals("1")){
                         oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
-                        JsonUtility.updateklan(oyuncu.getName(),null);
+                        JsonUtility.updateklan(oyuncu.getName(),"");
 
                         try {
                             JsonUtility.saveNotes();
-                        }catch (Exception ignored){
-                            Bukkit.getLogger().info("Değişiklik Kayıt Edilemedi");
+                        }catch (Exception e){
+                            Bukkit.getLogger().info("Değişiklik Kayıt Edilemedi:"+ e);
                         }
                     }else{
                         oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
@@ -254,7 +254,7 @@ public class Komutlar  implements CommandExecutor {
                     String durum = json.get("durum").toString();
                     String aciklama = json.get("aciklama").toString();
 
-                    if(durum.equals(1)){
+                    if(durum.equals("1")){
                         oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
                     }else{
                         oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
@@ -347,7 +347,7 @@ public class Komutlar  implements CommandExecutor {
                     oyuncu.teleport(new Location(Bukkit.getWorld("world"),x,y,z));
 
 
-                    if(durum.equals(1)){
+                    if(durum.equals("1")){
                         oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
                     }else{
                         oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
@@ -458,7 +458,7 @@ public class Komutlar  implements CommandExecutor {
                 try {
                     JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/tpa/"+ oyuncuarkadas.getName() +"/0/0");
                     oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + json.get("aciklama").toString());
-                    if (json.get("durum").equals(1)){
+                    if (json.get("durum").equals("1")){
                         oyuncuarkadas.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " "+oyuncu.getName() + " adlı oyuncu yanına gelmek istiyor.");
                     }
 
@@ -514,7 +514,7 @@ public class Komutlar  implements CommandExecutor {
             try {
                 JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/tpaccept/"+ oyuncuarkadas.getName() +"/0/0");
                 oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + json.get("aciklama").toString());
-                if (json.get("durum").equals(1)){
+                if (json.get("durum").equals("1")){
                     oyuncuarkadas.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "Arkadaşına gidiyorsun : " + ChatColor.AQUA + oyuncu.getName());
                     oyuncuarkadas.teleport(new Location(Bukkit.getWorld("world"),oyuncu.getLocation().getBlockX(),oyuncu.getLocation().getBlockY(),oyuncu.getLocation().getBlockZ()));
                 }
