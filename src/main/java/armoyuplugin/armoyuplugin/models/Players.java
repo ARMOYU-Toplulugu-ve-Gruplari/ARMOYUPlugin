@@ -7,7 +7,13 @@ public class Players {
 
     private String oyuncuID;
     private String oyuncuadi;
+    private String oyuncuparola;
+    private String para;
+    private String ev;
     private String klan;
+
+
+    private String klanrenk;
     private boolean hareket;
     private double aclik;
     private double saglik;
@@ -18,10 +24,13 @@ public class Players {
 
 
 
-    public Players(String oyuncuadi, String klan,boolean hareket,double aclik,double saglik,double x, double y, double z,String location) {
+    public Players(String oyuncuadi, String oyuncuparola,String para,String ev, String klan,String klanrenk,boolean hareket,double aclik,double saglik,double x, double y, double z,String location) {
         this.oyuncuID = UUID.randomUUID().toString();
         this.oyuncuadi = oyuncuadi;
+        this.para = para;
+        this.ev = ev;
         this.klan = klan;
+        this.klanrenk = klanrenk;
         this.hareket = hareket;
         this.aclik = aclik;
         this.saglik = saglik;
@@ -41,6 +50,30 @@ public class Players {
         this.oyuncuadi = oyuncuadi;
     }
 
+    public String getOyuncuparola() {
+        return oyuncuparola;
+    }
+
+    public void setOyuncuparola(String oyuncuparola) {
+        this.oyuncuparola = oyuncuparola;
+    }
+
+    public String getPara() {
+        return para;
+    }
+
+    public void setPara(String para) {
+        this.para = para;
+    }
+
+    public String getEv() {
+        return ev;
+    }
+
+    public void setEv(String ev) {
+        this.ev = ev;
+    }
+
     public String getKlan() {
         return klan;
     }
@@ -49,6 +82,13 @@ public class Players {
         this.klan = klan;
     }
 
+    public String getKlanrenk() {
+        return klanrenk;
+    }
+
+    public void setKlanrenk(String klanrenk) {
+        this.klanrenk = klanrenk;
+    }
 
     public boolean getHareket() {
         return hareket;
@@ -70,7 +110,7 @@ public class Players {
         return saglik;
     }
 
-    public void setSaglik(int saglik) {
+    public void setSaglik(double saglik) {
         this.saglik = saglik;
     }
 

@@ -3,19 +3,72 @@ version: '${project.version}'
 main: armoyuplugin.armoyuplugin.ARMOYUPlugin
 api-version: 1.19
 prefix: ARMOYU
-authors: [ ARMOYU ]
-description: Resmi ARMOYU Botu
-website: https://aramizdakioyuncu.com
+authors: [aramizdakioyuncu.com]
+loadbefore: [ClaimPlugini,V2]
+description: Resmi ARMOYU Minecraft Eklentisi
+website: https://server.aramizdakioyuncu.com/minecraft
 commands:
-  heal:
-    description: Can Verir
-    usage: /<command>
-    aliases: [can,canver,canlan]
-  feed:
-    description: yemek Verir
-    usage: /<command>
-    aliases: [ye,yemek,ac]
   giris:
-    description: sunucuda herket etmene müsade eder
+    description: Sunucuda giriş yapmamıza yarayan komut.
     usage: /<command>
-    aliases: [giris,login]
+    aliases: [giris,g,login,l]
+
+  toplamoldurme:
+    description: Sunucumuzda şuana kadar yaptığım katliamı gösterir.
+    usage: /<command>
+    aliases: [toplamoldurme,killerim,leslerim,totalkill]
+
+  klanlar:
+    description: Sunucumuzda kurulmuş klanları gösterir.
+    usage: /<command>
+    aliases: [klanlar,clans]
+
+  evegit:
+    description: Varsa ev noktasına gider.
+    usage: /<command>
+    aliases: [evegit,gitev,evim,home]
+
+  eviayarla:
+    description: Ev noktasını ayarlar
+    usage: /<command>
+    aliases: [eviayarla,evayarla,evayar,sethome]
+
+  para:
+    description: Mevcut paranı gösterir.
+    usage: /<command>
+    aliases: [para,parasay,money]
+
+  zenginler:
+    description: Zengin listesini gösterir.
+    usage: /<command>
+    aliases: [zenginler,balancetop]
+
+  oturumsaati:
+    description: Bugüne kadar geçirdiğin zamanı gösterir.
+    usage: /<command>
+    aliases: [oturumsaati,mytime]
+
+  klan:
+    description: Klan ile ilgili komutlar.
+    usage: /<command> [ayril|olustur|davet|katil|git|baslangicnoktasi|stop]
+    aliases: [klan,clan,krallik]
+
+  baslangicayarla:
+    description: Yetkili oyun başlangıç noktasını ayarlar.
+    usage: /<command>
+    aliases: [baslangicayarla,setspawn]
+
+  tpa:
+    description: Yanına gitmek istediğiniz oyuncunun yanına ışınlatır.
+    usage: /<command>
+    aliases: [tpa,gitark]
+
+  tpaccept:
+    description: Yanınıza gelmek isteyen oyuncunun isteğini kabul eder.
+    usage: /<command>
+    aliases: [tpaccept,kabulark]
+
+  blokla:
+    description: Blokları yerlestirir.
+    usage: /<command>
+    aliases: [blokla,bloksov]

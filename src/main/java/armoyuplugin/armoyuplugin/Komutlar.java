@@ -2,29 +2,35 @@ package armoyuplugin.armoyuplugin;
 
 import armoyuplugin.armoyuplugin.models.Players;
 import armoyuplugin.armoyuplugin.utils.JsonUtility;
-import com.google.gson.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.JSONArray;
-
 import java.io.*;
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.net.HttpURLConnection;
+import java.math.BigInteger;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import static org.bukkit.Bukkit.*;
+
 public class Komutlar  implements CommandExecutor {
+
+    String APIKEY = "771df488714111d39138eb60df756e6b";
+    String ARMOYUMESAJ = ChatColor.RED + "[ARMOYU] ";
+
+
     ////////////////////////////JSON ÇEKME FONKSİYON BAŞLANGIÇ////////////////////////////
     private static String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -48,67 +54,825 @@ public class Komutlar  implements CommandExecutor {
     }
     ////////////////////////////JSON ÇEKME FONKSİYON BİTTİ////////////////////////////
 
+
+    ////////////////////////////MD5 HASH KOD BAŞLANGIÇ////////////////////////////
+    public static String getMd5(String input)
+    {
+        try {
+
+            // Static getInstance method is called with hashing MD5
+            MessageDigest md = MessageDigest.getInstance("MD5");
+
+            // digest() method is called to calculate message digest
+            //  of an input digest() return array of byte
+            byte[] messageDigest = md.digest(input.getBytes());
+
+            // Convert byte array into signum representation
+            BigInteger no = new BigInteger(1, messageDigest);
+
+            // Convert message digest into hex value
+            String hashtext = no.toString(16);
+            while (hashtext.length() < 32) {
+                hashtext = "0" + hashtext;
+            }
+            return hashtext;
+        }
+
+        // For specifying wrong message digest algorithms
+        catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    ////////////////////////////MD5 HASH KOD BİTİŞ////////////////////////////
+
+
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
             return true;
         }
+
+
         Player oyuncu = (Player) sender;
 
 
-        if (cmd.getName().equalsIgnoreCase("heal")) {
-            double maxHealth = oyuncu.getAttribute(Attribute.GENERIC_MAX_HEALTH).getDefaultValue();
-            oyuncu.setHealth(maxHealth);
-        }
 
-        if (cmd.getName().equalsIgnoreCase("feed")) {
-            oyuncu.setFoodLevel(20);
-        }
+        if (cmd.getName().equalsIgnoreCase("para")) {
+            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+            List<Players> findAllNotes = JsonUtility.findAllNotes();
+            String oyuncuparola ="";
+            for (int i = 0; i < findAllNotes.size(); i++) {
+                Players oyuncucek = findAllNotes.get(i);
+                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                    oyuncuparola = oyuncucek.getOyuncuparola();
+                }
+            }
+            try {
+                JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/0/0/0/");
 
-        if (cmd.getName().equalsIgnoreCase("giris")) {
+                JSONArray recs = json.getJSONArray("niteliklioyunlar");
+                String mcpara = "0";
+                for (int i = 0; i < recs.length(); ++i) {
+                    JSONObject rec = recs.getJSONObject(i);
+                    if (rec.get("etkinlikkisaad").equals("minecraft")) {
+                        mcpara = rec.get("oyunbakiye").toString();
+                    }
+                }
+
+                for (int i = 0; i < findAllNotes.size(); i++) {
+                    Players oyuncucek = findAllNotes.get(i);
+                    if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                        oyuncucek.setPara(mcpara);
+                        JsonUtility.updatepara(oyuncu.getName(),mcpara);
+                    }
+                }
+                try {  JsonUtility.saveNotes();   } catch (IOException ERR) {   Bukkit.getLogger().info("[ARMOYU] "+"Para kaydetme işlemi yapılamadı");}
+
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + mcpara);
+
+            }catch (Exception E){
+                Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
+            }
+        }else if(cmd.getName().equalsIgnoreCase("zenginler")){
+
+            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+            List<Players> findAllNotes = JsonUtility.findAllNotes();
+            String oyuncuparola ="";
+            for (int i = 0; i < findAllNotes.size(); i++) {
+                Players oyuncucek = findAllNotes.get(i);
+                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                    oyuncuparola = oyuncucek.getOyuncuparola();
+                }
+            }
+
+
+            oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " Zengin Listesi :\n");
+
+
+            try{
+                JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/zenginler/0/0/");
+                JSONArray recs = json.getJSONArray("zenginler");
+
+                int sirasay =0;
+                for (int i = 0; i < recs.length(); ++i) {
+                    sirasay++;
+                    JSONObject rec = recs.getJSONObject(i);
+
+                    oyuncu.sendMessage(ChatColor.AQUA + "" +sirasay +"- "+  ChatColor.WHITE + rec.get("oyuncuadi").toString()+ " " + ChatColor.YELLOW +rec.get("oyuncupara").toString());
+
+                }
+
+
+            }catch (Exception e){
+                oyuncu.sendMessage("[ARMOYU] Sunucu ile bağlanılamadı(Zenginler).");
+            }
+
+
+
+
+
+        }else if (cmd.getName().equalsIgnoreCase("oturumsaati")) {
+
+
+            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+
+            List<Players> findAllNotes = JsonUtility.findAllNotes();
+            String oyuncuparola ="";
+
+            for (int i = 0; i < findAllNotes.size(); i++) {
+                Players oyuncucek = findAllNotes.get(i);
+
+                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                    oyuncuparola = oyuncucek.getOyuncuparola();
+                }
+            }
+
+            try {
+                JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/oturumsaati/0/0/0");
+
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + json.get("aciklama").toString());
+
+
+            } catch (Exception err) {
+                Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı (tpa).");
+            }
+
+
+        }else if (cmd.getName().equalsIgnoreCase("klan")) {
+
+            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+            List<Players> findAllNotes = JsonUtility.findAllNotes();
+            String oyuncuparola ="";
+
+            for (int i = 0; i < findAllNotes.size(); i++) {
+                Players oyuncucek = findAllNotes.get(i);
+
+                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                    oyuncuparola = oyuncucek.getOyuncuparola();
+                    break;
+                }
+            }
+
+
+
+            if(args[0].equals("ayril")){
+                try {
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klan/ayril/");
+
+                    String durum = json.get("durum").toString();
+                    String aciklama = json.get("aciklama").toString();
+
+                    if(durum.equals(1)){
+                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
+                        JsonUtility.updateklan(oyuncu.getName(),null);
+
+                        try {
+                            JsonUtility.saveNotes();
+                        }catch (Exception ignored){
+                            Bukkit.getLogger().info("Değişiklik Kayıt Edilemedi");
+                        }
+                    }else{
+                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
+
+                    }
+
+                } catch (Exception err) {
+                    Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
+                }
+
+
+            }else if (args[0].equals("olustur")){
+                if (args[1].equals("")){
+                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN +" Klan Adı yazmadın!");
+                    return true;
+                }
+
+                try {
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klan/olustur/"+args[1]);
+
+                    String durum = json.get("durum").toString();
+                    String aciklama = json.get("aciklama").toString();
+
+                    if(durum.equals(1)){
+                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
+                    }else{
+                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
+
+                    }
+
+                } catch (Exception err) {
+                    Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
+                    oyuncu.sendMessage(ARMOYUMESAJ + "Sunucuya bağlanılamadı.");
+                }
+
+
+            }else if (args[0].equals("davet")){
+
+
+            }else if(args[0].equals("acil")){
+
+                String oyuncuklan = "";
+                for (int i = 0; i < findAllNotes.size(); i++) {
+                    Players oyuncucek = findAllNotes.get(i);
+                    if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                        oyuncuklan = oyuncucek.getKlan();
+                    }
+                }
+                if (!oyuncuklan.equals("")){
+
+                    int klanuyesay=0;
+                    for (Player player : getServer().getOnlinePlayers()) {
+                        if (player.getDisplayName().contains("["+oyuncuklan+"]") && player.getName()!=oyuncu.getName()){
+                            klanuyesay++;
+                            player.teleport(new Location(Bukkit.getWorld("world"),oyuncu.getLocation().getX(),oyuncu.getLocation().getY(),oyuncu.getLocation().getZ()));
+
+                        }
+                        org.bukkit.inventory.PlayerInventory inv = player.getInventory();
+
+                        ItemStack kask = new ItemStack(Material.LEATHER_HELMET);
+                        ItemStack gogusluk = new ItemStack(Material.LEATHER_CHESTPLATE);
+                        ItemStack dizlik = new ItemStack(Material.LEATHER_LEGGINGS);
+                        ItemStack bot = new ItemStack(Material.LEATHER_BOOTS);
+                        ItemStack kilic = new ItemStack(Material.STONE_SWORD);
+                        ItemStack kalkan = new ItemStack(Material.SHIELD);
+                        ItemStack hava = new ItemStack(Material.AIR);
+
+                        if(inv.getBoots() == null){
+                            player.getInventory().setBoots(bot);
+                        }
+
+                        if(inv.getLeggings() == null){
+                            player.getInventory().setLeggings(dizlik);
+                        }
+
+                        if(inv.getChestplate() == null){
+                            player.getInventory().setChestplate(gogusluk);
+                        }
+
+                        if(inv.getHelmet() == null){
+                            player.getInventory().setHelmet(kask);
+                        }
+
+                        if (inv.getItemInMainHand().getType().equals(hava.getType())){
+                            player.getInventory().setItemInMainHand(kilic);
+                        }
+
+                        if (inv.getItemInOffHand().getType().equals(hava.getType())){
+                            player.getInventory().setItemInOffHand(kalkan);
+                        }
+                    }
+                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ ChatColor.GREEN + klanuyesay +  ChatColor.YELLOW +" [" + oyuncuklan +"] " +ChatColor.GREEN +"üyeleri çağrılıyor!");
+                }else{
+                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ ChatColor.YELLOW + "Klanınız YOK!");
+                }
+
+            }else if (args[0].equals("katil")){
+                oyuncu.sendMessage(ARMOYUMESAJ + "Davet YOK");
+
+            }else if (args[0].equals("git")){
+
+
+                try {
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klan/git/");
+
+                    String durum = json.get("durum").toString();
+                    String aciklama = json.get("aciklama").toString();
+
+                    String kordinat = json.get("klankordinat").toString();
+                    String[] result = kordinat.split(",");
+                    double x = Double.parseDouble(result[0]);
+                    double y = Double.parseDouble(result[1]);
+                    double z = Double.parseDouble(result[2]);
+                    oyuncu.teleport(new Location(Bukkit.getWorld("world"),x,y,z));
+
+
+                    if(durum.equals(1)){
+                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
+                    }else{
+                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
+
+                    }
+
+                } catch (Exception err) {
+                    Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
+                    oyuncu.sendMessage(ARMOYUMESAJ + "Sunucuya bağlanılamadı.");
+                }
+
+
+            }else if (args[0].equals("baslangicnoktasi")){
+
+                try {
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klan/baslangicnoktasi/"+ Math.round(oyuncu.getLocation().getX()) +"/"+ Math.round(oyuncu.getLocation().getY()) +"/"+ Math.round(oyuncu.getLocation().getZ())+"/"+oyuncu.getLocation().getWorld().getName());
+
+                    String durum = json.get("durum").toString();
+                    String aciklama = json.get("aciklama").toString();
+
+                    if(durum.equals("1")){
+                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
+                    }else{
+                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
+
+                    }
+
+
+
+                } catch (Exception err) {
+                    Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
+                }
+
+
+            }else{
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " Böyle bir komut yok");
+            }
+
+
+        return true;
+
+        }else if (cmd.getName().equalsIgnoreCase("baslangicayarla")) {
+            //OP KONTROL ET
+            if (!oyuncu.isOp()){
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " Bu komudu kullanmak için OP olmanız gerekir.");
+                return true;
+            }
+            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+
+            List<Players> findAllNotes = JsonUtility.findAllNotes();
+            String oyuncuparola ="";
+
+            for (int i = 0; i < findAllNotes.size(); i++) {
+                Players oyuncucek = findAllNotes.get(i);
+
+                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                  oyuncuparola = oyuncucek.getOyuncuparola();
+                }
+            }
+
+
+            try {
+                JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/sunucubilgi/baslangicayarla/"+ Math.round(oyuncu.getLocation().getX()) +"/"+ Math.round(oyuncu.getLocation().getY()) +"/"+ Math.round(oyuncu.getLocation().getZ()));
+
+                String sunucuozellik = json.get("sunucuozellik").toString();
+                String sunucuadi = json.get("sunucuadi").toString();
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + sunucuadi + "Yeni Başlangıç Noktası: " +sunucuozellik);
+
+
+            } catch (Exception err) {
+                Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
+            }
+
+        }else if (cmd.getName().equalsIgnoreCase("tpa")){
+
+            if (args.length != 1){
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "Hatalı Kullanım Yaptınız");
+                return true;
+            }
+
+            int oyuncubul = 0;
+            Player oyuncuarkadas = null;
+            for (Player player : getServer().getOnlinePlayers()) {
+                if (player.getName().equals(args[0])) {
+                    oyuncubul = 1;
+                    oyuncuarkadas = player;
+                    break;
+                }
+            }
+
+
+            if (oyuncubul == 1){
+
+
+                try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+
+                List<Players> findAllNotes = JsonUtility.findAllNotes();
+                String oyuncuparola ="";
+
+                for (int i = 0; i < findAllNotes.size(); i++) {
+                    Players oyuncucek = findAllNotes.get(i);
+
+                    if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                        oyuncuparola = oyuncucek.getOyuncuparola();
+                    }
+                }
+
+                try {
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/tpa/"+ oyuncuarkadas.getName() +"/0/0");
+                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + json.get("aciklama").toString());
+                    if (json.get("durum").equals(1)){
+                        oyuncuarkadas.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " "+oyuncu.getName() + " adlı oyuncu yanına gelmek istiyor.");
+                    }
+
+                } catch (Exception err) {
+                    Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı (tpa).");
+                }
+
+            }else{
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "oyuncu bulunamadı : " + ChatColor.AQUA + args[0]);
+
+            }
+
+
+
+
+        }else if (cmd.getName().equalsIgnoreCase("tpaccept")){
+
+            if (args.length != 1){
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "Hatalı Kullanım Yaptınız");
+                return true;
+            }
+
+
+            int oyuncubul = 0;
+            Player oyuncuarkadas = null;
+            for (Player player : getServer().getOnlinePlayers()) {
+                if (player.getName().equals(args[0])) {
+                    oyuncubul = 1;
+                    oyuncuarkadas = player;
+                    break;
+                }
+            }
+
+
+            if (oyuncubul == 0){
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "oyuncu bulunamadı : " + ChatColor.AQUA + args[0]);
+
+                return true;
+            }
+
+            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+            List<Players> findAllNotes = JsonUtility.findAllNotes();
+            String oyuncuparola ="";
+
+            for (int i = 0; i < findAllNotes.size(); i++) {
+                Players oyuncucek = findAllNotes.get(i);
+                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                    oyuncuparola = oyuncucek.getOyuncuparola();
+                }
+            }
+
+
+            try {
+                JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/tpaccept/"+ oyuncuarkadas.getName() +"/0/0");
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + json.get("aciklama").toString());
+                if (json.get("durum").equals(1)){
+                    oyuncuarkadas.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "Arkadaşına gidiyorsun : " + ChatColor.AQUA + oyuncu.getName());
+                    oyuncuarkadas.teleport(new Location(Bukkit.getWorld("world"),oyuncu.getLocation().getBlockX(),oyuncu.getLocation().getBlockY(),oyuncu.getLocation().getBlockZ()));
+                }
+
+            } catch (Exception err) {
+                Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı (tpa).");
+            }
+
+
+
+
+
+        }else if(cmd.getName().equalsIgnoreCase("blokla")){
+
+            //OP KONTROL ET
+            if (!oyuncu.isOp()){
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " Bu komudu kullanmak için OP olmanız gerekir.");
+                return true;
+            }
+
+            int x = oyuncu.getLocation().getBlockX(), y = oyuncu.getLocation().getBlockY(), z = oyuncu.getLocation().getBlockZ();
+
+            Location loc = new Location((Bukkit.getWorld("world")), x, y, z);
+            loc.getBlock().setType(Material.RED_BANNER);
+
+            for (int i = 0; i < 10; i++) {
+                loc = new Location((Bukkit.getWorld("world")), x+i, y, z+9);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z+9);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x-i, y, z+9);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z+9);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x+i, y, z-9);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z-9);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x-i, y, z-9);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z-9);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x+9, y, z+i);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x+9, y+1, z+i);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x+9, y, z-i);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x+9, y+1, z-i);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x-9, y, z+i);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x-9, y+1, z+i);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x-9, y, z-i);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x-9, y+1, z-i);
+                loc.getBlock().setType(Material.STONE);
+            }
+
+            for (int i = 0; i <11; i++) {
+                loc = new Location((Bukkit.getWorld("world")), x+i, y, z+10);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x-i, y, z+10);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x+i, y, z-10);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x-i, y, z-10);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+
+                loc = new Location((Bukkit.getWorld("world")), x+10, y, z+i);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x+10, y, z-i);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x-10, y, z+i);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x-10, y, z-i);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+            }
+
+            for (int i = 0; i <12; i++) {
+                loc = new Location((Bukkit.getWorld("world")), x+i, y, z+11);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x-i, y, z+11);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x+i, y, z-11);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x-i, y, z-11);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+
+                loc = new Location((Bukkit.getWorld("world")), x+11, y, z+i);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x+11, y, z-i);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x-11, y, z+i);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+
+                loc = new Location((Bukkit.getWorld("world")), x-11, y, z-i);
+                loc.getBlock().setType(Material.WHITE_WOOL);
+            }
+
+            for (int i = 0; i <13; i++) {
+                loc = new Location((Bukkit.getWorld("world")), x+i, y, z+12);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z+12);
+                loc.getBlock().setType(Material.STONE);
+
+
+                loc = new Location((Bukkit.getWorld("world")), x-i, y, z+12);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z+12);
+                loc.getBlock().setType(Material.STONE);
+
+
+                loc = new Location((Bukkit.getWorld("world")), x+i, y, z-12);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z-12);
+                loc.getBlock().setType(Material.STONE);
+
+
+                loc = new Location((Bukkit.getWorld("world")), x-i, y, z-12);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z-12);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x+12, y, z+i);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x+12, y+1, z+i);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x+12, y, z-i);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x+12, y+1, z-i);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x-12, y, z+i);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x-12, y+1, z+i);
+                loc.getBlock().setType(Material.STONE);
+
+                loc = new Location((Bukkit.getWorld("world")), x-12, y, z-i);
+                loc.getBlock().setType(Material.STONE);
+                loc = new Location((Bukkit.getWorld("world")), x-12, y+1, z-i);
+                loc.getBlock().setType(Material.STONE);
+            }
+
+
+        }else if (cmd.getName().equalsIgnoreCase("eviayarla")) {
+            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+
+            double x = Math.round(oyuncu.getLocation().getX());
+            double y = Math.round(oyuncu.getLocation().getY());
+            double z = Math.round(oyuncu.getLocation().getZ());
+
+            JsonUtility.updateevayarla(oyuncu.getName(),x + ","+ y + "," + z);
+            try {
+                JsonUtility.saveNotes();
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ChatColor.GREEN + "Ev ayarlandı!");
+            }catch (Exception ERR){
+                Bukkit.getLogger().info("Ev Ayarlanamadı");
+                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ChatColor.YELLOW + "Ev ayarlanamadı!");
+            }
+
+        }else if (cmd.getName().equalsIgnoreCase("evegit")) {
+            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+            //Oyuncu hiç oyuna girmiş mi kontrol
+            List<Players> findAllNotes = JsonUtility.findAllNotes();
+
+            for (int i = 0; i < findAllNotes.size(); i++) {
+                Players oyuncucek = findAllNotes.get(i);
+                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                    String kordinat = oyuncucek.getEv();
+
+                    try {
+                        String[] result = kordinat.split(",");
+                        double x = Double.parseDouble(result[0]);
+                        double y = Double.parseDouble(result[1]);
+                        double z = Double.parseDouble(result[2]);
+                        oyuncu.teleport(new Location(Bukkit.getWorld("world"),x,y,z));
+                    }catch (Exception ERR){
+                        Bukkit.getLogger().info("Ev Ayarlı Değil");
+                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + "Ev Ayarlı Değil!");
+                    }
+
+                }
+            }
+
+
+        }else if (cmd.getName().equalsIgnoreCase("toplamoldurme")) {
+
+            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+            //Oyuncu hiç oyuna girmiş mi kontrol
+            List<Players> findAllNotes = JsonUtility.findAllNotes();
+            String oyuncuparola = "";
+            for (int i = 0; i < findAllNotes.size(); i++) {
+                Players oyuncucek = findAllNotes.get(i);
+                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                    oyuncuparola = oyuncucek.getOyuncuparola();
+                    if (!oyuncucek.getHareket()){
+                        break;
+                    }
+                }
+            }
+
+            try {
+                JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/totalkill/0/0/");
+                oyuncu.sendMessage(ChatColor.GREEN + "Leş sayısı: " +json.get("aciklama").toString());
+                oyuncu.sendMessage(ChatColor.GREEN + "-----------------------------------------------");
+            }catch (IOException ERR) {
+                Bukkit.getLogger().info("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
+                ERR.printStackTrace();
+            }
+
+        }else if (cmd.getName().equalsIgnoreCase("klanlar")) {
+            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+            //Oyuncu hiç oyuna girmiş mi kontrol
+            List<Players> findAllNotes = JsonUtility.findAllNotes();
+            String oyuncuparola = "";
+            for (int i = 0; i < findAllNotes.size(); i++) {
+                Players oyuncucek = findAllNotes.get(i);
+                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                    oyuncuparola = oyuncucek.getOyuncuparola();
+                }
+            }
+
+            try {
+                JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klanlar/0/0/");
+                JSONArray recs = json.getJSONArray("klanlar");
+                int sirasay=0;
+                for (int i = 0; i < recs.length(); ++i) {
+                    sirasay++;
+                    JSONObject rec = recs.getJSONObject(i);
+                    if (rec.get("klandavarmi").equals("1")) {
+                        oyuncu.sendMessage(sirasay+") "+ChatColor.GREEN+rec.get("klanadi").toString() + ChatColor.LIGHT_PURPLE + " (" +ChatColor.RED+ rec.get("klanpuani") + ChatColor.LIGHT_PURPLE + ")");
+                        oyuncu.sendMessage(" Kurucu : "+ ChatColor.RED + rec.get("klankurucu").toString());
+                        oyuncu.sendMessage(" Üye sayısı: "+rec.get("klanuyesayisi").toString());
+
+                    }
+                    else{
+                        oyuncu.sendMessage(sirasay+") "+ChatColor.YELLOW+rec.get("klanadi").toString() + ChatColor.LIGHT_PURPLE +" (" +ChatColor.RED+ rec.get("klanpuani") + ChatColor.LIGHT_PURPLE + ")");
+                        oyuncu.sendMessage(" Kurucu: "+ ChatColor.RED + rec.get("klankurucu").toString());
+                        oyuncu.sendMessage(" Üye sayısı: "+rec.get("klanuyesayisi").toString());
+
+                    }
+                    oyuncu.sendMessage(ChatColor.GREEN + "----------------------------");
+
+                }
+            }catch (IOException ERR) {
+                Bukkit.getLogger().info("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
+                ERR.printStackTrace();
+            }
+
+        }else if (cmd.getName().equalsIgnoreCase("giris")) {
 
             if (args.length != 1) {
                 oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " +ChatColor.YELLOW + "Hatalı Kullanım Yaptınız");
             }else{
 
                 try {
-                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/c99e178d83cdfea3c167bc1d15f9b47ff8f80145/"+oyuncu.getDisplayName()+"/"+args[0]+"/0/0/0/");
-
-
-                    System.out.println(json.get("niteliklioyunlar").toString());
-
-                    System.out.println(json.length());
-
-
-
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/"+APIKEY+"/"+oyuncu.getName()+"/"+getMd5(args[0])+"/0/0/0/");
 
                     if (json.get("kontrol").equals("1")){
+                        JSONArray recs = json.getJSONArray("niteliklioyunlar");
+                        String klanadi = "";
+                        String klanrenk = "";
+                        String mcpara = "0";
 
-                        JsonUtility.updateNote(oyuncu.getDisplayName() ,json.get("varsaygrupkisa").toString(),true);
+                        float sunucux =0;
+                        float sunucuy =76;
+                        float sunucuz =-8;
+
+                        float evx=123;
+                        float evy=456;
+                        float evz=789;
+                        String evdunya ="";
+
+                        JSONObject ozellik = (JSONObject)json.get("ozellik");
 
                         try {
-                            JsonUtility.saveNotes();
+                            evx = Integer.parseInt(ozellik.get("evx").toString());
+                            evy = Integer.parseInt(ozellik.get("evy").toString());
+                            evz = Integer.parseInt(ozellik.get("evz").toString());
+                            evdunya = ozellik.get("evdunya").toString();
+                        }catch(Exception e){
 
-                            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+                        }
+                        try {
+                            sunucux = Integer.parseInt(ozellik.get("sunucux").toString());
+                            sunucuy = Integer.parseInt(ozellik.get("sunucuy").toString());
+                            sunucuz = Integer.parseInt(ozellik.get("sunucuz").toString());
+                        }catch(Exception e){
+
+                        }
+
+
+                        for (int i = 0; i < recs.length(); ++i) {
+                            JSONObject rec = recs.getJSONObject(i);
+                            if (rec.get("etkinlikkisaad").equals("minecraft")) {
+                                klanadi = rec.get("grupkisaad").toString();
+                                klanrenk = rec.get("gruprenk").toString();
+                                mcpara = rec.get("oyunbakiye").toString();
+                            }
+                        }
+
+                        try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+
+                        try {
                             List<Players> findAllNotes = JsonUtility.findAllNotes();
                             for (int i = 0; i < findAllNotes.size(); i++) {
                                 Players oyuncucek = findAllNotes.get(i);
-                                if(oyuncucek.getOyuncuadi().equals(oyuncu.getDisplayName())){
+                                if(oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
 
-                                    if (oyuncucek.getX() == 0.0 && oyuncucek.getY() == 0.0 && oyuncucek.getZ() == 0.0){
-                                        oyuncu.teleport(new Location(Bukkit.getWorld(oyuncucek.getLocation()),-8,76,-8));
-                                    }else{
-                                        oyuncu.teleport(new Location(Bukkit.getWorld(oyuncucek.getLocation()),oyuncucek.getX(),oyuncucek.getY(),oyuncucek.getZ()));
+
+
+                                    if (oyuncucek.getHareket() == false){
+                                        if(evx != 123 && evy !=456 && evz != 789){
+                                            oyuncu.teleport(new Location(Bukkit.getWorld(evdunya),evx,evy,evz));
+                                        }
+                                        else if (oyuncucek.getX() == 0.0 && oyuncucek.getY() == 0.0 && oyuncucek.getZ() == 0.0){
+                                            oyuncu.teleport(new Location(Bukkit.getWorld(oyuncucek.getLocation()),sunucux,sunucuy,sunucuz));
+                                        }else{
+                                            oyuncu.teleport(new Location(Bukkit.getWorld(oyuncucek.getLocation()),oyuncucek.getX(),oyuncucek.getY(),oyuncucek.getZ()));
+                                        }
+                                        int aclik = (int) oyuncucek.getAclik();
+                                        oyuncu.setFoodLevel(aclik);
+                                        oyuncu.setHealth(oyuncucek.getSaglik());
                                     }
 
-                                    int aclik = (int) oyuncucek.getAclik();
-                                    oyuncu.setFoodLevel(aclik);
-                                    oyuncu.setHealth(oyuncucek.getSaglik());
+                                    if (oyuncucek.getHareket() == true){
+                                        try {  JsonUtility.updateNote(oyuncu.getName() ,getMd5(args[0]),klanadi,klanrenk,true, mcpara);JsonUtility.saveNotes();  }catch (Exception er){   }
+                                    }
+                                    try {  JsonUtility.updateNote(oyuncu.getName() ,getMd5(args[0]),klanadi,klanrenk,true, mcpara);JsonUtility.saveNotes();  }catch (Exception er){   }
+                                    break;
                                 }
                             }
-                        } catch (IOException ERR) {
-                            System.out.println("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
-                            ERR.printStackTrace();
+                        } catch (Exception E) {
+                            Bukkit.getLogger().info("[ARMOYU] "+"Giriş komutları işlenemed!");
+
                         }
                         oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "Giriş Başarılı");
 
@@ -118,7 +882,7 @@ public class Komutlar  implements CommandExecutor {
                     }
 
                 }catch (Exception aa){
-                    System.out.println(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");
+                    Bukkit.getLogger().info(ChatColor.RED +"[ARMOYU] " +"oyuncu giriş yaparken sunucuyla bağlantı kurulamadı!");
                     oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "Sunucu ile Bağlantı Kurulamadı");
                 }
 
