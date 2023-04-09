@@ -214,9 +214,36 @@ public class Komutlar  implements CommandExecutor {
                 }
             }
 
+            if(args.length == 0){
 
+                try {
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klanlar/0/0/");
+                    JSONArray recs = json.getJSONArray("klanlar");
+                    int sirasay=0;
+                    for (int i = 0; i < recs.length(); ++i) {
+                        sirasay++;
+                        JSONObject rec = recs.getJSONObject(i);
+                        if (rec.get("klandavarmi").equals("1")) {
+                            oyuncu.sendMessage(sirasay+") "+ChatColor.GREEN+rec.get("klanadi").toString() + ChatColor.LIGHT_PURPLE + " (" +ChatColor.RED+ rec.get("klanpuani") + ChatColor.LIGHT_PURPLE + ")");
+                            oyuncu.sendMessage(" Kurucu : "+ ChatColor.RED + rec.get("klankurucu").toString());
+                            oyuncu.sendMessage(" Üye sayısı: "+rec.get("klanuyesayisi").toString());
 
-            if(args[0].equals("ayril")){
+                        }
+                        else{
+                            oyuncu.sendMessage(sirasay+") "+ChatColor.YELLOW+rec.get("klanadi").toString() + ChatColor.LIGHT_PURPLE +" (" +ChatColor.RED+ rec.get("klanpuani") + ChatColor.LIGHT_PURPLE + ")");
+                            oyuncu.sendMessage(" Kurucu: "+ ChatColor.RED + rec.get("klankurucu").toString());
+                            oyuncu.sendMessage(" Üye sayısı: "+rec.get("klanuyesayisi").toString());
+
+                        }
+                        oyuncu.sendMessage(ChatColor.GREEN + "----------------------------");
+
+                    }
+                }catch (IOException ERR) {
+                    Bukkit.getLogger().info("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
+                    ERR.printStackTrace();
+                }
+
+            }else if(args[0].equals("ayril")){
                 try {
                     JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klan/ayril/");
 
@@ -243,7 +270,7 @@ public class Komutlar  implements CommandExecutor {
 
 
             }else if (args[0].equals("olustur")){
-                if (args[1].equals("")){
+                if (args.length == 1){
                     oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN +" Klan Adı yazmadın!");
                     return true;
                 }
@@ -756,45 +783,6 @@ public class Komutlar  implements CommandExecutor {
                 JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/totalkill/0/0/");
                 oyuncu.sendMessage(ChatColor.GREEN + "Leş sayısı: " +json.get("aciklama").toString());
                 oyuncu.sendMessage(ChatColor.GREEN + "-----------------------------------------------");
-            }catch (IOException ERR) {
-                Bukkit.getLogger().info("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
-                ERR.printStackTrace();
-            }
-
-        }else if (cmd.getName().equalsIgnoreCase("klanlar")) {
-            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
-            //Oyuncu hiç oyuna girmiş mi kontrol
-            List<Players> findAllNotes = JsonUtility.findAllNotes();
-            String oyuncuparola = "";
-            for (int i = 0; i < findAllNotes.size(); i++) {
-                Players oyuncucek = findAllNotes.get(i);
-                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
-                    oyuncuparola = oyuncucek.getOyuncuparola();
-                }
-            }
-
-            try {
-                JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klanlar/0/0/");
-                JSONArray recs = json.getJSONArray("klanlar");
-                int sirasay=0;
-                for (int i = 0; i < recs.length(); ++i) {
-                    sirasay++;
-                    JSONObject rec = recs.getJSONObject(i);
-                    if (rec.get("klandavarmi").equals("1")) {
-                        oyuncu.sendMessage(sirasay+") "+ChatColor.GREEN+rec.get("klanadi").toString() + ChatColor.LIGHT_PURPLE + " (" +ChatColor.RED+ rec.get("klanpuani") + ChatColor.LIGHT_PURPLE + ")");
-                        oyuncu.sendMessage(" Kurucu : "+ ChatColor.RED + rec.get("klankurucu").toString());
-                        oyuncu.sendMessage(" Üye sayısı: "+rec.get("klanuyesayisi").toString());
-
-                    }
-                    else{
-                        oyuncu.sendMessage(sirasay+") "+ChatColor.YELLOW+rec.get("klanadi").toString() + ChatColor.LIGHT_PURPLE +" (" +ChatColor.RED+ rec.get("klanpuani") + ChatColor.LIGHT_PURPLE + ")");
-                        oyuncu.sendMessage(" Kurucu: "+ ChatColor.RED + rec.get("klankurucu").toString());
-                        oyuncu.sendMessage(" Üye sayısı: "+rec.get("klanuyesayisi").toString());
-
-                    }
-                    oyuncu.sendMessage(ChatColor.GREEN + "----------------------------");
-
-                }
             }catch (IOException ERR) {
                 Bukkit.getLogger().info("[ARMOYU] "+"SAVING NOTES FAILED AAAAAAH!!!!");
                 ERR.printStackTrace();

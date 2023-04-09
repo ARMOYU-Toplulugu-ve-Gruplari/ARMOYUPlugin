@@ -18,11 +18,6 @@ commands:
     usage: /<command>
     aliases: [toplamoldurme,killerim,leslerim,totalkill]
 
-  klanlar:
-    description: Sunucumuzda kurulmuş klanları gösterir.
-    usage: /<command>
-    aliases: [klanlar,clans]
-
   ev:
     description: Ev noktasını ayarlar veya gider
     usage: /<command>

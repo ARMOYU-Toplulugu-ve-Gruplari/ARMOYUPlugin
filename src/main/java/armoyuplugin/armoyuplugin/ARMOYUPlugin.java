@@ -59,7 +59,6 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
         getCommand("giris").setExecutor(komutlar);
         getCommand("toplamoldurme").setExecutor(komutlar);
-        getCommand("klanlar").setExecutor(komutlar);
         getCommand("ev").setExecutor(komutlar);
         getCommand("ev").setTabCompleter(new Tabtamamlama());
         getCommand("para").setExecutor(komutlar);
