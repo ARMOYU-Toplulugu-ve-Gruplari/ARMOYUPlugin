@@ -9,18 +9,18 @@ description: Resmi ARMOYU Minecraft Eklentisi
 website: https://server.aramizdakioyuncu.com/minecraft
 commands:
   giris:
-    description: Sunucuda giriş yapmamıza yarayan komut.
-    usage: /<command>
+    description: Sunucuya giriş yapmanıza yarar.
+    usage: /<command> <yalnızca /giris + şifreniz şeklinde yazmalısınız.>
     aliases: [giris,g,login,l]
 
   toplamoldurme:
-    description: Sunucumuzda şuana kadar yaptığım katliamı gösterir.
+    description: Sunucumuzda şuana kadar yaptığın katliamı gösterir.
     usage: /<command>
     aliases: [toplamoldurme,killerim,leslerim,totalkill]
 
   ev:
-    description: Ev noktasını ayarlar veya gider
-    usage: /<command>
+    description: Ev noktasına gider.
+    usage: <ev ayarla :ev konumunuzu yeniler ya da yeni ev konumunuzu belirler>
     aliases: [ev,home]
 
   para:
@@ -40,7 +40,8 @@ commands:
 
   klan:
     description: Klan ile ilgili komutlar.
-    usage: /<command> [ayril|olustur|davet|katil|git|baslangicnoktasi|stop]
+    usage: <klan acil :klandaki herkesi toplar.> <klan git :klanın ana merkezine yollar.> <klan ayrıl :kladan ayrılırsın.> <klan davet :klana oyuncuyu davet edersin.> <klan baslangic noktası :klanın baslangic noktasını ayarlarsın.> <klan oluştur :klan oluştur + isim şeklinde kullanılır.> <klan katıl :klana katılırsın>
+
     aliases: [klan,clan,krallik]
 
   baslangicayarla:
