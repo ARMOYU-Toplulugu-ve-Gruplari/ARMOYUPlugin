@@ -271,7 +271,7 @@ public class Komutlar  implements CommandExecutor {
 
             }else if (args[0].equals("olustur")){
                 if (args.length == 1){
-                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN +" Klan Adı yazmadın!");
+                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN +"Klan Adı yazmadın!");
                     return true;
                 }
 
