@@ -682,48 +682,61 @@ public class Komutlar  implements CommandExecutor {
             }
 
 
-        }else if (cmd.getName().equalsIgnoreCase("eviayarla")) {
-            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+        }else if (cmd.getName().equalsIgnoreCase("ev")){
 
-            double x = Math.round(oyuncu.getLocation().getX());
-            double y = Math.round(oyuncu.getLocation().getY());
-            double z = Math.round(oyuncu.getLocation().getZ());
 
-            JsonUtility.updateevayarla(oyuncu.getName(),x + ","+ y + "," + z);
-            try {
-                JsonUtility.saveNotes();
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ChatColor.GREEN + "Ev ayarlandı!");
-            }catch (Exception ERR){
-                Bukkit.getLogger().info("Ev Ayarlanamadı");
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ChatColor.YELLOW + "Ev ayarlanamadı!");
-            }
 
-        }else if (cmd.getName().equalsIgnoreCase("evegit")) {
             try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
             //Oyuncu hiç oyuna girmiş mi kontrol
             List<Players> findAllNotes = JsonUtility.findAllNotes();
 
+            String kordinat="";
             for (int i = 0; i < findAllNotes.size(); i++) {
                 Players oyuncucek = findAllNotes.get(i);
                 if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
-                    String kordinat = oyuncucek.getEv();
-
-                    try {
-                        String[] result = kordinat.split(",");
-                        double x = Double.parseDouble(result[0]);
-                        double y = Double.parseDouble(result[1]);
-                        double z = Double.parseDouble(result[2]);
-                        oyuncu.teleport(new Location(Bukkit.getWorld("world"),x,y,z));
-                    }catch (Exception ERR){
-                        Bukkit.getLogger().info("Ev Ayarlı Değil");
-                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + "Ev Ayarlı Değil!");
-                    }
-
+                    kordinat = oyuncucek.getEv();
                 }
             }
 
+            if (args.length==0){
 
-        }else if (cmd.getName().equalsIgnoreCase("toplamoldurme")) {
+
+                try {
+                    String[] result = kordinat.split(",");
+                    double x = Double.parseDouble(result[0]);
+                    double y = Double.parseDouble(result[1]);
+                    double z = Double.parseDouble(result[2]);
+                    oyuncu.teleport(new Location(Bukkit.getWorld("world"),x,y,z));
+                }catch (Exception ERR){
+                    Bukkit.getLogger().info("Ev Ayarlı Değil");
+                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + "Ev Ayarlı Değil!");
+                }
+
+
+            } else if(args[0].equals("ayarla")){
+                try { JsonUtility.loadNotes(); } catch (IOException err) {err.printStackTrace(); return true;}
+
+                double x = Math.round(oyuncu.getLocation().getX());
+                double y = Math.round(oyuncu.getLocation().getY());
+                double z = Math.round(oyuncu.getLocation().getZ());
+
+                JsonUtility.updateevayarla(oyuncu.getName(),x + ","+ y + "," + z);
+                try {
+                    JsonUtility.saveNotes();
+                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ChatColor.GREEN + "Ev ayarlandı!");
+                }catch (Exception ERR){
+                    Bukkit.getLogger().info("Ev Ayarlanamadı");
+                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ChatColor.YELLOW + "Ev ayarlanamadı!");
+                }
+
+            }else {
+
+                oyuncu.sendMessage(ChatColor.RED+ "[ARMOYU] "+ChatColor.YELLOW+ "BÖYLE BİR KOMUT YOK");
+            }
+
+            return true;
+
+        } else if (cmd.getName().equalsIgnoreCase("toplamoldurme")) {
 
             try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
             //Oyuncu hiç oyuna girmiş mi kontrol

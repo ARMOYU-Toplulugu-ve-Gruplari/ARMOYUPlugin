@@ -19,59 +19,78 @@ public class Tabtamamlama  implements TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
         Player oyuncu = (Player) sender;
 
-        if (cmd.getName().equalsIgnoreCase("klan")){
+        if (cmd.getName().equalsIgnoreCase("klan")) {
 
-            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+            try {
+                JsonUtility.loadNotes();
+            } catch (IOException err) {
+                err.printStackTrace();
+            }
             List<Players> findAllNotes = JsonUtility.findAllNotes();
-            String oyuncuparola ="";
-            String klan ="";
+            String oyuncuparola = "";
+            String klan = "";
 
             for (int i = 0; i < findAllNotes.size(); i++) {
                 Players oyuncucek = findAllNotes.get(i);
 
-                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())) {
                     oyuncuparola = oyuncucek.getOyuncuparola();
                     klan = oyuncucek.getKlan();
                     break;
                 }
             }
 
-            if(args.length == 1){
+            if (args.length == 1) {
 
                 List<String> arguments = new ArrayList<>();
 
 
-                if (!klan.equals("")){
+                if (!klan.equals("")) {
                     arguments.add("acil");
                     arguments.add("git");
                     arguments.add("ayril");
                     arguments.add("davet");
                     arguments.add("baslangicnoktasi");
-                }else {
+                } else {
                     arguments.add("olustur");
                     arguments.add("katil");
                 }
 
                 return arguments;
 
-            }else if(args.length == 2 && args[0].equals("davet")) {
+            } else if (args.length == 2 && args[0].equals("davet")) {
 
 
                 List<String> playerNames = new ArrayList<>();
                 Player[] players = new Player[Bukkit.getServer().getOnlinePlayers().size()];
                 Bukkit.getServer().getOnlinePlayers().toArray(players);
                 for (int i = 0; i < players.length; i++) {
-                    if (!players[i].getName().equals(sender.getName())){
+                    if (!players[i].getName().equals(sender.getName())) {
                         playerNames.add(players[i].getName());
                     }
                 }
                 return playerNames;
 
-            } else{
+            } else {
                 List<String> arguments = new ArrayList<>();
                 return arguments;
             }
+        } else if (cmd.getName().equalsIgnoreCase("ev")) {
+
+            if (args.length == 1) {
+
+                List<String> arguments = new ArrayList<>();
+
+                arguments.add("ayarla");
+
+
+
+                return arguments;
+
+            }
+
         }
-        return null;
+            return null;
+        }
     }
-}
+

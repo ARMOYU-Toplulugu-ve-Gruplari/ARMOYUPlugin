@@ -23,15 +23,10 @@ commands:
     usage: /<command>
     aliases: [klanlar,clans]
 
-  evegit:
-    description: Varsa ev noktasına gider.
+  ev:
+    description: Ev noktasını ayarlar veya gider
     usage: /<command>
-    aliases: [evegit,gitev,evim,home]
-
-  eviayarla:
-    description: Ev noktasını ayarlar
-    usage: /<command>
-    aliases: [eviayarla,evayarla,evayar,sethome]
+    aliases: [ev,home]
 
   para:
     description: Mevcut paranı gösterir.
