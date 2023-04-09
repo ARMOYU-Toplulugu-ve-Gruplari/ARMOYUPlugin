@@ -59,10 +59,13 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
         getCommand("giris").setExecutor(komutlar);
         getCommand("toplamoldurme").setExecutor(komutlar);
+
         getCommand("ev").setExecutor(komutlar);
         getCommand("ev").setTabCompleter(new Tabtamamlama());
+
         getCommand("para").setExecutor(komutlar);
-        getCommand("zenginler").setExecutor(komutlar);
+        getCommand("para").setTabCompleter(new Tabtamamlama());
+
         getCommand("oturumsaati").setExecutor(komutlar);
 
         getCommand("klan").setExecutor(komutlar);
@@ -72,11 +75,13 @@ public final class ARMOYUPlugin extends JavaPlugin {
         getCommand("baslangicayarla").setExecutor(komutlar);
         getCommand("tpa").setExecutor(komutlar);
         getCommand("tpaccept").setExecutor(komutlar);
-        getCommand("blokla").setExecutor(komutlar);
 
+
+
+        //SONRADAN AKTİF EDİLMELİ
         for (Player player : getServer().getOnlinePlayers()) {
-            player.setGameMode(GameMode.SURVIVAL);
-            player.kickPlayer("Sunucu yeniden başlatılıyor");
+//            player.setGameMode(GameMode.SURVIVAL);
+//            player.kickPlayer("Sunucu yeniden başlatılıyor");
         }
 
     getServer().getScheduler().runTaskTimer(this, new Runnable() {

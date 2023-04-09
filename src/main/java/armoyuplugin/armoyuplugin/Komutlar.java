@@ -106,70 +106,68 @@ public class Komutlar  implements CommandExecutor {
                 Players oyuncucek = findAllNotes.get(i);
                 if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
                     oyuncuparola = oyuncucek.getOyuncuparola();
+                    break;
                 }
             }
-            try {
-                JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/0/0/0/");
 
-                JSONArray recs = json.getJSONArray("niteliklioyunlar");
-                String mcpara = "0";
-                for (int i = 0; i < recs.length(); ++i) {
-                    JSONObject rec = recs.getJSONObject(i);
-                    if (rec.get("etkinlikkisaad").equals("minecraft")) {
-                        mcpara = rec.get("oyunbakiye").toString();
+
+
+
+            if(args.length == 0){
+
+                try {
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/0/0/0/");
+
+                    JSONArray recs = json.getJSONArray("niteliklioyunlar");
+                    String mcpara = "0";
+                    for (int i = 0; i < recs.length(); ++i) {
+                        JSONObject rec = recs.getJSONObject(i);
+                        if (rec.get("etkinlikkisaad").equals("minecraft")) {
+                            mcpara = rec.get("oyunbakiye").toString();
+                        }
                     }
+
+                    for (int i = 0; i < findAllNotes.size(); i++) {
+                        Players oyuncucek = findAllNotes.get(i);
+                        if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
+                            oyuncucek.setPara(mcpara);
+                            JsonUtility.updatepara(oyuncu.getName(),mcpara);
+                        }
+                    }
+                    try {  JsonUtility.saveNotes();   } catch (IOException ERR) {   Bukkit.getLogger().info("[ARMOYU] "+"Para kaydetme işlemi yapılamadı");}
+
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + mcpara);
+
+                }catch (Exception E){
+                    Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
+                }
+            }else if(args[0].equals("liste")){
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Zengin Listesi :\n");
+
+
+                try{
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/zenginler/0/0/");
+                    JSONArray recs = json.getJSONArray("zenginler");
+
+                    int sirasay =0;
+                    for (int i = 0; i < recs.length(); ++i) {
+                        sirasay++;
+                        JSONObject rec = recs.getJSONObject(i);
+
+                        oyuncu.sendMessage(ChatColor.AQUA + "" +sirasay +"- "+  ChatColor.WHITE + rec.get("oyuncuadi").toString()+ " " + ChatColor.YELLOW +rec.get("oyuncupara").toString());
+
+                    }
+
+
+                }catch (Exception e){
+                    oyuncu.sendMessage("[ARMOYU] Sunucu ile bağlanılamadı(Zenginler).");
                 }
 
-                for (int i = 0; i < findAllNotes.size(); i++) {
-                    Players oyuncucek = findAllNotes.get(i);
-                    if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
-                        oyuncucek.setPara(mcpara);
-                        JsonUtility.updatepara(oyuncu.getName(),mcpara);
-                    }
-                }
-                try {  JsonUtility.saveNotes();   } catch (IOException ERR) {   Bukkit.getLogger().info("[ARMOYU] "+"Para kaydetme işlemi yapılamadı");}
-
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + mcpara);
-
-            }catch (Exception E){
-                Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
+            }else{
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Böyle bir komut yok");
             }
+
         }else if(cmd.getName().equalsIgnoreCase("zenginler")){
-
-            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
-            List<Players> findAllNotes = JsonUtility.findAllNotes();
-            String oyuncuparola ="";
-            for (int i = 0; i < findAllNotes.size(); i++) {
-                Players oyuncucek = findAllNotes.get(i);
-                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
-                    oyuncuparola = oyuncucek.getOyuncuparola();
-                }
-            }
-
-
-            oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " Zengin Listesi :\n");
-
-
-            try{
-                JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/zenginler/0/0/");
-                JSONArray recs = json.getJSONArray("zenginler");
-
-                int sirasay =0;
-                for (int i = 0; i < recs.length(); ++i) {
-                    sirasay++;
-                    JSONObject rec = recs.getJSONObject(i);
-
-                    oyuncu.sendMessage(ChatColor.AQUA + "" +sirasay +"- "+  ChatColor.WHITE + rec.get("oyuncuadi").toString()+ " " + ChatColor.YELLOW +rec.get("oyuncupara").toString());
-
-                }
-
-
-            }catch (Exception e){
-                oyuncu.sendMessage("[ARMOYU] Sunucu ile bağlanılamadı(Zenginler).");
-            }
-
-
-
 
 
         }else if (cmd.getName().equalsIgnoreCase("oturumsaati")) {
@@ -191,7 +189,7 @@ public class Komutlar  implements CommandExecutor {
             try {
                 JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/oturumsaati/0/0/0");
 
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + json.get("aciklama").toString());
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
 
 
             } catch (Exception err) {
@@ -251,16 +249,13 @@ public class Komutlar  implements CommandExecutor {
                     String aciklama = json.get("aciklama").toString();
 
                     if(durum.equals("1")){
-                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
-                        JsonUtility.updateklan(oyuncu.getName(),"");
 
-                        try {
-                            JsonUtility.saveNotes();
-                        }catch (Exception e){
-                            Bukkit.getLogger().info("Değişiklik Kayıt Edilemedi:"+ e);
-                        }
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + aciklama );
+                        JsonUtility.updateklan(oyuncu.getName(),"");
+                        try {JsonUtility.saveNotes();}catch (Exception e){Bukkit.getLogger().info("Değişiklik Kayıt Edilemedi:"+ e);}
+
                     }else{
-                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + aciklama );
 
                     }
 
@@ -271,26 +266,189 @@ public class Komutlar  implements CommandExecutor {
 
             }else if (args[0].equals("olustur")){
                 if (args.length == 1){
-                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN +"Klan Adı yazmadın!");
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN +"Klan Adı yazmadın!");
                     return true;
                 }
 
+
+
                 try {
-                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klan/olustur/"+args[1]);
+                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klan/olustur/" + args[1] + "/" + args[1]);
 
                     String durum = json.get("durum").toString();
                     String aciklama = json.get("aciklama").toString();
 
                     if(durum.equals("1")){
-                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + aciklama );
+
+                        JsonUtility.updateklan(oyuncu.getName(),args[1]);
+                        try {JsonUtility.saveNotes();}catch (Exception e){Bukkit.getLogger().info("Değişiklik Kayıt Edilemedi:"+ e);}
+
+
+//                        //OP KONTROL ET
+//                        if (!oyuncu.isOp()){
+//                            oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Bu komudu kullanmak için OP olmanız gerekir.");
+//                            return true;
+//                        }
+
+                        int x = oyuncu.getLocation().getBlockX(), y = oyuncu.getLocation().getBlockY(), z = oyuncu.getLocation().getBlockZ();
+
+                        Location loc = new Location((Bukkit.getWorld("world")), x, y, z);
+                        loc.getBlock().setType(Material.RED_BANNER);
+
+                        for (int i = 0; i < 10; i++) {
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y, z+9);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z+9);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y, z+9);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z+9);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y, z-9);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z-9);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y, z-9);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z-9);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x+9, y, z+i);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x+9, y+1, z+i);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x+9, y, z-i);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x+9, y+1, z-i);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-9, y, z+i);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x-9, y+1, z+i);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-9, y, z-i);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x-9, y+1, z-i);
+                            loc.getBlock().setType(Material.STONE);
+                        }
+
+                        for (int i = 0; i <11; i++) {
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y, z+10);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y, z+10);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y, z-10);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y, z-10);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+
+                            loc = new Location((Bukkit.getWorld("world")), x+10, y, z+i);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x+10, y, z-i);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-10, y, z+i);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-10, y, z-i);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+                        }
+
+                        for (int i = 0; i <12; i++) {
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y, z+11);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y, z+11);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y, z-11);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y, z-11);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+
+                            loc = new Location((Bukkit.getWorld("world")), x+11, y, z+i);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x+11, y, z-i);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-11, y, z+i);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-11, y, z-i);
+                            loc.getBlock().setType(Material.WHITE_WOOL);
+                        }
+
+                        for (int i = 0; i <13; i++) {
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y, z+12);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z+12);
+                            loc.getBlock().setType(Material.STONE);
+
+
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y, z+12);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z+12);
+                            loc.getBlock().setType(Material.STONE);
+
+
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y, z-12);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z-12);
+                            loc.getBlock().setType(Material.STONE);
+
+
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y, z-12);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z-12);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x+12, y, z+i);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x+12, y+1, z+i);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x+12, y, z-i);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x+12, y+1, z-i);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-12, y, z+i);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x-12, y+1, z+i);
+                            loc.getBlock().setType(Material.STONE);
+
+                            loc = new Location((Bukkit.getWorld("world")), x-12, y, z-i);
+                            loc.getBlock().setType(Material.STONE);
+                            loc = new Location((Bukkit.getWorld("world")), x-12, y+1, z-i);
+                            loc.getBlock().setType(Material.STONE);
+                        }
+
+
+
+
+
                     }else{
-                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + aciklama );
 
                     }
 
                 } catch (Exception err) {
                     Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
-                    oyuncu.sendMessage(ARMOYUMESAJ + "Sunucuya bağlanılamadı.");
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Sunucuya bağlanılamadı.");
                 }
 
 
@@ -349,13 +507,13 @@ public class Komutlar  implements CommandExecutor {
                             player.getInventory().setItemInOffHand(kalkan);
                         }
                     }
-                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ ChatColor.GREEN + klanuyesay +  ChatColor.YELLOW +" [" + oyuncuklan +"] " +ChatColor.GREEN +"üyeleri çağrılıyor!");
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + klanuyesay +  ChatColor.YELLOW +" [" + oyuncuklan +"] " +ChatColor.GREEN +"üyeleri çağrılıyor!");
                 }else{
-                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ ChatColor.YELLOW + "Klanınız YOK!");
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Klanınız YOK!");
                 }
 
             }else if (args[0].equals("katil")){
-                oyuncu.sendMessage(ARMOYUMESAJ + "Davet YOK");
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Davet YOK");
 
             }else if (args[0].equals("git")){
 
@@ -375,15 +533,15 @@ public class Komutlar  implements CommandExecutor {
 
 
                     if(durum.equals("1")){
-                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + aciklama );
                     }else{
-                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + aciklama );
 
                     }
 
                 } catch (Exception err) {
                     Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
-                    oyuncu.sendMessage(ARMOYUMESAJ + "Sunucuya bağlanılamadı.");
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Sunucuya bağlanılamadı.");
                 }
 
 
@@ -396,9 +554,9 @@ public class Komutlar  implements CommandExecutor {
                     String aciklama = json.get("aciklama").toString();
 
                     if(durum.equals("1")){
-                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.GREEN + aciklama );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + aciklama );
                     }else{
-                        oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + aciklama );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + aciklama );
 
                     }
 
@@ -410,7 +568,7 @@ public class Komutlar  implements CommandExecutor {
 
 
             }else{
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " Böyle bir komut yok");
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Böyle bir komut yok");
             }
 
 
@@ -419,7 +577,7 @@ public class Komutlar  implements CommandExecutor {
         }else if (cmd.getName().equalsIgnoreCase("baslangicayarla")) {
             //OP KONTROL ET
             if (!oyuncu.isOp()){
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " Bu komudu kullanmak için OP olmanız gerekir.");
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Bu komudu kullanmak için OP olmanız gerekir.");
                 return true;
             }
             try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
@@ -441,7 +599,7 @@ public class Komutlar  implements CommandExecutor {
 
                 String sunucuozellik = json.get("sunucuozellik").toString();
                 String sunucuadi = json.get("sunucuadi").toString();
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + sunucuadi + "Yeni Başlangıç Noktası: " +sunucuozellik);
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + sunucuadi + "Yeni Başlangıç Noktası: " +sunucuozellik);
 
 
             } catch (Exception err) {
@@ -451,7 +609,7 @@ public class Komutlar  implements CommandExecutor {
         }else if (cmd.getName().equalsIgnoreCase("tpa")){
 
             if (args.length != 1){
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "Hatalı Kullanım Yaptınız");
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW  + "Hatalı Kullanım Yaptınız");
                 return true;
             }
 
@@ -484,9 +642,9 @@ public class Komutlar  implements CommandExecutor {
 
                 try {
                     JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/tpa/"+ oyuncuarkadas.getName() +"/0/0");
-                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + json.get("aciklama").toString());
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW  + json.get("aciklama").toString());
                     if (json.get("durum").equals("1")){
-                        oyuncuarkadas.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " "+oyuncu.getName() + " adlı oyuncu yanına gelmek istiyor.");
+                        oyuncuarkadas.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + oyuncu.getName() + " adlı oyuncu yanına gelmek istiyor.");
                     }
 
                 } catch (Exception err) {
@@ -494,7 +652,7 @@ public class Komutlar  implements CommandExecutor {
                 }
 
             }else{
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "oyuncu bulunamadı : " + ChatColor.AQUA + args[0]);
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW  + "Oyuncu bulunamadı : " + ChatColor.AQUA + args[0]);
 
             }
 
@@ -504,7 +662,7 @@ public class Komutlar  implements CommandExecutor {
         }else if (cmd.getName().equalsIgnoreCase("tpaccept")){
 
             if (args.length != 1){
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "Hatalı Kullanım Yaptınız");
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW  + "Hatalı Kullanım Yaptınız");
                 return true;
             }
 
@@ -521,7 +679,7 @@ public class Komutlar  implements CommandExecutor {
 
 
             if (oyuncubul == 0){
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "oyuncu bulunamadı : " + ChatColor.AQUA + args[0]);
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW  + "Oyuncu bulunamadı : " + ChatColor.AQUA + args[0]);
 
                 return true;
             }
@@ -540,9 +698,9 @@ public class Komutlar  implements CommandExecutor {
 
             try {
                 JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/tpaccept/"+ oyuncuarkadas.getName() +"/0/0");
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + json.get("aciklama").toString());
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW  + json.get("aciklama").toString());
                 if (json.get("durum").equals("1")){
-                    oyuncuarkadas.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " " + "Arkadaşına gidiyorsun : " + ChatColor.AQUA + oyuncu.getName());
+                    oyuncuarkadas.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW  + "Arkadaşına gidiyorsun : " + ChatColor.AQUA + oyuncu.getName());
                     oyuncuarkadas.teleport(new Location(Bukkit.getWorld("world"),oyuncu.getLocation().getBlockX(),oyuncu.getLocation().getBlockY(),oyuncu.getLocation().getBlockZ()));
                 }
 
@@ -552,161 +710,6 @@ public class Komutlar  implements CommandExecutor {
 
 
 
-
-
-        }else if(cmd.getName().equalsIgnoreCase("blokla")){
-
-            //OP KONTROL ET
-            if (!oyuncu.isOp()){
-                oyuncu.sendMessage(ChatColor.RED + "[ARMOYU]" + ChatColor.YELLOW + " Bu komudu kullanmak için OP olmanız gerekir.");
-                return true;
-            }
-
-            int x = oyuncu.getLocation().getBlockX(), y = oyuncu.getLocation().getBlockY(), z = oyuncu.getLocation().getBlockZ();
-
-            Location loc = new Location((Bukkit.getWorld("world")), x, y, z);
-            loc.getBlock().setType(Material.RED_BANNER);
-
-            for (int i = 0; i < 10; i++) {
-                loc = new Location((Bukkit.getWorld("world")), x+i, y, z+9);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z+9);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x-i, y, z+9);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z+9);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x+i, y, z-9);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z-9);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x-i, y, z-9);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z-9);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x+9, y, z+i);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x+9, y+1, z+i);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x+9, y, z-i);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x+9, y+1, z-i);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x-9, y, z+i);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x-9, y+1, z+i);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x-9, y, z-i);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x-9, y+1, z-i);
-                loc.getBlock().setType(Material.STONE);
-            }
-
-            for (int i = 0; i <11; i++) {
-                loc = new Location((Bukkit.getWorld("world")), x+i, y, z+10);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x-i, y, z+10);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x+i, y, z-10);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x-i, y, z-10);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-
-                loc = new Location((Bukkit.getWorld("world")), x+10, y, z+i);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x+10, y, z-i);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x-10, y, z+i);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x-10, y, z-i);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-            }
-
-            for (int i = 0; i <12; i++) {
-                loc = new Location((Bukkit.getWorld("world")), x+i, y, z+11);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x-i, y, z+11);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x+i, y, z-11);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x-i, y, z-11);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-
-                loc = new Location((Bukkit.getWorld("world")), x+11, y, z+i);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x+11, y, z-i);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x-11, y, z+i);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-
-                loc = new Location((Bukkit.getWorld("world")), x-11, y, z-i);
-                loc.getBlock().setType(Material.WHITE_WOOL);
-            }
-
-            for (int i = 0; i <13; i++) {
-                loc = new Location((Bukkit.getWorld("world")), x+i, y, z+12);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z+12);
-                loc.getBlock().setType(Material.STONE);
-
-
-                loc = new Location((Bukkit.getWorld("world")), x-i, y, z+12);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z+12);
-                loc.getBlock().setType(Material.STONE);
-
-
-                loc = new Location((Bukkit.getWorld("world")), x+i, y, z-12);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x+i, y+1, z-12);
-                loc.getBlock().setType(Material.STONE);
-
-
-                loc = new Location((Bukkit.getWorld("world")), x-i, y, z-12);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x-i, y+1, z-12);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x+12, y, z+i);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x+12, y+1, z+i);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x+12, y, z-i);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x+12, y+1, z-i);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x-12, y, z+i);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x-12, y+1, z+i);
-                loc.getBlock().setType(Material.STONE);
-
-                loc = new Location((Bukkit.getWorld("world")), x-12, y, z-i);
-                loc.getBlock().setType(Material.STONE);
-                loc = new Location((Bukkit.getWorld("world")), x-12, y+1, z-i);
-                loc.getBlock().setType(Material.STONE);
-            }
 
 
         }else if (cmd.getName().equalsIgnoreCase("ev")){
@@ -736,7 +739,7 @@ public class Komutlar  implements CommandExecutor {
                     oyuncu.teleport(new Location(Bukkit.getWorld("world"),x,y,z));
                 }catch (Exception ERR){
                     Bukkit.getLogger().info("Ev Ayarlı Değil");
-                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] " + ChatColor.YELLOW + "Ev Ayarlı Değil!");
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Ev Ayarlı Değil!");
                 }
 
 
@@ -750,15 +753,15 @@ public class Komutlar  implements CommandExecutor {
                 JsonUtility.updateevayarla(oyuncu.getName(),x + ","+ y + "," + z);
                 try {
                     JsonUtility.saveNotes();
-                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ChatColor.GREEN + "Ev ayarlandı!");
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + "Ev ayarlandı!");
                 }catch (Exception ERR){
                     Bukkit.getLogger().info("Ev Ayarlanamadı");
-                    oyuncu.sendMessage(ChatColor.RED + "[ARMOYU] "+ChatColor.YELLOW + "Ev ayarlanamadı!");
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Ev ayarlanamadı!");
                 }
 
             }else {
 
-                oyuncu.sendMessage(ChatColor.RED+ "[ARMOYU] "+ChatColor.YELLOW+ "BÖYLE BİR KOMUT YOK");
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW+ "BÖYLE BİR KOMUT YOK");
             }
 
             return true;
@@ -791,7 +794,7 @@ public class Komutlar  implements CommandExecutor {
         }else if (cmd.getName().equalsIgnoreCase("giris")) {
 
             if (args.length != 1) {
-                oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " +ChatColor.YELLOW + "Hatalı Kullanım Yaptınız");
+                oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Hatalı Kullanım Yaptınız");
             }else{
 
                 try {
@@ -875,16 +878,16 @@ public class Komutlar  implements CommandExecutor {
                             Bukkit.getLogger().info("[ARMOYU] "+"Giriş komutları işlenemed!");
 
                         }
-                        oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "Giriş Başarılı");
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + "Giriş Başarılı");
 
                     }else {
-                        oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "Hatalı GİRİŞ");
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Hatalı GİRİŞ");
 
                     }
 
                 }catch (Exception aa){
-                    Bukkit.getLogger().info(ChatColor.RED +"[ARMOYU] " +"oyuncu giriş yaparken sunucuyla bağlantı kurulamadı!");
-                    oyuncu.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "Sunucu ile Bağlantı Kurulamadı");
+                    Bukkit.getLogger().info(ARMOYUMESAJ + "oyuncu giriş yaparken sunucuyla bağlantı kurulamadı!");
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Sunucu ile Bağlantı Kurulamadı");
                 }
 
             }

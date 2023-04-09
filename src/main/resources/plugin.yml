@@ -25,13 +25,9 @@ commands:
 
   para:
     description: Mevcut paranı gösterir.
-    usage: /<command>
+    usage: /<command>, /<command> liste
     aliases: [para,parasay,money]
 
-  zenginler:
-    description: Zengin listesini gösterir.
-    usage: /<command>
-    aliases: [zenginler,balancetop]
 
   oturumsaati:
     description: Bugüne kadar geçirdiğin zamanı gösterir.
@@ -40,7 +36,7 @@ commands:
 
   klan:
     description: Klan ile ilgili komutlar.
-    usage: <klan acil :klandaki herkesi toplar.> <klan git :klanın ana merkezine yollar.> <klan ayrıl :kladan ayrılırsın.> <klan davet :klana oyuncuyu davet edersin.> <klan baslangic noktası :klanın baslangic noktasını ayarlarsın.> <klan oluştur :klan oluştur + isim şeklinde kullanılır.> <klan katıl :klana katılırsın>
+    usage: <klan acil :klandaki herkesi toplar.> \n/cak<klan git :klanın ana merkezine yollar.> <klan ayrıl :kladan ayrılırsın.> <klan davet :klana oyuncuyu davet edersin.> <klan baslangic noktası :klanın baslangic noktasını ayarlarsın.> <klan oluştur :klan oluştur + isim şeklinde kullanılır.> <klan katıl :klana katılırsın>
 
     aliases: [klan,clan,krallik]
 
@@ -58,8 +54,3 @@ commands:
     description: Yanınıza gelmek isteyen oyuncunun isteğini kabul eder.
     usage: /<command>
     aliases: [tpaccept,kabulark]
-
-  blokla:
-    description: Blokları yerlestirir.
-    usage: /<command>
-    aliases: [blokla,bloksov]

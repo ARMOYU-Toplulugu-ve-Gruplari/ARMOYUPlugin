@@ -44,7 +44,6 @@ public class Tabtamamlama  implements TabCompleter {
 
                 List<String> arguments = new ArrayList<>();
 
-
                 if (!klan.equals("")) {
                     arguments.add("acil");
                     arguments.add("git");
@@ -78,15 +77,17 @@ public class Tabtamamlama  implements TabCompleter {
         } else if (cmd.getName().equalsIgnoreCase("ev")) {
 
             if (args.length == 1) {
-
                 List<String> arguments = new ArrayList<>();
-
                 arguments.add("ayarla");
-
-
-
                 return arguments;
+            }
 
+        }else if (cmd.getName().equalsIgnoreCase("para")) {
+
+            if (args.length == 1) {
+                List<String> arguments = new ArrayList<>();
+                arguments.add("liste");
+                return arguments;
             }
 
         }
