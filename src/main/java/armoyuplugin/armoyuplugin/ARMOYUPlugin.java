@@ -104,7 +104,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
                     if(oyuncucek.getOyuncuadi().equals(player.getName())){
 
                         oyuncuadi=oyuncucek.getOyuncuadi();
-                        oyuncuklanadi=oyuncucek.getOyuncuadi();
+                        oyuncuklanadi=oyuncucek.getKlan();
                         oyuncuklanrutbe=oyuncucek.getKlanrutbe();
                         oyuncupara=oyuncucek.getPara();
                         oyunculeslerim=oyuncucek.getLeslerim();
@@ -131,7 +131,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
                 Score slotpara = o.getScore(ChatColor.WHITE + "Para: " + ChatColor.GREEN + oyuncupara );
 
-                Score slotles = o.getScore(ChatColor.YELLOW + "Skorum:"+ ChatColor.GREEN+oyunculeslerim);
+                Score slotles = o.getScore(ChatColor.YELLOW + "Skorum: "+ ChatColor.GREEN+oyunculeslerim);
 
                 Score slotbosluk = o.getScore("");
 
