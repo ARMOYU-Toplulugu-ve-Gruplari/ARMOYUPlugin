@@ -25,7 +25,7 @@ commands:
 
   para:
     description: Mevcut paranı gösterir.
-    usage: /<command>, /<command> liste
+    usage: <para liste :en çok paası olan oyuncular(zenginler) listesini açar>
     aliases: [para,parasay,money]
 
 
