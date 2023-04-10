@@ -22,7 +22,7 @@ public class JsonUtility {
         } else if (p.getLocation().toString().contains("world_end")) {
             k = "world_end";
         }
-        Players note = new Players(p.getDisplayName(), "", "0", "", "","", hareket, aclik, saglik, -8, 76, -8, k);
+        Players note = new Players(p.getDisplayName(), "", "0", "", "", "" ,"" ,hareket, aclik, saglik, -8, 76, -8, k);
         notes.add(note);
         return note;
     }
@@ -76,11 +76,12 @@ public class JsonUtility {
 
     }
 
-    public static Players updateNote(String oyuncuadi, String oyuncuparola, String klan,String klanrenk, boolean hareket, String para) {
+    public static Players updateNote(String oyuncuadi, String oyuncuparola, String klan, String klanrutbe,String klanrenk, boolean hareket, String para) {
         for (Players note : notes) {
             if (note.getOyuncuadi().equals(oyuncuadi)) {
                 note.setOyuncuparola(oyuncuparola);
                 note.setKlan(klan);
+                note.setKlanrutbe(klanrutbe);
                 note.setKlanrenk(klanrenk);
                 note.setHareket(hareket);
                 note.setPara(para);

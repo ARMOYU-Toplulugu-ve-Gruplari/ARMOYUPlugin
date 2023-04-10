@@ -33,7 +33,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import org.json.JSONObject;
 
-public class JoinLeaveListener extends Komutlar implements Listener {
+public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
 
     String ARMOYUMESAJ = ChatColor.RED + "[ARMOYU] ";
 
@@ -409,7 +409,7 @@ public class JoinLeaveListener extends Komutlar implements Listener {
         }catch (Exception error){
             Bukkit.getLogger().info("[ARMOYU] oyuncular.json dosyası oluşturulamadı!");
             player.kickPlayer("Sunucuya Bağlanılamadı tekrar dene!");
-
+            return;
         }
 
 

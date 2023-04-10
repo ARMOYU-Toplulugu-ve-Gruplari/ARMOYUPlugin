@@ -2,9 +2,6 @@ package armoyuplugin.armoyuplugin;
 
 
 import armoyuplugin.armoyuplugin.models.Players;
-import armoyuplugin.armoyuplugin.ozelesyalar.Poseidonunmizragi;
-import armoyuplugin.armoyuplugin.ozelesyalar.esyayonetim;
-import armoyuplugin.armoyuplugin.ozelesyalar.esyakomutlar;
 import armoyuplugin.armoyuplugin.utils.JsonUtility;
 
 import org.bukkit.Bukkit;
@@ -14,8 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -29,7 +24,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
     public void onEnable() {
 
         Bukkit.getLogger().info(ARMOYUMESAJ + "----Aktif---- aramizdakioyuncu.com");
-        getServer().getPluginManager().registerEvents(new JoinLeaveListener(), this);
+        getServer().getPluginManager().registerEvents(new Olaylar(), this);
         plugin = this;
 
 
@@ -139,11 +134,11 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
                             }
 
-                            team.setSuffix(ChatColor.GREEN + " " + oyuncucek.getPara());
+                            team.setSuffix(ChatColor.GREEN + " " + oyuncucek.getKlanrutbe());
                             team.setPrefix(klanad);
 
-                            player.setDisplayName(klanad + ChatColor.WHITE + player.getName());
-                            player.setPlayerListName(klanad + ChatColor.WHITE + player.getName());
+                            player.setDisplayName(klanad + ChatColor.WHITE + player.getName() + " " + ChatColor.GREEN + oyuncucek.getKlanrutbe());
+                            player.setPlayerListName(klanad + ChatColor.WHITE + player.getName() + " " + ChatColor.GREEN + oyuncucek.getKlanrutbe());
 
                             team.addEntry(player.getName());
                         }
@@ -152,7 +147,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
 
         }
-    },0,200);
+    },0,100);
 
 
 
