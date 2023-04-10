@@ -10,7 +10,7 @@ website: https://server.aramizdakioyuncu.com/minecraft
 commands:
   giris:
     description: Sunucuya giriş yapmanıza yarar.
-    usage: /<command> <yalnızca /giris + şifreniz şeklinde yazmalısınız.>
+    usage: <yalnızca /giris + şifreniz şeklinde yazmalısınız.>
     aliases: [giris,g,login,l]
 
   toplamoldurme:
