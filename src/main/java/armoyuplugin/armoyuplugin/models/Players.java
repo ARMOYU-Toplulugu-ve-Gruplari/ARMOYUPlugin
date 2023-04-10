@@ -8,14 +8,15 @@ public class Players {
     private String oyuncuID;
     private String oyuncuadi;
     private String oyuncuparola;
-    private String para;
+
+
+
+    private int para;
     private String ev;
     private String klan;
-
     private String klanrutbe;
-
-
     private String klanrenk;
+    private int leslerim;
     private boolean hareket;
     private double aclik;
     private double saglik;
@@ -26,7 +27,7 @@ public class Players {
 
 
 
-    public Players(String oyuncuadi, String oyuncuparola,String para,String ev, String klan,String klanrutbe,String klanrenk,boolean hareket,double aclik,double saglik,double x, double y, double z,String location) {
+    public Players(String oyuncuadi, String oyuncuparola, int para, String ev, String klan, String klanrutbe, String klanrenk, int leslerim, boolean hareket, double aclik, double saglik, double x, double y, double z, String location) {
         this.oyuncuID = UUID.randomUUID().toString();
         this.oyuncuadi = oyuncuadi;
         this.para = para;
@@ -34,6 +35,7 @@ public class Players {
         this.klan = klan;
         this.klanrutbe = klanrutbe;
         this.klanrenk = klanrenk;
+        this.leslerim=leslerim;
         this.hareket = hareket;
         this.aclik = aclik;
         this.saglik = saglik;
@@ -61,29 +63,17 @@ public class Players {
         this.oyuncuparola = oyuncuparola;
     }
 
-    public String getPara() {
-        return para;
-    }
+    public int getPara() {return para;}
 
-    public void setPara(String para) {
-        this.para = para;
-    }
+    public void setPara(int para) {this.para = para;}
 
-    public String getEv() {
-        return ev;
-    }
+    public String getEv() {return ev;}
 
-    public void setEv(String ev) {
-        this.ev = ev;
-    }
+    public void setEv(String ev) {this.ev = ev;}
 
-    public String getKlan() {
-        return klan;
-    }
+    public String getKlan() {return klan;}
 
-    public void setKlan(String klan) {
-        this.klan = klan;
-    }
+    public void setKlan(String klan) {this.klan = klan;}
 
     public String getKlanrutbe() {  return klanrutbe;}
 
@@ -97,6 +87,10 @@ public class Players {
     public void setKlanrenk(String klanrenk) {
         this.klanrenk = klanrenk;
     }
+
+    public int getLeslerim() {return leslerim;}
+
+    public void setLeslerim(int leslerim) {this.leslerim = leslerim;}
 
     public boolean getHareket() {
         return hareket;

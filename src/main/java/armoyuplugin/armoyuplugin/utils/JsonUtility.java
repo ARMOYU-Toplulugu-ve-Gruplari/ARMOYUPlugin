@@ -22,7 +22,7 @@ public class JsonUtility {
         } else if (p.getLocation().toString().contains("world_end")) {
             k = "world_end";
         }
-        Players note = new Players(p.getDisplayName(), "", "0", "", "", "" ,"" ,hareket, aclik, saglik, -8, 76, -8, k);
+        Players note = new Players(p.getDisplayName(), "", 0, "", "", "" ,"" ,0,hareket, aclik, saglik, -8, 76, -8, k);
         notes.add(note);
         return note;
     }
@@ -69,20 +69,21 @@ public class JsonUtility {
             writer.flush();
             writer.close();
         }catch(Exception e){
-            System.out.println(ChatColor.RED + "[ARMOYU] Veri Güncelleme Hatası.:"+ e);
+            System.out.println(ChatColor.DARK_RED + "[ARMOYU] Veri Güncelleme Hatası.:"+ e);
 
         }
 
 
     }
 
-    public static Players updateNote(String oyuncuadi, String oyuncuparola, String klan, String klanrutbe,String klanrenk, boolean hareket, String para) {
+    public static Players updateNote(String oyuncuadi, String oyuncuparola, String klan, String klanrutbe,String klanrenk,int leslerim, boolean hareket, int para) {
         for (Players note : notes) {
             if (note.getOyuncuadi().equals(oyuncuadi)) {
                 note.setOyuncuparola(oyuncuparola);
                 note.setKlan(klan);
                 note.setKlanrutbe(klanrutbe);
                 note.setKlanrenk(klanrenk);
+                note.setLeslerim(leslerim);
                 note.setHareket(hareket);
                 note.setPara(para);
             }
@@ -90,7 +91,7 @@ public class JsonUtility {
         return null;
     }
 
-    public static Players updateNotexyz(String oyuncuadi, String para, boolean hareket, double aclik, double saglik, double x, double y, double z, String location) {
+    public static Players updateNotexyz(String oyuncuadi, int para, boolean hareket, double aclik, double saglik, double x, double y, double z, String location) {
 
         for (Players note : notes) {
             if (note.getOyuncuadi().equals(oyuncuadi)) {
@@ -127,10 +128,19 @@ public class JsonUtility {
         return null;
     }
 
-    public static Players updatepara(String oyuncuadi, String para) {
+    public static Players updatepara(String oyuncuadi,int para) {
         for (Players oyuncubul : notes) {
             if (oyuncubul.getOyuncuadi().equals(oyuncuadi)) {
                 oyuncubul.setPara(para);
+            }
+        }
+        return null;
+    }
+
+    public static Players updateles(String oyuncuadi,int les) {
+        for (Players oyuncubul : notes) {
+            if (oyuncubul.getOyuncuadi().equals(oyuncuadi)) {
+                oyuncubul.setLeslerim(les);
             }
         }
         return null;

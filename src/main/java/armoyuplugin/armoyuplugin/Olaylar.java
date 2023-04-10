@@ -204,6 +204,14 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
                 entity.getKiller().sendMessage("Öldürme bilgisi işlenemedi!");
             }else{
                 entity.getKiller().sendMessage(ChatColor.GREEN +"+" + json.get("ortayakalanpara"));
+
+               int para= (int) json.get("oldurenpara");
+               int les=(int) json.get("oyuncuskor");
+
+                JsonUtility.updateles(entity.getKiller().getName(),les);
+                JsonUtility.updatepara(entity.getKiller().getName(),para);
+                try { JsonUtility.saveNotes(); } catch (IOException ERR) {Bukkit.getLogger().info("[ARMOYU] "+ChatColor.RED+"Json Dosyasına Kayıt yapılamadı!");}
+            g
             }
         }catch (Exception E){
             Bukkit.getLogger().info("Öldürme bilgisi işlenemedi");
@@ -429,10 +437,10 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
         boolean oyuncukontrol = false;
         List<Players> findAllNotes = JsonUtility.findAllNotes();
 
-
+            int oyunculeslerim=0;
             String oyuncuklanadi= "";
             String oyuncuklanrutbe= "";
-            String oyuncupara= "";
+            int oyuncupara=0;
             String oyuncuadi = "";
 
         for (int i = 0; i < findAllNotes.size(); i++) {
@@ -443,6 +451,7 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
                 oyuncuklanrutbe = oyuncucek.getKlanrutbe();
                 oyuncupara = oyuncucek.getPara();
                 oyuncuadi = oyuncucek.getOyuncuadi();
+                oyunculeslerim=oyuncucek.getLeslerim();
                 break;
             }
         }
@@ -479,6 +488,10 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
 
         Score slotklanrutbe = o.getScore(ChatColor.WHITE + "Rütbe: " + ChatColor.GREEN + oyuncuklanrutbe );
 
+        Score slotpara = o.getScore(ChatColor.WHITE + "Para: " + ChatColor.GREEN + oyuncupara );
+
+        Score slotles = o.getScore(ChatColor.YELLOW + "Skorum:"+ ChatColor.GREEN+oyunculeslerim);
+
         Score slotbosluk = o.getScore("");
 
         Score slotreklam = o.getScore(ChatColor.YELLOW + "§laramizdakioyuncu.com");
@@ -493,10 +506,13 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
         slotoyuncuadi.setScore(10);
         slotbosluk.setScore(9);
         slotklanadi.setScore(8);
-        slotklanrutbe.setScore(8);
-        slotbosluk.setScore(7);
-        slotzaman.setScore(6);
-        slotreklam.setScore(5);
+        slotklanrutbe.setScore(7);
+        slotpara.setScore(6);
+        slotbosluk.setScore(5);
+        slotbosluk.setScore(4);
+        slotles.setScore(3);
+        slotzaman.setScore(2);
+        slotreklam.setScore(1);
 
 
 

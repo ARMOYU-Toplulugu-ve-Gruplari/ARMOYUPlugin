@@ -12,6 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.*;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public final class ARMOYUPlugin extends JavaPlugin {
@@ -34,7 +36,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
         for (int i = 0; i < findAllNotes.size(); i++) {
             Players oyuncucek = findAllNotes.get(i);
             Bukkit.getLogger().info(ARMOYUMESAJ + oyuncucek.getOyuncuadi());
-            JsonUtility.updateNotexyz(oyuncucek.getOyuncuadi(), oyuncucek.getPara().toString(), false, oyuncucek.getAclik(), oyuncucek.getSaglik(), oyuncucek.getX(), oyuncucek.getY(), oyuncucek.getZ(), oyuncucek.getLocation());
+            JsonUtility.updateNotexyz(oyuncucek.getOyuncuadi(), oyuncucek.getPara(), false, oyuncucek.getAclik(), oyuncucek.getSaglik(), oyuncucek.getX(), oyuncucek.getY(), oyuncucek.getZ(), oyuncucek.getLocation());
 
             try {JsonUtility.saveNotes();} catch (IOException ERR) {Bukkit.getLogger().info("[ARMOYU] " + "Oyuncu bilgileri Güncellenemedi");}
         }
@@ -83,12 +85,83 @@ public final class ARMOYUPlugin extends JavaPlugin {
         @Override
         public void run() {
             Scoreboard scoreboard = getServer().getScoreboardManager().getMainScoreboard();
-
+            String oyuncuadi = "";
+            String oyuncuklanadi = "";
+            String oyuncuklanrutbe = "";
+            int oyuncupara = 0;
+            int oyunculeslerim=0;
 
 
 
 
             for (Player player : getServer().getOnlinePlayers()){
+
+                try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+
+                List<Players> findAllNotes = JsonUtility.findAllNotes();
+                for (int i = 0; i < findAllNotes.size(); i++) {
+                    Players oyuncucek = findAllNotes.get(i);
+                    if(oyuncucek.getOyuncuadi().equals(player.getName())){
+
+                        oyuncuadi=oyuncucek.getOyuncuadi();
+                        oyuncuklanadi=oyuncucek.getOyuncuadi();
+                        oyuncuklanrutbe=oyuncucek.getKlanrutbe();
+                        oyuncupara=oyuncucek.getPara();
+                        oyunculeslerim=oyuncucek.getLeslerim();
+
+                        break;
+                    }
+                }
+
+                ScoreboardManager m = Bukkit.getScoreboardManager();
+                Scoreboard b = m.getNewScoreboard();
+
+                Objective o = b.registerNewObjective("ARMOYU TEST SERVER", "ANA","");
+
+
+                o.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+                o.setDisplayName(ChatColor.DARK_AQUA + o.getName());
+
+                Score slotoyuncuadi = o.getScore(ChatColor.WHITE + "Oyuncu Adı: " + ChatColor.WHITE + oyuncuadi );
+
+                Score slotklanadi = o.getScore(ChatColor.WHITE + "Klan: " + ChatColor.YELLOW + oyuncuklanadi );
+
+                Score slotklanrutbe = o.getScore(ChatColor.WHITE + "Rütbe: " + ChatColor.GREEN + oyuncuklanrutbe );
+
+                Score slotpara = o.getScore(ChatColor.WHITE + "Para: " + ChatColor.GREEN + oyuncupara );
+
+                Score slotles = o.getScore(ChatColor.YELLOW + "Skorum:"+ ChatColor.GREEN+oyunculeslerim);
+
+                Score slotbosluk = o.getScore("");
+
+                Score slotreklam = o.getScore(ChatColor.YELLOW + "§laramizdakioyuncu.com");
+
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                Date date = new Date();
+
+                Score slotzaman = o.getScore(ChatColor.YELLOW + formatter.format(date));
+
+
+
+                slotoyuncuadi.setScore(10);
+                slotbosluk.setScore(9);
+                slotklanadi.setScore(8);
+                slotklanrutbe.setScore(7);
+                slotpara.setScore(6);
+                slotbosluk.setScore(5);
+                slotbosluk.setScore(4);
+                slotles.setScore(3);
+                slotzaman.setScore(2);
+                slotreklam.setScore(1);
+
+
+
+
+                player.setScoreboard(b);
+
+
+
 
                 Team team = scoreboard.getTeam(player.getName());
 
@@ -100,7 +173,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
 
                    String klanad = "";
-                    List<Players> findAllNotes = JsonUtility.findAllNotes();
+
                     for (int i = 0; i < findAllNotes.size(); i++) {
                         Players oyuncucek = findAllNotes.get(i);
 
@@ -178,7 +251,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
                         else if (player.getLocation().toString().contains("world_the_end")){
                             k = "world_the_end";
                         }
-                        JsonUtility.updateNotexyz(player.getName(), oyuncucek.getPara().toString(),false,player.getFoodLevel(),player.getHealth() ,x,y,z, k);
+                        JsonUtility.updateNotexyz(player.getName(), oyuncucek.getPara(),false,player.getFoodLevel(),player.getHealth() ,x,y,z, k);
 
                         try { JsonUtility.saveNotes();   } catch (IOException ERR) {   Bukkit.getLogger().info("[ARMOYU] "+"Oyuncu bilgileri Güncellenemedi");
 

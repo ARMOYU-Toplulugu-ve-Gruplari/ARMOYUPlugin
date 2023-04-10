@@ -119,11 +119,11 @@ public class Komutlar  implements CommandExecutor {
                     JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/0/0/0/");
 
                     JSONArray recs = json.getJSONArray("niteliklioyunlar");
-                    String mcpara = "0";
+                    int mcpara = 0;
                     for (int i = 0; i < recs.length(); ++i) {
                         JSONObject rec = recs.getJSONObject(i);
                         if (rec.get("etkinlikkisaad").equals("minecraft")) {
-                            mcpara = rec.get("oyunbakiye").toString();
+                            mcpara = (int) rec.get("oyunbakiye");
                         }
                     }
 
@@ -131,7 +131,7 @@ public class Komutlar  implements CommandExecutor {
                         Players oyuncucek = findAllNotes.get(i);
                         if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
                             oyuncucek.setPara(mcpara);
-                            JsonUtility.updatepara(oyuncu.getName(),mcpara);
+                            JsonUtility.updatepara(oyuncu.getName(), mcpara);
                         }
                     }
                     try {  JsonUtility.saveNotes();   } catch (IOException ERR) {   Bukkit.getLogger().info("[ARMOYU] "+"Para kaydetme işlemi yapılamadı");}
@@ -806,8 +806,8 @@ public class Komutlar  implements CommandExecutor {
                         String klanadi = "";
                         String klanrutbe = "";
                         String klanrenk = "";
-                        String mcpara = "0";
-
+                        int mcpara = 0;
+                        int leslerim=0;
                         float sunucux =0;
                         float sunucuy =76;
                         float sunucuz =-8;
@@ -842,7 +842,9 @@ public class Komutlar  implements CommandExecutor {
                                 klanadi = rec.get("grupkisaad").toString();
                                 klanrutbe = rec.get("gruprutbe").toString();
                                 klanrenk = rec.get("gruprenk").toString();
-                                mcpara = rec.get("oyunbakiye").toString();
+                                mcpara = (int) rec.get("oyunbakiye");
+                                leslerim = (int) rec.get("skor");
+
                             }
                         }
 
@@ -871,9 +873,9 @@ public class Komutlar  implements CommandExecutor {
                                     }
 
                                     if (oyuncucek.getHareket() == true){
-                                        try {  JsonUtility.updateNote(oyuncu.getName() ,getMd5(args[0]),klanadi ,klanrutbe,klanrenk,true, mcpara);JsonUtility.saveNotes();  }catch (Exception er){   }
+                                        try {  JsonUtility.updateNote(oyuncu.getName() ,getMd5(args[0]),klanadi ,klanrutbe,klanrenk,leslerim,true, mcpara);JsonUtility.saveNotes();  }catch (Exception er){   }
                                     }
-                                    try {  JsonUtility.updateNote(oyuncu.getName() ,getMd5(args[0]),klanadi ,klanrutbe,klanrenk,true, mcpara);JsonUtility.saveNotes();  }catch (Exception er){   }
+                                    try {  JsonUtility.updateNote(oyuncu.getName() ,getMd5(args[0]),klanadi ,klanrutbe,klanrenk,leslerim,true, mcpara);JsonUtility.saveNotes();  }catch (Exception er){   }
                                     break;
                                 }
                             }
