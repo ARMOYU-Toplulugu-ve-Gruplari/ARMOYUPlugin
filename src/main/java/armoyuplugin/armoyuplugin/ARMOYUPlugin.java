@@ -139,7 +139,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
                             }
 
-                            team.setSuffix(ChatColor.GREEN +" [MÜTTEFİK]");
+                            team.setSuffix(ChatColor.GREEN + " " + oyuncucek.getPara());
                             team.setPrefix(klanad);
 
                             player.setDisplayName(klanad + ChatColor.WHITE + player.getName());

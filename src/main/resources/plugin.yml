@@ -36,7 +36,7 @@ commands:
 
   klan:
     description: Klan ile ilgili komutlar.
-    usage: <klan acil :klandaki herkesi toplar.> \n/cak<klan git :klanın ana merkezine yollar.> <klan ayrıl :kladan ayrılırsın.> <klan davet :klana oyuncuyu davet edersin.> <klan baslangic noktası :klanın baslangic noktasını ayarlarsın.> <klan oluştur :klan oluştur + isim şeklinde kullanılır.> <klan katıl :klana katılırsın>
+    usage: <klan acil :klandaki herkesi toplar.> /cak<klan git :klanın ana merkezine yollar.> <klan ayrıl :kladan ayrılırsın.> <klan davet :klana oyuncuyu davet edersin.> <klan baslangic noktası :klanın baslangic noktasını ayarlarsın.> <klan oluştur :klan oluştur + isim şeklinde kullanılır.> <klan katıl :klana katılırsın>
 
     aliases: [klan,clan,krallik]
 
