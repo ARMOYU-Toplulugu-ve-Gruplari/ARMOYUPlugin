@@ -251,7 +251,7 @@ public class Komutlar  implements CommandExecutor {
                     if(durum.equals("1")){
 
                         oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + aciklama );
-                        JsonUtility.updateklan(oyuncu.getName(),"");
+                        JsonUtility.updateklan(oyuncu.getName(),"","");
                         try {JsonUtility.saveNotes();}catch (Exception e){Bukkit.getLogger().info("Değişiklik Kayıt Edilemedi:"+ e);}
 
                     }else{
@@ -281,7 +281,7 @@ public class Komutlar  implements CommandExecutor {
                     if(durum.equals("1")){
                         oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + aciklama );
 
-                        JsonUtility.updateklan(oyuncu.getName(),args[1]);
+                        JsonUtility.updateklan(oyuncu.getName(),args[1],"Kurucu");
                         try {JsonUtility.saveNotes();}catch (Exception e){Bukkit.getLogger().info("Değişiklik Kayıt Edilemedi:"+ e);}
 
 

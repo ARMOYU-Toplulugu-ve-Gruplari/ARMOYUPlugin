@@ -136,10 +136,11 @@ public class JsonUtility {
         return null;
     }
 
-    public static Players updateklan(String oyuncuadi, String klan) {
+    public static Players updateklan(String oyuncuadi, String klan,String klanrutbe) {
         for (Players oyuncubul : notes) {
             if (oyuncubul.getOyuncuadi().equals(oyuncuadi)) {
                 oyuncubul.setKlan(klan);
+                oyuncubul.setKlanrutbe(klanrutbe);
             }
         }
         return null;

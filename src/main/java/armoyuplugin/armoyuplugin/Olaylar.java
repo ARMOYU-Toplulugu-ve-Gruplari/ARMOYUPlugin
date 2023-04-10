@@ -3,6 +3,7 @@ package armoyuplugin.armoyuplugin;
 import armoyuplugin.armoyuplugin.models.Players;
 import armoyuplugin.armoyuplugin.utils.JsonUtility;
 import com.google.gson.Gson;
+import net.md_5.bungee.api.ChatMessageType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -18,6 +19,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.scoreboard.*;
 import org.json.JSONException;
 import java.io.*;
 import java.math.BigInteger;
@@ -25,6 +27,9 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -352,6 +357,8 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e){
         Player player = e.getPlayer();
+
+
         player.setGameMode(GameMode.SURVIVAL);
         String dünya = "world";
         e.setJoinMessage(ChatColor.YELLOW +"Aktif Oyuncular: "+ Bukkit.getOnlinePlayers().size() + "/20");
@@ -421,10 +428,22 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
         //Oyuncu hiç oyuna girmiş mi kontrol
         boolean oyuncukontrol = false;
         List<Players> findAllNotes = JsonUtility.findAllNotes();
+
+
+            String oyuncuklanadi= "";
+            String oyuncuklanrutbe= "";
+            String oyuncupara= "";
+            String oyuncuadi = "";
+
         for (int i = 0; i < findAllNotes.size(); i++) {
             Players oyuncucek = findAllNotes.get(i);
             if (oyuncucek.getOyuncuadi().equals(player.getName())){
                 oyuncukontrol = true;
+                oyuncuklanadi = oyuncucek.getKlan();
+                oyuncuklanrutbe = oyuncucek.getKlanrutbe();
+                oyuncupara = oyuncucek.getPara();
+                oyuncuadi = oyuncucek.getOyuncuadi();
+                break;
             }
         }
 
@@ -441,6 +460,48 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
 
         }
 
+
+
+
+        ScoreboardManager m = Bukkit.getScoreboardManager();
+        Scoreboard b = m.getNewScoreboard();
+
+        Objective o = b.registerNewObjective("ARMOYU TEST SERVER", "ANA","");
+
+
+        o.setDisplaySlot(DisplaySlot.SIDEBAR);
+
+        o.setDisplayName(ChatColor.DARK_AQUA + o.getName());
+
+        Score slotoyuncuadi = o.getScore(ChatColor.WHITE + "Oyuncu Adı: " + ChatColor.WHITE + oyuncuadi );
+
+        Score slotklanadi = o.getScore(ChatColor.WHITE + "Klan: " + ChatColor.YELLOW + oyuncuklanadi );
+
+        Score slotklanrutbe = o.getScore(ChatColor.WHITE + "Rütbe: " + ChatColor.GREEN + oyuncuklanrutbe );
+
+        Score slotbosluk = o.getScore("");
+
+        Score slotreklam = o.getScore(ChatColor.YELLOW + "§laramizdakioyuncu.com");
+
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+
+        Score slotzaman = o.getScore(ChatColor.YELLOW + formatter.format(date));
+
+
+
+        slotoyuncuadi.setScore(10);
+        slotbosluk.setScore(9);
+        slotklanadi.setScore(8);
+        slotklanrutbe.setScore(8);
+        slotbosluk.setScore(7);
+        slotzaman.setScore(6);
+        slotreklam.setScore(5);
+
+
+
+
+        player.setScoreboard(b);
 
 
     }
