@@ -208,8 +208,8 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
                int para= (int) json.get("oldurenpara");
                int les=(int) json.get("oyuncuskor");
 
-//                JsonUtility.updateles(entity.getKiller().getName(),les);
-//                JsonUtility.updatepara(entity.getKiller().getName(),para);
+                JsonUtility.updateles(entity.getKiller().getName(),les);
+                JsonUtility.updatepara(entity.getKiller().getName(),para);
 
                 try { JsonUtility.saveNotes(); } catch (IOException ERR) {Bukkit.getLogger().info("[ARMOYU] "+ChatColor.RED+"Json Dosyasına Kayıt yapılamadı!");}
 
