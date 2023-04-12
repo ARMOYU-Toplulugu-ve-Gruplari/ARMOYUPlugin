@@ -367,6 +367,24 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
     public void onJoin(PlayerJoinEvent e){
         Player player = e.getPlayer();
 
+        try {
+            JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/ana-arama-motoru.php?ozellik=tamarama&deger="+player.getName());
+
+            if (json.get("kontrol").equals("1")){
+                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "Siteye Kayıtlı");
+                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "/giris <sifreniz>");
+
+            }else{
+                //player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.DARK_PURPLE + "SİTEYE KAYDOLUN");
+                player.kickPlayer(ChatColor.RED+"!!!!!! Siteye kayıt olmanız gerekli !!!!!!"+ChatColor.YELLOW +"\n\n aramizdakioyuncu.com/kayit-ol");
+                // player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "https://aramizdakioyuncu.com/kayit-ol");
+                return;
+            }
+        }catch (Exception aa){
+            player.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " Sunucu Bağlanısı Kurulamadı");
+            Bukkit.getLogger().info(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");
+        }
+
 
         player.setGameMode(GameMode.SURVIVAL);
         String dünya = "world";
@@ -393,21 +411,7 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
         player.setHealth(20);
 
 
-        try {
-            JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/ana-arama-motoru.php?ozellik=tamarama&deger="+player.getName());
 
-            if (json.get("kontrol").equals("1")){
-                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "Siteye Kayıtlı");
-                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "/giris <sifreniz>");
-
-            }else{
-                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.DARK_PURPLE + "SİTEYE KAYDOLUN");
-                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "https://aramizdakioyuncu.com/kayit-ol");
-            }
-        }catch (Exception aa){
-            player.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " Sunucu Bağlanısı Kurulamadı");
-            Bukkit.getLogger().info(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");
-        }
 
 
         try {
@@ -469,58 +473,6 @@ public class Olaylar extends Komutlar implements org.bukkit.event.Listener {
             }
 
         }
-
-
-
-
-        ScoreboardManager m = Bukkit.getScoreboardManager();
-        Scoreboard b = m.getNewScoreboard();
-
-        Objective o = b.registerNewObjective("ARMOYU TEST SERVER", "ANA","");
-
-
-        o.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-        o.setDisplayName(ChatColor.DARK_AQUA + o.getName());
-
-        Score slotoyuncuadi = o.getScore(ChatColor.WHITE + "Oyuncu Adı: " + ChatColor.WHITE + oyuncuadi );
-
-        Score slotklanadi = o.getScore(ChatColor.WHITE + "Klan: " + ChatColor.YELLOW + oyuncuklanadi );
-
-        Score slotklanrutbe = o.getScore(ChatColor.WHITE + "Rütbe: " + ChatColor.GREEN + oyuncuklanrutbe );
-
-        Score slotpara = o.getScore(ChatColor.WHITE + "Para: " + ChatColor.GREEN + oyuncupara );
-
-        Score slotles = o.getScore(ChatColor.YELLOW + "Skorum:"+ ChatColor.GREEN+oyunculeslerim);
-
-        Score slotbosluk = o.getScore("");
-
-        Score slotreklam = o.getScore(ChatColor.YELLOW + "§laramizdakioyuncu.com");
-
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        Date date = new Date();
-
-        Score slotzaman = o.getScore(ChatColor.YELLOW + formatter.format(date));
-
-
-
-        slotoyuncuadi.setScore(10);
-        slotbosluk.setScore(9);
-        slotklanadi.setScore(8);
-        slotklanrutbe.setScore(7);
-        slotpara.setScore(6);
-        slotbosluk.setScore(5);
-        slotbosluk.setScore(4);
-        slotles.setScore(3);
-        slotzaman.setScore(2);
-        slotreklam.setScore(1);
-
-
-
-
-        player.setScoreboard(b);
-
-
     }
 
     @EventHandler

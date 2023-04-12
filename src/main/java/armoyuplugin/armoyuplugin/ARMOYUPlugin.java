@@ -119,21 +119,28 @@ public final class ARMOYUPlugin extends JavaPlugin {
                 Objective o = b.registerNewObjective("ARMOYU TEST SERVER", "ANA","");
 
 
+
+
+
                 o.setDisplaySlot(DisplaySlot.SIDEBAR);
 
                 o.setDisplayName(ChatColor.DARK_AQUA + o.getName());
 
-                Score slotoyuncuadi = o.getScore(ChatColor.WHITE + "Oyuncu Adı: " + ChatColor.WHITE + oyuncuadi );
+                Score slotoyuncuadi = o.getScore(ChatColor.YELLOW + "Oyuncu Adı: " + ChatColor.WHITE + oyuncuadi );
 
-                Score slotklanadi = o.getScore(ChatColor.WHITE + "Klan: " + ChatColor.YELLOW + oyuncuklanadi );
+                Score slotpara = o.getScore(ChatColor.YELLOW + "Para: " + ChatColor.WHITE + oyuncupara );
 
-                Score slotklanrutbe = o.getScore(ChatColor.WHITE + "Rütbe: " + ChatColor.GREEN + oyuncuklanrutbe );
+                Score slotles = o.getScore(ChatColor.YELLOW + "Leş: "+ ChatColor.WHITE+oyunculeslerim);
 
-                Score slotpara = o.getScore(ChatColor.WHITE + "Para: " + ChatColor.GREEN + oyuncupara );
+                Score slotbosluk1 = o.getScore(" ");
 
-                Score slotles = o.getScore(ChatColor.YELLOW + "Skorum: "+ ChatColor.GREEN+oyunculeslerim);
+                Score slotbosluk2 = o.getScore("  ");
 
-                Score slotbosluk = o.getScore("");
+                Score slotbosluk3 = o.getScore("   ");
+
+                Score slotbosluk4 = o.getScore("    ");
+
+                Score slotbosluk5 = o.getScore("     ");
 
                 Score slotreklam = o.getScore(ChatColor.YELLOW + "§laramizdakioyuncu.com");
 
@@ -144,16 +151,29 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
 
 
-                slotoyuncuadi.setScore(10);
-                slotbosluk.setScore(9);
-                slotklanadi.setScore(8);
-                slotklanrutbe.setScore(7);
-                slotpara.setScore(6);
-                slotbosluk.setScore(5);
-                slotbosluk.setScore(4);
-                slotles.setScore(3);
-                slotzaman.setScore(2);
-                slotreklam.setScore(1);
+
+
+                slotbosluk1.setScore(10);
+                slotoyuncuadi.setScore(9);
+                slotbosluk2.setScore(8);
+                slotpara.setScore(7);
+                slotles.setScore(6);
+                slotbosluk3.setScore(5);
+
+                if (!oyuncuklanadi.equals("")){
+
+                    Score slotklanadi = o.getScore(ChatColor.DARK_AQUA + "Klan: " + ChatColor.GOLD+ oyuncuklanadi );
+                    Score slotklanrutbe = o.getScore(ChatColor.DARK_AQUA  + "Rütbe: " + ChatColor.DARK_GREEN+ oyuncuklanrutbe );
+
+                    slotklanadi.setScore(4);
+                    slotklanrutbe.setScore(3);
+                }
+
+                slotbosluk4.setScore(2);
+                slotzaman.setScore(1);
+                slotbosluk5.setScore(0);
+                slotreklam.setScore(-1);
+
 
 
 
@@ -184,34 +204,20 @@ public final class ARMOYUPlugin extends JavaPlugin {
                                 return;
                             }
 
-                            if (oyuncucek.getKlan().equals("")){
+                           if (oyuncucek.getKlan().equals("")){
                                 klanad = "";
 
                             }else {
 
-                                if (oyuncucek.getKlanrenk().equalsIgnoreCase("GREEN")){
-                                    klanad = ChatColor.GREEN + "[" + oyuncucek.getKlan() + "] ";
-
-                                }else if(oyuncucek.getKlanrenk().equalsIgnoreCase("RED")){
-                                    klanad = ChatColor.RED + "[" + oyuncucek.getKlan() + "] ";
-
-                                }else if(oyuncucek.getKlanrenk().equalsIgnoreCase("LIGHT_PURPLE")){
-                                    klanad = ChatColor.LIGHT_PURPLE + "[" + oyuncucek.getKlan() + "] ";
-
-                                }else if(oyuncucek.getKlanrenk().equalsIgnoreCase("GOLD")){
-                                    klanad = ChatColor.GOLD + "[" + oyuncucek.getKlan() + "] ";
-
-                                }else{
-                                    klanad = ChatColor.YELLOW + "[" + oyuncucek.getKlan() + "] ";
-                                }
+                               klanad = ChatColor.GOLD + "[" + oyuncucek.getKlan() + "] ";
 
                             }
 
                             team.setSuffix(ChatColor.GREEN + " " + oyuncucek.getKlanrutbe());
                             team.setPrefix(klanad);
 
-                            player.setDisplayName(klanad + ChatColor.WHITE + player.getName() + " " + ChatColor.GREEN + oyuncucek.getKlanrutbe());
-                            player.setPlayerListName(klanad + ChatColor.WHITE + player.getName() + " " + ChatColor.GREEN + oyuncucek.getKlanrutbe());
+                            player.setDisplayName(klanad + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncucek.getKlanrutbe());
+                            player.setPlayerListName(klanad + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncucek.getKlanrutbe());
 
                             team.addEntry(player.getName());
                         }

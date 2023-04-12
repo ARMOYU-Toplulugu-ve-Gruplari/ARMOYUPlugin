@@ -526,12 +526,14 @@ public class Komutlar  implements CommandExecutor {
 
                     if(durum.equals("1")){
 
+                        String klandunya = json.get("klandunya").toString();
+
                         String kordinat = json.get("klankordinat").toString();
                         String[] result = kordinat.split(",");
                         double x = Double.parseDouble(result[0]);
                         double y = Double.parseDouble(result[1]);
                         double z = Double.parseDouble(result[2]);
-                        oyuncu.teleport(new Location(Bukkit.getWorld("world"),x,y,z));
+                        oyuncu.teleport(new Location(Bukkit.getWorld(klandunya),x,y,z));
 
                         oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + aciklama );
 
