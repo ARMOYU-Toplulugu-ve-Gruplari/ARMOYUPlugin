@@ -53,7 +53,7 @@ public class ArmoyuScoreBoard {
             Objective o = b.registerNewObjective("ARMOYU TEST SERVER", "ANA","");
 
 
-            String claim = yeniListe.claimSahipKim(player.getLocation().getChunk(),player.getWorld().toString());
+            String claim = yeniListe.claimSahipKim(player.getLocation().getChunk().toString(),player.getWorld().toString());
 
 
             o.setDisplaySlot(DisplaySlot.SIDEBAR);

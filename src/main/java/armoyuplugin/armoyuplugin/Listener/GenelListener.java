@@ -28,7 +28,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.UUID;
 
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.jsonService;
@@ -57,9 +57,6 @@ public class GenelListener implements Listener {
     }
 
 
-
-
-
     String ARMOYUMESAJ = ChatColor.RED + "[ARMOYU Claim] ";
     String APIKEY = "771df488714111d39138eb60df756e6b";
     private final ARMOYUPlugin plugin = ARMOYUPlugin.getPlugin();
@@ -69,16 +66,9 @@ public class GenelListener implements Listener {
     private final HashMap<UUID,Long> cooldown;
 
 
-
-
-
-
-
-
-    private String tiklanilanblock = "x";
     @EventHandler
     public void onClick(PlayerInteractEvent event){
-
+        String tiklanilanblock = "x";
         //CLAİM PLUGİNİ
         Player p = event.getPlayer();
         if (event.getAction().name().equals("RIGHT_CLICK_AIR")){
@@ -91,7 +81,7 @@ public class GenelListener implements Listener {
         ItemStack stick = new ItemStack(Material.STICK);
         if (stick.equals(p.getInventory().getItemInMainHand())){
             if (event.getAction().toString().equals("RIGHT_CLICK_BLOCK")){
-                p.sendMessage(yeniListe.claimSahipKim(p.getLocation().getChunk(),p.getWorld().toString()));
+                p.sendMessage(yeniListe.claimSahipKim(p.getLocation().getChunk().toString(),p.getWorld().toString()));
             }
             else if ("LEFT_CLICK_BLOCK".equals(event.getAction().toString())){
                 Link temp = yeniListe.head;
@@ -192,7 +182,7 @@ public class GenelListener implements Listener {
 
 
 //        player.setGameMode(GameMode.SURVIVAL);
-        String dünya = "world";
+        String dunya = "world";
         event.setJoinMessage(ChatColor.YELLOW +"Aktif Oyuncular: "+ Bukkit.getOnlinePlayers().size() + "/20");
 
         int cekozellikx = 0;
@@ -210,7 +200,7 @@ public class GenelListener implements Listener {
             player.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " Sunucu Bağlanısı Kurulamadı");
             Bukkit.getLogger().info(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");
         }
-        player.teleport(new Location(Bukkit.getWorld(dünya),cekozellikx,cekozelliky,cekozellikz));
+        player.teleport(new Location(Bukkit.getWorld(dunya),cekozellikx,cekozelliky,cekozellikz));
 
 
         try {
@@ -252,16 +242,15 @@ public class GenelListener implements Listener {
         Players oyuncucek = jsonService.oyuncu(player);
 
         //CLAİM PLUGİN
-        if (!tiklanilanblock.equals("x")) {
-            Player p = event.getPlayer();
-            int deneme = yeniListe.chunkControl(p, tiklanilanblock, p.getWorld().toString());
+
+            int deneme = yeniListe.chunkControl(player.getName(), event.getBlockPlaced().getChunk().toString(), player.getWorld().toString());
 
             if (deneme != 2 && oyuncucek.getHareket()) {
                 event.setCancelled(false);
             } else
                 event.setCancelled(true);
 
-        }
+
 
 
         //BASE PLUGİN
@@ -275,9 +264,8 @@ public class GenelListener implements Listener {
         Players oyuncucek = jsonService.oyuncu(p);
 
         //CLAİM PLUGİN
-        if (!tiklanilanblock.equals("x")) {
 
-            int deneme =yeniListe.chunkControl(p, tiklanilanblock, p.getWorld().toString());
+            int deneme =yeniListe.chunkControl(p.getName(), event.getBlock().getChunk().toString(), p.getWorld().toString());
 
             if (deneme!=2 && oyuncucek.getHareket()) {
                 event.setCancelled(false);
@@ -285,7 +273,7 @@ public class GenelListener implements Listener {
                 event.setCancelled(true);
             }
 
-        }
+
 
 
         //BASE PLUGİN

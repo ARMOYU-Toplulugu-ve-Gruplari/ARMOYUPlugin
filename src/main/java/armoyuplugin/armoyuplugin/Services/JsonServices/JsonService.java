@@ -24,9 +24,9 @@ import static armoyuplugin.armoyuplugin.ARMOYUPlugin.yeniListe;
 public class JsonService {
 
 
-private List<Players> jsonCek(Player p){
+private List<Players> jsonCek(){
     String ARMOYUMESAJ = ChatColor.RED + "[ARMOYU Claim] ";
-    try { JsonUtility.loadNotes(); } catch (IOException err) {    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "notlar yüklenmedi");   }
+    try { JsonUtility.loadNotes(); } catch (IOException err) {    }
     return JsonUtility.findAllNotes();
 }
 public void jsonSave(){
@@ -38,7 +38,7 @@ public void jsonCreate(Player p){
     JsonUtility.createNote(p,false,20,20);
 }
 public Players oyuncu(Player p){
-    List<Players> findAllNotes = jsonCek(p);
+    List<Players> findAllNotes = jsonCek();
     for (int i = 0; i < findAllNotes.size(); i++) {
         Players oyuncucek = findAllNotes.get(i);
         if (oyuncucek.getOyuncuadi().equals(p.getName())){
@@ -77,14 +77,16 @@ public Players oyuncu(Player p){
             }
         }
 
-       List<Players> findAllNotes = JsonUtility.findAllNotes();
+       List<Players> findAllNotes = jsonCek();
 
         for (int i = 0; i < findAllNotes.size(); i++) {
             Players oyuncucek = findAllNotes.get(i);
-            Bukkit.getLogger().info(oyuncucek.getOyuncuadi());
             JsonUtility.updateNotexyz(oyuncucek.getOyuncuadi(), oyuncucek.getPara(), false, oyuncucek.getAclik(), oyuncucek.getSaglik(), oyuncucek.getX(), oyuncucek.getY(), oyuncucek.getZ(), oyuncucek.getLocation());
+            jsonSave();
+        }
 
-            try {JsonUtility.saveNotes();} catch (IOException ERR) {Bukkit.getLogger().info("[ARMOYU] " + "Oyuncu bilgileri Güncellenemedi");}
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            player.kickPlayer("Sunucu yeniden başlatılıyor");
         }
 
 

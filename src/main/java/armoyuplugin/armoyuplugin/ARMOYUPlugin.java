@@ -15,14 +15,13 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 public final class ARMOYUPlugin extends JavaPlugin {
 
     private BukkitAudiences adventure;
-
     public static LinkList yeniListe = new LinkList();
     private static ARMOYUPlugin plugin;
     public static ARMOYUPlugin getPlugin(){
         return plugin;
     }
     public static JsonService jsonService = new JsonService();
-    private static final ClaimApiService claimApiService = new ClaimApiService();
+    public static final ClaimApiService claimApiService = new ClaimApiService();
     private static final ArmoyuScoreBoard tablo = new ArmoyuScoreBoard();
     private static final SetupCommandsService commandsService = new SetupCommandsService();
     String ARMOYUMESAJ = "[ARMOYU] ";
