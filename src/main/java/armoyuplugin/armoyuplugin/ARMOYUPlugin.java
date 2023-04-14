@@ -1,45 +1,86 @@
 package armoyuplugin.armoyuplugin;
-
-
-import armoyuplugin.armoyuplugin.models.Players;
-import armoyuplugin.armoyuplugin.utils.JsonUtility;
-
+import armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi.LinkList;
+import armoyuplugin.armoyuplugin.Listener.GenelListener;
+import armoyuplugin.armoyuplugin.Services.ApiServices.ClaimApiService;
+import armoyuplugin.armoyuplugin.Services.CommandService.SetupCommandsService;
+import armoyuplugin.armoyuplugin.Services.JsonServices.JsonService;
+import armoyuplugin.armoyuplugin.ScoreBoardPlugin.ArmoyuScoreBoard;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scoreboard.*;
+import me.kodysimpson.simpapi.menu.MenuManager;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+
 
 public final class ARMOYUPlugin extends JavaPlugin {
 
+    private BukkitAudiences adventure;
+
+    public static LinkList yeniListe = new LinkList();
     private static ARMOYUPlugin plugin;
+    public static ARMOYUPlugin getPlugin(){
+        return plugin;
+    }
+    public static JsonService jsonService = new JsonService();
+    private static final ClaimApiService claimApiService = new ClaimApiService();
+    private static final ArmoyuScoreBoard tablo = new ArmoyuScoreBoard();
+    private static final SetupCommandsService commandsService = new SetupCommandsService();
     String ARMOYUMESAJ = "[ARMOYU] ";
 
 
     @Override
     public void onEnable() {
 
-        Bukkit.getLogger().info(ARMOYUMESAJ + "----Aktif---- aramizdakioyuncu.com");
-        getServer().getPluginManager().registerEvents(new Olaylar(), this);
         plugin = this;
+        this.adventure = BukkitAudiences.create(plugin);
 
 
+        claimApiService.listeyiDoldur();
+        commandsService.setupCommands(plugin);
 
-        List<Players> findAllNotes = JsonUtility.findAllNotes();
 
-        for (int i = 0; i < findAllNotes.size(); i++) {
-            Players oyuncucek = findAllNotes.get(i);
-            Bukkit.getLogger().info(ARMOYUMESAJ + oyuncucek.getOyuncuadi());
-            JsonUtility.updateNotexyz(oyuncucek.getOyuncuadi(), oyuncucek.getPara(), false, oyuncucek.getAclik(), oyuncucek.getSaglik(), oyuncucek.getX(), oyuncucek.getY(), oyuncucek.getZ(), oyuncucek.getLocation());
+        MenuManager.setup(getServer(),plugin);
+        getServer().getPluginManager().registerEvents(new GenelListener(), plugin);
+        Bukkit.getLogger().info(ARMOYUMESAJ + "----Aktif---- aramizdakioyuncu.com");
 
-            try {JsonUtility.saveNotes();} catch (IOException ERR) {Bukkit.getLogger().info("[ARMOYU] " + "Oyuncu bilgileri Güncellenemedi");}
+
+        getServer().getScheduler().runTaskTimer(this, new Runnable() {
+            @Override
+            public void run() {
+               tablo.setScoreBoard(plugin);
+            }
+        },0,100);
+    }
+    @Override
+    public void onDisable() {
+
+
+        if (this.adventure!=null){
+            this.adventure.close();
+            this.adventure = null;
         }
+        jsonService.serverDisable(plugin);
+
+        Bukkit.getLogger().info("[ARMOYU] ----Devre Dışı----");
+
+    }
+
+
+
+    public BukkitAudiences getAdventure() {
+        if (this.adventure == null){
+            throw new IllegalStateException("adventure ilk sayfa");
+        }
+        return this.adventure;
+    }
+}
+
+
+
+
+
+
+
 
 
 ////OZEL ESYALAR BASLANGIC
@@ -52,231 +93,27 @@ public final class ARMOYUPlugin extends JavaPlugin {
 //
 ////OZEL ESYALAR BITIS
 
-        Komutlar komutlar = new Komutlar();
-
-        getCommand("giris").setExecutor(komutlar);
-        getCommand("toplamoldurme").setExecutor(komutlar);
-
-        getCommand("ev").setExecutor(komutlar);
-        getCommand("ev").setTabCompleter(new Tabtamamlama());
-
-        getCommand("para").setExecutor(komutlar);
-        getCommand("para").setTabCompleter(new Tabtamamlama());
-
-        getCommand("oturumsaati").setExecutor(komutlar);
-
-        getCommand("klan").setExecutor(komutlar);
-        getCommand("klan").setTabCompleter(new Tabtamamlama());
-
-
-        getCommand("baslangicayarla").setExecutor(komutlar);
-        getCommand("tpa").setExecutor(komutlar);
-        getCommand("tpaccept").setExecutor(komutlar);
 
 
 
-        //SONRADAN AKTİF EDİLMELİ
-        for (Player player : getServer().getOnlinePlayers()) {
+//        SONRADAN AKTİF EDİLMELİ
+//        for (Player player : getServer().getOnlinePlayers()) {
 //            player.setGameMode(GameMode.SURVIVAL);
 //            player.kickPlayer("Sunucu yeniden başlatılıyor");
-        }
+//        }
 
-    getServer().getScheduler().runTaskTimer(this, new Runnable() {
-        @Override
-        public void run() {
-            Scoreboard scoreboard = getServer().getScoreboardManager().getMainScoreboard();
-            String oyuncuadi = "";
-            String oyuncuklanadi = "";
-            String oyuncuklanrutbe = "";
-            int oyuncupara = 0;
-            int oyunculeslerim=0;
 
 
 
+//        List<Players> findAllNotes = JsonUtility.findAllNotes();
+//
+//        for (int i = 0; i < findAllNotes.size(); i++) {
+//            Players oyuncucek = findAllNotes.get(i);
+//            Bukkit.getLogger().info(ARMOYUMESAJ + oyuncucek.getOyuncuadi());
+//            JsonUtility.updateNotexyz(oyuncucek.getOyuncuadi(), oyuncucek.getPara(), false, oyuncucek.getAclik(), oyuncucek.getSaglik(), oyuncucek.getX(), oyuncucek.getY(), oyuncucek.getZ(), oyuncucek.getLocation());
+//
+//            try {JsonUtility.saveNotes();} catch (IOException ERR) {Bukkit.getLogger().info("[ARMOYU] " + "Oyuncu bilgileri Güncellenemedi");}
+//        }
 
-            for (Player player : getServer().getOnlinePlayers()){
 
-                try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
 
-                List<Players> findAllNotes = JsonUtility.findAllNotes();
-                for (int i = 0; i < findAllNotes.size(); i++) {
-                    Players oyuncucek = findAllNotes.get(i);
-                    if(oyuncucek.getOyuncuadi().equals(player.getName())){
-
-                        oyuncuadi=oyuncucek.getOyuncuadi();
-                        oyuncuklanadi=oyuncucek.getKlan();
-                        oyuncuklanrutbe=oyuncucek.getKlanrutbe();
-                        oyuncupara=oyuncucek.getPara();
-                        oyunculeslerim=oyuncucek.getLeslerim();
-
-                        break;
-                    }
-                }
-
-                ScoreboardManager m = Bukkit.getScoreboardManager();
-                Scoreboard b = m.getNewScoreboard();
-
-                Objective o = b.registerNewObjective("ARMOYU TEST SERVER", "ANA","");
-
-
-
-
-
-                o.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-                o.setDisplayName(ChatColor.DARK_AQUA + o.getName());
-
-                Score slotoyuncuadi = o.getScore(ChatColor.YELLOW + "Oyuncu Adı: " + ChatColor.WHITE + oyuncuadi );
-
-                Score slotpara = o.getScore(ChatColor.YELLOW + "Para: " + ChatColor.WHITE + oyuncupara );
-
-                Score slotles = o.getScore(ChatColor.YELLOW + "Leş: "+ ChatColor.WHITE+oyunculeslerim);
-
-                Score slotbosluk1 = o.getScore(" ");
-
-                Score slotbosluk2 = o.getScore("  ");
-
-                Score slotbosluk3 = o.getScore("   ");
-
-                Score slotbosluk4 = o.getScore("    ");
-
-                Score slotbosluk5 = o.getScore("     ");
-
-                Score slotreklam = o.getScore(ChatColor.YELLOW + "§laramizdakioyuncu.com");
-
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                Date date = new Date();
-
-                Score slotzaman = o.getScore(ChatColor.YELLOW + formatter.format(date));
-
-
-
-
-
-                slotbosluk1.setScore(10);
-                slotoyuncuadi.setScore(9);
-                slotbosluk2.setScore(8);
-                slotpara.setScore(7);
-                slotles.setScore(6);
-                slotbosluk3.setScore(5);
-
-                if (!oyuncuklanadi.equals("")){
-
-                    Score slotklanadi = o.getScore(ChatColor.DARK_AQUA + "Klan: " + ChatColor.GOLD+ oyuncuklanadi );
-                    Score slotklanrutbe = o.getScore(ChatColor.DARK_AQUA  + "Rütbe: " + ChatColor.DARK_GREEN+ oyuncuklanrutbe );
-
-                    slotklanadi.setScore(4);
-                    slotklanrutbe.setScore(3);
-                }
-
-                slotbosluk4.setScore(2);
-                slotzaman.setScore(1);
-                slotbosluk5.setScore(0);
-                slotreklam.setScore(-1);
-
-
-
-
-
-                player.setScoreboard(b);
-
-
-
-
-                Team team = scoreboard.getTeam(player.getName());
-
-
-                if (team == null) {
-                    team = scoreboard.registerNewTeam(player.getName());
-                }
-
-
-
-                   String klanad = "";
-
-                    for (int i = 0; i < findAllNotes.size(); i++) {
-                        Players oyuncucek = findAllNotes.get(i);
-
-                        if(oyuncucek.getOyuncuadi().equals(player.getName())){
-
-                            if(oyuncucek.getHareket() == false){
-                                player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "giriş yapmak için /giris <sifre>");
-                                return;
-                            }
-
-                           if (oyuncucek.getKlan().equals("")){
-                                klanad = "";
-
-                            }else {
-
-                               klanad = ChatColor.GOLD + "[" + oyuncucek.getKlan() + "] ";
-
-                            }
-
-                            team.setSuffix(ChatColor.GREEN + " " + oyuncucek.getKlanrutbe());
-                            team.setPrefix(klanad);
-
-                            player.setDisplayName(klanad + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncucek.getKlanrutbe());
-                            player.setPlayerListName(klanad + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncucek.getKlanrutbe());
-
-                            team.addEntry(player.getName());
-                        }
-                    }
-                }
-
-
-        }
-    },0,100);
-
-
-
-    }
-    @Override
-    public void onDisable() {
-
-
-        for (Player player : getServer().getOnlinePlayers()) {
-            player.setGameMode(GameMode.SURVIVAL);
-
-
-            double x = player.getLocation().getX();
-            double y = player.getLocation().getY();
-            double z = player.getLocation().getZ();
-            //Listeyi (oyuncular.json) yeniden çekiyoruz
-            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
-
-            List<Players> findAllNotes = JsonUtility.findAllNotes();
-            for (int i = 0; i < findAllNotes.size(); i++) {
-                Players oyuncucek = findAllNotes.get(i);
-                if (oyuncucek.getOyuncuadi().equals(player.getName())){
-                    if (oyuncucek.getHareket()){
-                        String k = "world";
-                        if (player.getLocation().toString().contains("world_nether")){
-                            k = "world_nether";
-                        }
-                        else if (player.getLocation().toString().contains("world_the_end")){
-                            k = "world_the_end";
-                        }
-                        JsonUtility.updateNotexyz(player.getName(), oyuncucek.getPara(),false,player.getFoodLevel(),player.getHealth() ,x,y,z, k);
-
-                        try { JsonUtility.saveNotes();   } catch (IOException ERR) {   Bukkit.getLogger().info("[ARMOYU] "+"Oyuncu bilgileri Güncellenemedi");
-
-                        }
-                    }
-
-                }
-            }
-        }
-
-        try { JsonUtility.loadNotes(); } catch (IOException e) {  Bukkit.getLogger().info("[ARMOYU] Oyuncu hareketleri okunamadı!");   }
-
-        try { JsonUtility.updatereload();  JsonUtility.saveNotes();  }catch (Exception ERR){  Bukkit.getLogger().info("[ARMOYU] Json Dosyasındaki Verileri Güncellenmedi");    }
-
-        Bukkit.getLogger().info("[ARMOYU] ----Devre Dışı----");
-
-    }
-
-    public static ARMOYUPlugin getPlugin(){
-        return plugin;
-    }
-}

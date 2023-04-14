@@ -1,10 +1,9 @@
-package armoyuplugin.armoyuplugin;
+package armoyuplugin.armoyuplugin.BasePlugin;
 
-import armoyuplugin.armoyuplugin.models.Players;
-import armoyuplugin.armoyuplugin.utils.JsonUtility;
+import armoyuplugin.armoyuplugin.Services.JsonServices.models.Players;
+import armoyuplugin.armoyuplugin.Services.JsonServices.utils.JsonUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;

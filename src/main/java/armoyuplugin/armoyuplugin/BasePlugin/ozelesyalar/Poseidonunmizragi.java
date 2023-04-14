@@ -1,4 +1,4 @@
-package armoyuplugin.armoyuplugin.ozelesyalar;
+package armoyuplugin.armoyuplugin.BasePlugin.ozelesyalar;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
 import org.bukkit.event.EventHandler;

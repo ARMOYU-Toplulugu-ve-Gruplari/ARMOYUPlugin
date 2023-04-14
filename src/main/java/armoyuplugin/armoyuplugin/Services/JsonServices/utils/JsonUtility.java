@@ -1,8 +1,8 @@
-package armoyuplugin.armoyuplugin.utils;
+package armoyuplugin.armoyuplugin.Services.JsonServices.utils;
 
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
-import armoyuplugin.armoyuplugin.models.Players;
+import armoyuplugin.armoyuplugin.Services.JsonServices.models.Players;
 import com.google.gson.Gson;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

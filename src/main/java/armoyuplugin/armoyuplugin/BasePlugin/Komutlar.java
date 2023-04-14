@@ -1,12 +1,11 @@
-package armoyuplugin.armoyuplugin;
+package armoyuplugin.armoyuplugin.BasePlugin;
 
-import armoyuplugin.armoyuplugin.models.Players;
-import armoyuplugin.armoyuplugin.utils.JsonUtility;
+import armoyuplugin.armoyuplugin.Services.JsonServices.models.Players;
+import armoyuplugin.armoyuplugin.Services.JsonServices.utils.JsonUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -24,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import static org.bukkit.Bukkit.*;
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.jsonService;
 
 public class Komutlar  implements CommandExecutor {
 
@@ -99,16 +99,8 @@ public class Komutlar  implements CommandExecutor {
 
 
         if (cmd.getName().equalsIgnoreCase("para")) {
-            try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
-            List<Players> findAllNotes = JsonUtility.findAllNotes();
-            String oyuncuparola ="";
-            for (int i = 0; i < findAllNotes.size(); i++) {
-                Players oyuncucek = findAllNotes.get(i);
-                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
-                    oyuncuparola = oyuncucek.getOyuncuparola();
-                    break;
-                }
-            }
+            String oyuncuparola = jsonService.getOyuncuAdiVeParola(oyuncu)[1];
+
 
 
 
@@ -127,14 +119,10 @@ public class Komutlar  implements CommandExecutor {
                         }
                     }
 
-                    for (int i = 0; i < findAllNotes.size(); i++) {
-                        Players oyuncucek = findAllNotes.get(i);
-                        if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())){
-                            oyuncucek.setPara(mcpara);
+                            Players jsonOyuncu = jsonService.oyuncu(oyuncu);
+                            jsonOyuncu.setPara(mcpara);
                             JsonUtility.updatepara(oyuncu.getName(), mcpara);
-                        }
-                    }
-                    try {  JsonUtility.saveNotes();   } catch (IOException ERR) {   Bukkit.getLogger().info("[ARMOYU] "+"Para kaydetme işlemi yapılamadı");}
+                            jsonService.jsonSave();
 
                     oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + mcpara);
 

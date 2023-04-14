@@ -54,3 +54,5 @@ commands:
     description: Yanınıza gelmek isteyen oyuncunun isteğini kabul eder.
     usage: /<command>
     aliases: [tpaccept,kabulark]
+  claim:
+    description: arsayi sahiplen

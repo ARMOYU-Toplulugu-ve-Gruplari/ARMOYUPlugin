@@ -1,4 +1,4 @@
-package armoyuplugin.armoyuplugin.ozelesyalar;
+package armoyuplugin.armoyuplugin.BasePlugin.ozelesyalar;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -6,11 +6,9 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.naming.directory.AttributeInUseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;

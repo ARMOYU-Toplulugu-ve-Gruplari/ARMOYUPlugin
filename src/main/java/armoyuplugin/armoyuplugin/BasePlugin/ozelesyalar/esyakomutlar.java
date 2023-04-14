@@ -1,4 +1,4 @@
-package armoyuplugin.armoyuplugin.ozelesyalar;
+package armoyuplugin.armoyuplugin.BasePlugin.ozelesyalar;
 
 
 import org.bukkit.command.Command;
