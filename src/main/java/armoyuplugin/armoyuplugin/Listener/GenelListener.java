@@ -212,10 +212,6 @@ public class GenelListener implements Listener {
         }
         player.teleport(new Location(Bukkit.getWorld(dünya),cekozellikx,cekozelliky,cekozellikz));
 
-        player.setFoodLevel(20);
-        player.setHealth(20);
-
-
 
         try {
             File yourFile = new File(ARMOYUPlugin.getPlugin().getDataFolder().getAbsolutePath() + "/oyuncular.json");
@@ -235,34 +231,16 @@ public class GenelListener implements Listener {
             return;
         }
 
-        //Oyuncu hiç oyuna girmiş mi kontrol
-        boolean oyuncukontrol = false;
 
-        int oyunculeslerim=0;
-        String oyuncuklanadi= "";
-        String oyuncuklanrutbe= "";
-        int oyuncupara=0;
-        String oyuncuadi = "";
-
-
-            Players oyuncucek = jsonService.oyuncu(event.getPlayer());
-
-                oyuncukontrol = true;
-                oyuncuklanadi = oyuncucek.getKlan();
-                oyuncuklanrutbe = oyuncucek.getKlanrutbe();
-                oyuncupara = oyuncucek.getPara();
-                oyuncuadi = oyuncucek.getOyuncuadi();
-                oyunculeslerim=oyuncucek.getLeslerim();
-
-
-
-        //Yeni oyuncu ise
-        if (oyuncukontrol == false){
-            Bukkit.getLogger().info("[ARMOYU] "+"YENİ OYUNCU GİRDİ");
-            JsonUtility.createNote(player,false,20,20);
+        Players oyuncucek = jsonService.oyuncu(event.getPlayer());
+        if (oyuncucek==null) {
+            jsonService.jsonCreate(event.getPlayer());
             jsonService.jsonSave();
-
         }
+
+
+
+
     }
 
 

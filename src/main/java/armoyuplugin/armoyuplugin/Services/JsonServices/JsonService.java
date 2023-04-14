@@ -33,6 +33,10 @@ public void jsonSave(){
     try {JsonUtility.saveNotes();} catch (IOException ERR) {
         Bukkit.getLogger().info("[ARMOYU] " + "Oyuncu bilgileri Güncellenemedi");}
 }
+
+public void jsonCreate(Player p){
+    JsonUtility.createNote(p,false,20,20);
+}
 public Players oyuncu(Player p){
     List<Players> findAllNotes = jsonCek(p);
     for (int i = 0; i < findAllNotes.size(); i++) {
