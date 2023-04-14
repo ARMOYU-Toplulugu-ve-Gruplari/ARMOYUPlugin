@@ -68,15 +68,10 @@ public class GenelListener implements Listener {
 
     @EventHandler
     public void onClick(PlayerInteractEvent event){
-        String tiklanilanblock = "x";
+
         //CLAİM PLUGİNİ
         Player p = event.getPlayer();
-        if (event.getAction().name().equals("RIGHT_CLICK_AIR")){
-            tiklanilanblock = "x";
-        } else if (event.getAction().name().equals("LEFT_CLICK_AIR")) {
-            tiklanilanblock = "x";
-        } else
-            tiklanilanblock = event.getClickedBlock().getChunk().toString();
+
 
         ItemStack stick = new ItemStack(Material.STICK);
         if (stick.equals(p.getInventory().getItemInMainHand())){
@@ -245,10 +240,7 @@ public class GenelListener implements Listener {
 
             int deneme = yeniListe.chunkControl(player.getName(), event.getBlockPlaced().getChunk().toString(), player.getWorld().toString());
 
-            if (deneme != 2 && oyuncucek.getHareket()) {
-                event.setCancelled(false);
-            } else
-                event.setCancelled(true);
+            event.setCancelled(deneme == 2 || !oyuncucek.getHareket());
 
 
 
@@ -267,11 +259,7 @@ public class GenelListener implements Listener {
 
             int deneme =yeniListe.chunkControl(p.getName(), event.getBlock().getChunk().toString(), p.getWorld().toString());
 
-            if (deneme!=2 && oyuncucek.getHareket()) {
-                event.setCancelled(false);
-            } else{
-                event.setCancelled(true);
-            }
+            event.setCancelled(deneme == 2 || !oyuncucek.getHareket());
 
 
 
@@ -366,10 +354,7 @@ public class GenelListener implements Listener {
         //Oyuncu hiç oyuna girmiş mi kontrol
 
             Players oyuncucek = jsonService.oyuncu(player);
-                if (oyuncucek.getHareket()){
-                    event.setCancelled(false);}
-                else
-                    event.setCancelled(true);
+            event.setCancelled(!oyuncucek.getHareket());
         }
 
     @EventHandler
@@ -379,12 +364,7 @@ public class GenelListener implements Listener {
         //Oyuncu hiç oyuna girmiş mi kontrol
 
             Players oyuncucek = jsonService.oyuncu(player);
-                if (oyuncucek.getHareket()){
-                    event.setCancelled(false);
-                }
-                else{
-                    event.setCancelled(true);
-                }
+            event.setCancelled(!oyuncucek.getHareket());
 
     }
 
