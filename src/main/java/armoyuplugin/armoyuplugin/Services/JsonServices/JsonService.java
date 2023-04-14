@@ -72,6 +72,19 @@ public Players oyuncu(Player p){
 
             }
         }
+
+       List<Players> findAllNotes = JsonUtility.findAllNotes();
+
+        for (int i = 0; i < findAllNotes.size(); i++) {
+            Players oyuncucek = findAllNotes.get(i);
+            Bukkit.getLogger().info(oyuncucek.getOyuncuadi());
+            JsonUtility.updateNotexyz(oyuncucek.getOyuncuadi(), oyuncucek.getPara(), false, oyuncucek.getAclik(), oyuncucek.getSaglik(), oyuncucek.getX(), oyuncucek.getY(), oyuncucek.getZ(), oyuncucek.getLocation());
+
+            try {JsonUtility.saveNotes();} catch (IOException ERR) {Bukkit.getLogger().info("[ARMOYU] " + "Oyuncu bilgileri Güncellenemedi");}
+        }
+
+
+
     }
 
 
