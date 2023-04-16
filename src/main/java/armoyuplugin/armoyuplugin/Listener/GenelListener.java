@@ -76,7 +76,7 @@ public class GenelListener implements Listener {
         ItemStack stick = new ItemStack(Material.STICK);
         if (stick.equals(p.getInventory().getItemInMainHand())){
             if (event.getAction().toString().equals("RIGHT_CLICK_BLOCK")){
-                p.sendMessage(yeniListe.claimSahipKim(p.getLocation().getChunk().toString(),p.getWorld().toString()));
+                p.sendMessage(yeniListe.claimWhoOwner(p.getLocation().getChunk().toString(),p.getWorld().toString()));
             }
             else if ("LEFT_CLICK_BLOCK".equals(event.getAction().toString())){
                 Link temp = yeniListe.head;
@@ -126,7 +126,7 @@ public class GenelListener implements Listener {
 
             if (timeElapsed > 2000){
                 this.cooldown.put(p.getUniqueId(),System.currentTimeMillis());
-                yeniListe.chunkControlEkranaYaziYazdirma(p,p.getLocation().getChunk(),p.getWorld().toString(),plugin);
+                yeniListe.chunkControlOnScreen(p,p.getLocation().getChunk(),p.getWorld().toString(),plugin);
             }
 
         }

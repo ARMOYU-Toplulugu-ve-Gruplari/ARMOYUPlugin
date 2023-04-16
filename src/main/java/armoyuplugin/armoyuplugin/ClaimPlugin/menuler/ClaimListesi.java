@@ -56,7 +56,7 @@ public class ClaimListesi extends Menu {
                         m++;
                     }
                 }else if (yeniListe.chunkControl(p.getName(),x.toString(),p.getWorld().toString())==2){
-                    String sahip = yeniListe.claimSahipKim(x.toString(),p.getWorld().toString());
+                    String sahip = yeniListe.claimWhoOwner(x.toString(),p.getWorld().toString());
                     if (m!=22){
                     deneme = makeItem(Material.RED_STAINED_GLASS, ColorTranslator.translateColorCodes("&e&lArazi sahibi "+ sahip));
                     inventory.setItem(m,deneme);
@@ -66,7 +66,7 @@ public class ClaimListesi extends Menu {
                         m++;
                     }
                 }else{
-                    String sahip = yeniListe.claimSahipKim(x.toString(),p.getWorld().toString());
+                    String sahip = yeniListe.claimWhoOwner(x.toString(),p.getWorld().toString());
                     if (m!=22){
                         deneme = makeItem(Material.GREEN_STAINED_GLASS, ColorTranslator.translateColorCodes("&e&lArazi sahibi " + sahip));
                         inventory.setItem(m,deneme);

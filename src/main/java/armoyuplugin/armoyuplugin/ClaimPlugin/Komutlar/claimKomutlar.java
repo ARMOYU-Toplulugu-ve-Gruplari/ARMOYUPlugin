@@ -69,7 +69,7 @@ public class claimKomutlar implements CommandExecutor {
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                                 } else {
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                    yeniListe.claimAl(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString());
+                                    yeniListe.buyClaim(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString());
                                 }
                             }else
                                 p.sendMessage("claimal null hatası yetkiliye danışın");
@@ -85,7 +85,7 @@ public class claimKomutlar implements CommandExecutor {
                         if (!durumVeAciklama[0].equals("null")) {
                             if (durumVeAciklama[0].equals("1")) {
                                 p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                yeniListe.birTrustVer(p.getLocation().getChunk().toString(), p.getName(), args[1], p.getWorld().toString());
+                                yeniListe.giveTrustForOneChunk(p.getLocation().getChunk().toString(), p.getName(), args[1], p.getWorld().toString());
                             } else
                                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                         }
@@ -116,7 +116,7 @@ public class claimKomutlar implements CommandExecutor {
                             p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                         } else {
                             p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                            yeniListe.deleteOneChunk(p, p.getWorld().toString());
+                            yeniListe.removeClaimForOneChunk(p, p.getWorld().toString());
                         }
                         }
 
@@ -138,7 +138,7 @@ public class claimKomutlar implements CommandExecutor {
                                         p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                                     }else{
                                         p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                        yeniListe.claimSilHepsi(p.getName());
+                                        yeniListe.removeClaimForAll(p.getName());
                                     }
                 }
                     }
@@ -159,7 +159,7 @@ public class claimKomutlar implements CommandExecutor {
                         if (!durumVeAciklama[0].equals("null")) {
                             if (durumVeAciklama[0].equals("1")) {
                                 p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                yeniListe.trustVerHepsi(p.getName(), args[2]);
+                                yeniListe.giveTrustForAll(p.getName(), args[2]);
                             } else
                                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                         }
@@ -179,7 +179,7 @@ public class claimKomutlar implements CommandExecutor {
                             if (!durumVeAciklama[0].equals("null")) {
                                 if (durumVeAciklama[0].equals("1")) {
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                    yeniListe.trustSilHepsi(p.getName(), args[2]);
+                                    yeniListe.removeTrustForAll(p.getName(), args[2]);
                                 } else
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                             }
@@ -196,13 +196,18 @@ public class claimKomutlar implements CommandExecutor {
                 if (args.length == 1){
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claimaciklama <aciklama>");
                 }else {
-                    yeniListe.arsaAciklamaDegisme(p.getName(),args);
+                    yeniListe.claimNotificationChange(p.getName(),args);
                 }
             } else if (args[0].equals("bahset")) {
                 if (args.length==1){
                     yeniListe.arsaBahset(p.getLocation().getChunk().toString(),p.getName(),p.getWorld().toString());
                 }else
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim bahset");
+            } else if (args[0].equals("devret")) {
+                if (args.length==2){
+                    yeniListe.claimTransfer(p.getLocation().getChunk().toString(),p.getName(),args[1],p.getWorld().toString());
+                }else
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim devret oyuncuismi");
             }
 
         }

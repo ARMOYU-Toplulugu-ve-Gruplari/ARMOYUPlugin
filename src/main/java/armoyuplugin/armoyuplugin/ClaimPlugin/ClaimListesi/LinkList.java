@@ -12,9 +12,6 @@ import org.bukkit.entity.Player;
 import java.time.Duration;
 
 public class LinkList {
-
-    String ARMOYUMESAJ = ChatColor.RED + "[ARMOYU Claim] ";
-
     public Link head;
     public Link tail;
 
@@ -41,165 +38,92 @@ public class LinkList {
         head = newLink; //yeni head newLinki gösterir
                }
     }
-    public void claimAl(String claim, String pName,String dunya) {
-        Link current = head;
-        while (current != null) {
-            if (current.oyuncu.equals(pName)){
+    public void buyClaim(String claim, String pName,String dunya) {
+        Link current = listedeOyuncuBul(pName);
+        if (current != null){
                 TrustLink newLink = new TrustLink();
                 newLink.arsaKonum = claim;
                 newLink.arsaDunya = dunya;
                 newLink.arsaBahset=0;
                 newLink.trustVerilenler.add(pName);
                 current.trustlar.add(newLink);
-                break;
             }
-            current = current.next;
-        }
+
     }
 
     public void removeTrust(String chunk,String silen,String silinen,String dunya){
-        int trustuVarmi =0;
-        Link current = head;
-        while (current != null) {
-            if (current.oyuncu.equals(silen)) {
-                if (!silen.equals(silinen)) {
-                    for (int i = 0; i < current.trustlar.size(); i++) {
-                        if (current.trustlar.get(i).arsaDunya.equals(dunya)){
-                            if (current.trustlar.get(i).arsaKonum.equals(chunk)) {
-                                for (int j = 0; j < current.trustlar.get(i).trustVerilenler.size(); j++) {
-                                    if (current.trustlar.get(i).trustVerilenler.get(j).equals(silinen)) {
-                                        trustuVarmi++;
-                                        break;
-                                    }
-                                }
-                                if (trustuVarmi != 0) {
-                                    current.trustlar.get(i).trustVerilenler.remove(silinen);
-                                }
-
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            current = current.next;
-        }
-    }
-    public void birTrustVer(String chunk,String ekleyen, String eklenen,String dunya){
-        int trustuVarmi =0;
-        Link current = head;
-        while (current != null) {
-            if (current.oyuncu.equals(ekleyen)) {
-
-                    for (int i = 0; i < current.trustlar.size(); i++) {
-                        if (current.trustlar.get(i).arsaDunya.equals(dunya)) {
-                            if (current.trustlar.get(i).arsaKonum.equals(chunk)) {
-                                for (int j = 0; j < current.trustlar.get(i).trustVerilenler.size(); j++) {
-                                    if (current.trustlar.get(i).trustVerilenler.get(j).equals(eklenen)) {
-                                        trustuVarmi++;
-                                        break;
-                                    }
-                                }
-
-
-                                if (trustuVarmi == 0) {
-                                    current.trustlar.get(i).trustVerilenler.add(eklenen);
-                                }
-                                break;
-                            }
-
-                        }
-
-                    }
-
-                break;
-            }
-            current = current.next;
-        }
-    }
-
-    public void trustVerHepsi(String ekleyen,String eklenen){
-        int trustuVarmi =0;
-        Link current = head;
-        while (current != null) {
-            if (current.oyuncu.equals(ekleyen)) {
-                    for (int i = 0; i < current.trustlar.size(); i++) {
-                        trustuVarmi=0;
-                            for (int j = 0; j < current.trustlar.get(i).trustVerilenler.size(); j++) {
-                                if (current.trustlar.get(i).trustVerilenler.get(j).equals(eklenen)) {
-                                    trustuVarmi++;
-                                    break;
-                                }
-                            }
-
-                            if (trustuVarmi == 0) {
-                                current.trustlar.get(i).trustVerilenler.add(eklenen);
-                            }
-                    }
-                break;
-            }
-            current = current.next;
-        }
-    }
-
-    public void trustSilHepsi(String ekleyen, String silinen){
-        int trustuVarmi = 0;
-        Link current = head;
-        while (current != null) {
-            if (current.oyuncu.equals(ekleyen)) {
-
-                    for (int i = 0; i < current.trustlar.size(); i++) {
-                        trustuVarmi=0;
-                        for (int j = 0; j < current.trustlar.get(i).trustVerilenler.size(); j++) {
-                            if (current.trustlar.get(i).trustVerilenler.get(j).equals(silinen)) {
-                                trustuVarmi++;
-                                break;
-                            }
-                        }
-                        if (trustuVarmi != 0) {
+        int trustDurum;
+        Link current = listedeOyuncuBul(silen);
+        if (current != null) {
+            if (!silen.equals(silinen)) {
+                    int i = oyuncuArsaBul(current,chunk,dunya);
+                    if (i != -1) {
+                        trustDurum = trustuVarmi(silinen,silen,dunya,chunk);
+                        if (trustDurum != 0) {
                             current.trustlar.get(i).trustVerilenler.remove(silinen);
                         }
                     }
-                break;
-            }
-            current = current.next;
-        }
-
-    }
-
-    public void deleteOneChunk(Player silen,String dunya) {
-
-        Link temp = head;
-        while (temp != null) {
-            for (int i = 0; i < temp.trustlar.size(); i++) {
-                if (temp.trustlar.get(i).arsaDunya.equals(dunya)) {
-                    if (temp.trustlar.get(i).arsaKonum.equals(silen.getLocation().getChunk().toString())) {
-                        if (temp.trustlar.get(i).trustVerilenler.get(0).equals(silen.getName())) {
-                            temp.trustlar.get(i).arsaKonum = null;
-                            temp.trustlar.get(i).arsaDunya = null;
-                            temp.trustlar.get(i).trustVerilenler.clear();
-                            temp.trustlar.remove(i);
-                        } else
-                            silen.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Baskasinin arsasini silemezsin");
-                        break;
-                    }
-
                 }
-
             }
-            temp = temp.next;
         }
 
+    public void giveTrustForOneChunk(String chunk,String ekleyen, String eklenen,String dunya){
+        int trustDurum;
+        int i;
+        Link current = listedeOyuncuBul(ekleyen);
+        if (current != null) {
+            i = oyuncuArsaBul(current,chunk,dunya);
+            if (i !=-1) {
+                trustDurum = trustuVarmi(eklenen,ekleyen,dunya,chunk);
+                if (trustDurum == 0) {
+                    current.trustlar.get(i).trustVerilenler.add(eklenen);
+                }
+            }
+        }
     }
 
-    public void claimSilHepsi(String silen) {
-
-        Link temp = head;
-        while (temp != null) {
-            if (temp.oyuncu.equals(silen)){
-            temp.trustlar.clear();
+    public void giveTrustForAll(String ekleyen,String eklenen){
+        int trustDurum;
+        Link current = listedeOyuncuBul(ekleyen);
+        if (current != null) {
+            for (int i = 0; i < current.trustlar.size(); i++) {
+                trustDurum = trustuVarmi(eklenen,ekleyen,current.trustlar.get(i).arsaDunya,current.trustlar.get(i).arsaKonum);
+                if (trustDurum == 0) {
+                    current.trustlar.get(i).trustVerilenler.add(eklenen);
+                }
             }
-            temp = temp.next;
+        }
+    }
+
+    public void removeTrustForAll(String ekleyen, String silinen){
+        int trustDurum;
+        Link current = listedeOyuncuBul(ekleyen);
+        if (current != null) {
+            for (int i = 0; i < current.trustlar.size(); i++) {
+                trustDurum = trustuVarmi(silinen,ekleyen,current.trustlar.get(i).arsaDunya,current.trustlar.get(i).arsaKonum);
+                if (trustDurum != 0) {
+                    current.trustlar.get(i).trustVerilenler.remove(silinen);
+                }
+            }
+        }
+    }
+
+
+    public void removeClaimForOneChunk(Player silen,String dunya) {
+        Link temp = listedeOyuncuBul(silen.getName());
+        if (temp != null){
+            int i = oyuncuArsaBul(temp,silen.getLocation().getChunk().toString(),dunya);
+            if (i != -1){
+                temp.trustlar.remove(i);
+            }
+        }
+    }
+
+    public void removeClaimForAll(String silen) {
+
+        Link temp = listedeOyuncuBul(silen);
+        if (temp != null){
+            temp.trustlar.clear();
         }
 
     }
@@ -235,7 +159,7 @@ public class LinkList {
         target.showTitle(title);
 
     }
-    public void chunkControlEkranaYaziYazdirma(Player p, Chunk chunk,String dunya,ARMOYUPlugin plugin){
+    public void chunkControlOnScreen(Player p, Chunk chunk,String dunya,ARMOYUPlugin plugin){
         int arsadolu = 0;
         int trustvarmi = 0;
         int durmadanYazmasiniEngelleme = 0;
@@ -301,92 +225,130 @@ public class LinkList {
 
     }
 
-    public void arsaAciklamaDegisme(String p,String[] diziAciklama){
+    public void claimNotificationChange(String oyuncuIsmi,String[] diziAciklama){
         String aciklama= "";
         for (int i = 1; i < diziAciklama.length; i++) {
             aciklama = aciklama + diziAciklama[i] + " ";
         }
-        Link temp = head;
-        while (temp != null) {
-            if (temp.oyuncu.equals(p)){
-                if (aciklama.length()<25){
-                    temp.arsaAciklamasi = aciklama;
-                }
+        Link temp = listedeOyuncuBul(oyuncuIsmi);
+        if (temp != null) {
+            if (aciklama.length() < 25) {
+                temp.arsaAciklamasi = aciklama;
             }
-            temp = temp.next;
         }
+
+
     }
 
     public int chunkControl(String playerName,String chunk,String dunya){
-        if (head == null)
-            return 0;
         int arsadolu = 0;
-        int trustvarmi = 0;
-
+        int trustDurum = 0;
+        int oyuncuArsa;
             Link temp = head;
             while (temp != null) {
-                for (int i = 0; i < temp.trustlar.size(); i++) {
-                    if (temp.trustlar.get(i).arsaDunya.equals(dunya)) {
-                        if (temp.trustlar.get(i).arsaKonum.equals(chunk)) {
-                            for (int j = 0; j < temp.trustlar.get(i).trustVerilenler.size(); j++) {
-                                if (temp.trustlar.get(i).trustVerilenler.get(j).equals(playerName)) {
-                                    trustvarmi++;
-                                    break;
-                                }
-                            }
-
-                            arsadolu++;
-                            break;
-                        }
-                    }
+                oyuncuArsa = oyuncuArsaBul(temp,chunk,dunya);
+                if (oyuncuArsa != -1) {
+                    trustDurum = trustuVarmi(playerName, temp.oyuncu, dunya, chunk);
+                    arsadolu++;
+                    break;
                 }
-
                 temp = temp.next;
             }
 
-        if (trustvarmi!=0){
+        if (trustDurum!=0){
             return 1;
         } else if (arsadolu !=0) {
             return 2;
         }
        return 0;
     }
-    public String claimSahipKim(String chunk,String dunya){
-        if (head == null)
-            return "Claimsiz";
-
+    public String claimWhoOwner(String chunk,String dunya){
         Link temp = head;
         while (temp != null) {
             for (int i = 0; i < temp.trustlar.size(); i++) {
                 if (temp.trustlar.get(i).arsaDunya.equals(dunya)) {
-                    if (temp.trustlar.get(i).arsaKonum.equals(chunk.toString())) {
-
+                    if (temp.trustlar.get(i).arsaKonum.equals(chunk)) {
                         return temp.trustlar.get(i).trustVerilenler.get(0);
                     }
                 }
             }
-
             temp = temp.next;
         }
         return "Claimsiz";
     }
 
-    public void arsaBahset(String chunk, String pName,String dunya){
-        Link temp = head;
-        while (temp != null) {
-            for (int i = 0; i < temp.trustlar.size(); i++) {
-                if (temp.trustlar.get(i).trustVerilenler.get(0).equals(pName)) {
-                    if (temp.trustlar.get(i).arsaDunya.equals(dunya)) {
-                        if (temp.trustlar.get(i).arsaKonum.equals(chunk)) {
-                            temp.trustlar.get(i).arsaBahset=1;
-                            break;
-                        }
+    public void arsaBahset(String chunk, String oyuncuIsmi,String dunya){
+        Link temp = listedeOyuncuBul(oyuncuIsmi);
+        if (temp != null){
+            int oyuncuArsa = oyuncuArsaBul(temp,chunk,dunya);
+            if (oyuncuArsa != -1){
+                temp.trustlar.get(oyuncuArsa).arsaBahset=1;
+            }
+        }
+    }
+
+    public void claimTransfer(String chunk, String bagislayan,String bagislanan,String dunya){
+                Link temp = listedeOyuncuBul(bagislayan);
+                if (temp!=null) {
+                    int oyuncuArsa = oyuncuArsaBul(temp, chunk, dunya);
+                    if (oyuncuArsa != -1) {
+                        temp.trustlar.remove(oyuncuArsa);
+                        buyClaim(chunk, bagislanan, dunya);
+                    }
+                }
+    }
+
+
+
+
+
+
+
+    //Genel
+
+
+    private int trustuVarmi(String kimin,String araziSahibi,String dunya,String chunk){
+        Link temp = listedeOyuncuBul(araziSahibi);
+        if (temp != null) {
+            int i = oyuncuArsaBul(temp, chunk, dunya);
+            if (i != -1){
+                for (int j = 0; j < temp.trustlar.get(i).trustVerilenler.size(); j++) {
+                    if (temp.trustlar.get(i).trustVerilenler.get(j).equals(kimin)){
+                        return 1;
                     }
                 }
             }
+        }
+        return 0;
+    }
 
+
+
+
+    private int oyuncuArsaBul(Link temp,String chunk,String dunya){
+        for (int i = 0; i < temp.trustlar.size(); i++) {
+            if (temp.trustlar.get(i).arsaKonum.equals(chunk)){
+                if (temp.trustlar.get(i).arsaDunya.equals(dunya)){
+                    if (temp.trustlar.get(i).trustVerilenler.get(0).equals(temp.oyuncu)){
+                        return i;
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+
+
+    private Link listedeOyuncuBul(String oyuncuIsmi){
+        Link temp = head;
+        while (temp != null) {
+            if (temp.oyuncu.equals(oyuncuIsmi)){
+                return temp;
+            }
             temp = temp.next;
         }
+        return null;
     }
 
 

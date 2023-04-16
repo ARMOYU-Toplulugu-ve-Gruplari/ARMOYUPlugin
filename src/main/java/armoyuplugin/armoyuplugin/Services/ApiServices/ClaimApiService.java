@@ -81,12 +81,12 @@ public class ClaimApiService {
                         JSONArray recsTwo = rec.getJSONArray("arsalarim");
                         for (int j = 0; j < recsTwo.length(); j++) {
                             JSONObject recTwo = recsTwo.getJSONObject(j);
-                            yeniListe.claimAl(recTwo.get("arsachank").toString(), rec.get("oyuncuadi").toString(), recTwo.get("arsadunya").toString());
+                            yeniListe.buyClaim(recTwo.get("arsachank").toString(), rec.get("oyuncuadi").toString(), recTwo.get("arsadunya").toString());
 
                             JSONArray recsThree = recTwo.getJSONArray("hissedarlar");
                             for (int k = 0; k < recsThree.length(); k++) {
                                 JSONObject recThree = recsThree.getJSONObject(k);
-                                yeniListe.birTrustVer(recTwo.get("arsachank").toString(), rec.get("oyuncuadi").toString(), recThree.get("oyuncuadi").toString(), recTwo.get("arsadunya").toString());
+                                yeniListe.giveTrustForOneChunk(recTwo.get("arsachank").toString(), rec.get("oyuncuadi").toString(), recThree.get("oyuncuadi").toString(), recTwo.get("arsadunya").toString());
                             }
 
                         }
