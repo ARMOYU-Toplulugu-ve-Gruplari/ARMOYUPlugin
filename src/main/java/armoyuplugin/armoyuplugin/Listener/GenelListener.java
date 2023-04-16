@@ -155,6 +155,13 @@ public class GenelListener implements Listener {
         yeniListe.insertToHead(event.getPlayer().getName());
 
         //BASE PLUGİN
+        Players oyuncucek = jsonService.oyuncu(event.getPlayer());
+        if (oyuncucek==null) {
+            jsonService.jsonCreate(event.getPlayer());
+            jsonService.jsonSave();
+        }
+
+
         Player player = event.getPlayer();
 
         try {
@@ -213,15 +220,10 @@ public class GenelListener implements Listener {
         }catch (Exception error){
             Bukkit.getLogger().info("[ARMOYU] oyuncular.json dosyası oluşturulamadı!");
             player.kickPlayer("Sunucuya Bağlanılamadı tekrar dene!");
-            return;
         }
 
 
-        Players oyuncucek = jsonService.oyuncu(event.getPlayer());
-        if (oyuncucek==null) {
-            jsonService.jsonCreate(event.getPlayer());
-            jsonService.jsonSave();
-        }
+
 
 
 
@@ -317,27 +319,25 @@ public class GenelListener implements Listener {
         String k = "world";
 
             Players oyuncucek = jsonService.oyuncu(player);
+                if (oyuncucek.getHareket()) {
 
-                if (oyuncucek.getHareket()){
-
-                    if (player.getLocation().toString().contains("world_nether")){
+                    if (player.getLocation().toString().contains("world_nether")) {
                         k = "world_nether";
-                    }
-                    else if (player.getLocation().toString().contains("world_the_end")){
+                    } else if (player.getLocation().toString().contains("world_the_end")) {
                         k = "world_the_end";
                     }
 
                     oyuncuparola = oyuncucek.getOyuncuparola();
-                    JsonUtility.updateNotexyz(player.getName(), oyuncucek.getPara(),false,player.getFoodLevel(),player.getHealth() ,x,y,z, k);
+                    JsonUtility.updateNotexyz(player.getName(), oyuncucek.getPara(), false, player.getFoodLevel(), player.getHealth(), x, y, z, k);
 
                     try {
-                        JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/"+APIKEY+"/"+player.getName()+"/"+oyuncuparola+"/sunucudancik/"+Math.round(x)+"/"+Math.round(y)+"/"+Math.round(z)+"/"+k+"/"+player.isDead());
+                        JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + player.getName() + "/" + oyuncuparola + "/sunucudancik/" + Math.round(x) + "/" + Math.round(y) + "/" + Math.round(z) + "/" + k + "/" + player.isDead());
 
-                        if (json.get("durum").equals(0)){
+                        if (json.get("durum").equals(0)) {
                             Bukkit.getLogger().info(json.get("aciklama").toString());
                         }
-                    }catch (Exception aa){
-                        Bukkit.getLogger().info(ChatColor.RED +"[ARMOYU] " +player.getName() + " verileri sunucuya kaydedilemedi.");
+                    } catch (Exception aa) {
+                        Bukkit.getLogger().info(ChatColor.RED + "[ARMOYU] " + player.getName() + " verileri sunucuya kaydedilemedi.");
                     }
                     jsonService.jsonSave();
                 }
