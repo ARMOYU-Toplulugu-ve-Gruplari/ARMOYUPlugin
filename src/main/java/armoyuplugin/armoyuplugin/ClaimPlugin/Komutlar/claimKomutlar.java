@@ -205,7 +205,15 @@ public class claimKomutlar implements CommandExecutor {
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim bahset");
             } else if (args[0].equals("devret")) {
                 if (args.length==2){
-                    yeniListe.claimTransfer(p.getLocation().getChunk().toString(),p.getName(),args[1],p.getWorld().toString());
+                    String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsalar","deviret",args[1],p.getLocation().getChunk().toString(),p.getWorld().toString()};
+                    String[] durumVeAciklama = claimApiService.getDurumVeAciklama(p,linkElemanlar);
+                    if (!durumVeAciklama[0].equals("null")) {
+                        if (durumVeAciklama[0].equals("1")) {
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
+                            yeniListe.claimTransfer(p.getLocation().getChunk().toString(),p.getName(),args[1],p.getWorld().toString());
+                        } else
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
+                    }
                 }else
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim devret oyuncuismi");
             }
