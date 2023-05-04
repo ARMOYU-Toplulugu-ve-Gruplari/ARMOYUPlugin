@@ -48,16 +48,9 @@ public class claimKomutlar implements CommandExecutor {
 
                 if (args.length == 1) {
 
-                    Link temp = yeniListe.head;
-                    while (temp != null) {
-                        for (int i = 0; i < temp.trustlar.size(); i++) {
-                            if (temp.trustlar.get(i).arsaKonum.equals(p.getLocation().getChunk().toString())) {
-                                claimkontrol++;
-                            }
-
-                        }
-
-                        temp = temp.next;
+                    Link temp = yeniListe.listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
+                    if (temp!=null){
+                        claimkontrol++;
                     }
                     if (claimkontrol != 0) {
                         p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Bu arsa sahipli");
@@ -196,7 +189,7 @@ public class claimKomutlar implements CommandExecutor {
                 if (args.length == 1){
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claimaciklama <aciklama>");
                 }else {
-                    yeniListe.claimNotificationChange(p.getName(),args);
+                    yeniListe.claimNotificationChange(p,args);
                 }
             } else if (args[0].equals("bahset")) {
                 if (args.length==1){

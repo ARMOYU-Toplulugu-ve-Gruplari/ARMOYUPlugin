@@ -3,7 +3,7 @@ import armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi.LinkList;
 import armoyuplugin.armoyuplugin.Listener.GenelListener;
 import armoyuplugin.armoyuplugin.Services.ApiServices.ClaimApiService;
 import armoyuplugin.armoyuplugin.Services.CommandService.SetupCommandsService;
-import armoyuplugin.armoyuplugin.Services.JsonServices.JsonService;
+import armoyuplugin.armoyuplugin.Services.TxtServices.JsonService;
 import armoyuplugin.armoyuplugin.ScoreBoardPlugin.ArmoyuScoreBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

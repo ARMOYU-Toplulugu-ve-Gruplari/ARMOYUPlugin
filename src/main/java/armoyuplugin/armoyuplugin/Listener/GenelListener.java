@@ -2,8 +2,8 @@ package armoyuplugin.armoyuplugin.Listener;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
 import armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi.Link;
-import armoyuplugin.armoyuplugin.Services.JsonServices.models.Players;
-import armoyuplugin.armoyuplugin.Services.JsonServices.utils.JsonUtility;
+import armoyuplugin.armoyuplugin.Services.TxtServices.models.Players;
+import armoyuplugin.armoyuplugin.Services.TxtServices.utils.JsonUtility;
 import com.google.gson.Gson;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -79,22 +79,12 @@ public class GenelListener implements Listener {
                 p.sendMessage(yeniListe.claimWhoOwner(p.getLocation().getChunk().toString(),p.getWorld().toString()));
             }
             else if ("LEFT_CLICK_BLOCK".equals(event.getAction().toString())){
-                Link temp = yeniListe.head;
-                while (temp != null) {
-                    if (temp.oyuncu.equals(p.getName())){
-                        for (int i = 0; i < temp.trustlar.size(); i++) {
-                            if (temp.trustlar.get(i).arsaKonum.equals(event.getClickedBlock().getLocation().getChunk().toString())){
-                                for (int j = 0; j < temp.trustlar.get(i).trustVerilenler.size(); j++) {
-                                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + temp.trustlar.get(i).trustVerilenler.get(j));
-                                }
-
-                            }
-
-                        }
-                    }
-                    temp = temp.next;
+                Link temp= yeniListe.listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
+                for (int i = 0; i < temp.hissedarlar.size(); i++) {
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + temp.hissedarlar.get(i));
                 }
             }
+
 
         }
 
@@ -126,7 +116,7 @@ public class GenelListener implements Listener {
 
             if (timeElapsed > 2000){
                 this.cooldown.put(p.getUniqueId(),System.currentTimeMillis());
-                yeniListe.chunkControlOnScreen(p,p.getLocation().getChunk(),p.getWorld().toString(),plugin);
+//                yeniListe.chunkControlOnScreen(p,p.getLocation().getChunk(),p.getWorld().toString(),plugin);
             }
 
         }
@@ -152,7 +142,7 @@ public class GenelListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
         //CLAİM PLUGİNİ
-        yeniListe.insertToHead(event.getPlayer().getName());
+
 
         //BASE PLUGİN
         Players oyuncucek = jsonService.oyuncu(event.getPlayer());

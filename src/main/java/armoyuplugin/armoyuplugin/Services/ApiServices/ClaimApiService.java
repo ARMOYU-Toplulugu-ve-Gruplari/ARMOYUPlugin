@@ -75,23 +75,14 @@ public class ClaimApiService {
                 JSONArray recs = json.getJSONArray("arsalar");
                 for (int i = 0; i < recs.length(); ++i) {
                     JSONObject rec = recs.getJSONObject(i);
-                    yeniListe.insertToHead(rec.get("oyuncuadi").toString());
+                    yeniListe.buyClaim(rec.get("arsachunk").toString(),rec.get("arsaoyuncuadi").toString(),rec.get("arsadunya").toString());
 
-                    if (!rec.get("arsalarim").equals("null")) {
-                        JSONArray recsTwo = rec.getJSONArray("arsalarim");
-                        for (int j = 0; j < recsTwo.length(); j++) {
-                            JSONObject recTwo = recsTwo.getJSONObject(j);
-                            yeniListe.buyClaim(recTwo.get("arsachank").toString(), rec.get("oyuncuadi").toString(), recTwo.get("arsadunya").toString());
+                    JSONArray recsTwo = rec.getJSONArray("hissedarlar");
 
-                            JSONArray recsThree = recTwo.getJSONArray("hissedarlar");
-                            for (int k = 0; k < recsThree.length(); k++) {
-                                JSONObject recThree = recsThree.getJSONObject(k);
-                                yeniListe.giveTrustForOneChunk(recTwo.get("arsachank").toString(), rec.get("oyuncuadi").toString(), recThree.get("oyuncuadi").toString(), recTwo.get("arsadunya").toString());
-                            }
-
-                        }
+                    for (int k = 0; k < recsTwo.length(); k++) {
+                        JSONObject recThree = recsTwo.getJSONObject(k);
+                        yeniListe.giveTrustForOneChunk(rec.get("arsachunk").toString(), rec.get("arsaoyuncuadi").toString(), recThree.get("oyuncuadi").toString(), rec.get("arsadunya").toString());
                     }
-
                 }
             }
         } catch (IOException e) {

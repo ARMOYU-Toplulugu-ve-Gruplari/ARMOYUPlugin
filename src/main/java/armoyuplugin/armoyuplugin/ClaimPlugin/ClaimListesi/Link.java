@@ -4,14 +4,16 @@ import java.util.ArrayList;
 
 public class Link {
 
-    public String oyuncu;
-    public String klan;
-    public Link next;
-    public String oncekiGecilenAraziSahibi = "";
-    public String arsaAciklamasi = "default arsa aciklamasi";
-    public ArrayList<TrustLink> trustlar = new ArrayList<TrustLink>();
-    public Link(){
+    public String arsaoyuncuadi;
+    public int arsaKlanaBaglanmaDurumu;
+    public String arsaDunya;
+    public String arsaChunk;
 
-    }
+    public Link next;
+    public String arsaAciklamasi = "default arsa aciklamasi";
+    public ArrayList<String> hissedarlar = new ArrayList<String>();
+    public Link(){}
 
 }
+
+

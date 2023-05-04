@@ -1,7 +1,7 @@
 package armoyuplugin.armoyuplugin.BasePlugin;
 
-import armoyuplugin.armoyuplugin.Services.JsonServices.models.Players;
-import armoyuplugin.armoyuplugin.Services.JsonServices.utils.JsonUtility;
+import armoyuplugin.armoyuplugin.Services.TxtServices.models.Players;
+import armoyuplugin.armoyuplugin.Services.TxtServices.utils.JsonUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
