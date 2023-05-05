@@ -10,7 +10,6 @@ public class LinkList {
     public void oyuncuEkle(String kullaniciAdi,String klanAdi){
 
     }
-
     public String klanAdiBul(String oyuncuAdi){
         OyuncuBilgiLink temp = oyuncuBul(oyuncuAdi);
         if (temp != null){
