@@ -1,7 +1,7 @@
 package armoyuplugin.armoyuplugin;
 import armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi.LinkList;
 import armoyuplugin.armoyuplugin.Listener.GenelListener;
-import armoyuplugin.armoyuplugin.Services.ApiServices.ClaimApiService;
+import armoyuplugin.armoyuplugin.Services.ApiServices.ApiService;
 import armoyuplugin.armoyuplugin.Services.CommandService.SetupCommandsService;
 import armoyuplugin.armoyuplugin.Services.TxtServices.JsonService;
 import armoyuplugin.armoyuplugin.ScoreBoardPlugin.ArmoyuScoreBoard;
@@ -15,13 +15,13 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 public final class ARMOYUPlugin extends JavaPlugin {
 
     private BukkitAudiences adventure;
-    public static LinkList yeniListe = new LinkList();
+    public static LinkList claimListesi = new LinkList();
     private static ARMOYUPlugin plugin;
     public static ARMOYUPlugin getPlugin(){
         return plugin;
     }
     public static JsonService jsonService = new JsonService();
-    public static final ClaimApiService claimApiService = new ClaimApiService();
+    public static final ApiService apiService = new ApiService();
     private static final ArmoyuScoreBoard tablo = new ArmoyuScoreBoard();
     private static final SetupCommandsService commandsService = new SetupCommandsService();
     String ARMOYUMESAJ = "[ARMOYU] ";
@@ -34,7 +34,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
         this.adventure = BukkitAudiences.create(plugin);
 
 
-        claimApiService.listeyiDoldur();
+        apiService.claimListesiniDoldur();
         commandsService.setupCommands(plugin);
 
 
@@ -76,12 +76,6 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
 
 
-
-
-
-
-
-
 ////OZEL ESYALAR BASLANGIC
 //
 //        esyayonetim.init();
@@ -100,11 +94,3 @@ public final class ARMOYUPlugin extends JavaPlugin {
 //            player.setGameMode(GameMode.SURVIVAL);
 //            player.kickPlayer("Sunucu yeniden başlatılıyor");
 //        }
-
-
-
-
-
-
-
-

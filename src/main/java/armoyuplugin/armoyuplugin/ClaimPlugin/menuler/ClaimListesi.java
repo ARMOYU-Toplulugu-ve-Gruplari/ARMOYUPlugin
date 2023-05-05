@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.yeniListe;
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.claimListesi;
 
 public class ClaimListesi extends Menu {
     public ClaimListesi(PlayerMenuUtility playerMenuUtility) {
@@ -46,7 +46,7 @@ public class ClaimListesi extends Menu {
         Chunk z = p.getWorld().getChunkAt(p.getLocation().getChunk().getX()-4, p.getLocation().getChunk().getZ()-2);
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 9; j++) {
-                if (yeniListe.chunkControl(p.getName(),x.toString(),p.getWorld().toString()) == 0){
+                if (claimListesi.arsaKontrol(p.getName(),x.toString(),p.getWorld().toString()) == 0){
                     if (m!=22){
                     deneme = makeItem(Material.WHITE_STAINED_GLASS, ColorTranslator.translateColorCodes("&e&lSahipsiz arazi"));
                     inventory.setItem(m,deneme);
@@ -55,8 +55,8 @@ public class ClaimListesi extends Menu {
                         inventory.setItem(m,deneme);
                         m++;
                     }
-                }else if (yeniListe.chunkControl(p.getName(),x.toString(),p.getWorld().toString())==2){
-                    String sahip = yeniListe.claimWhoOwner(x.toString(),p.getWorld().toString());
+                }else if (claimListesi.arsaKontrol(p.getName(),x.toString(),p.getWorld().toString())==2){
+                    String sahip = claimListesi.arsaninSahibiKim(x.toString(),p.getWorld().toString());
                     if (m!=22){
                     deneme = makeItem(Material.RED_STAINED_GLASS, ColorTranslator.translateColorCodes("&e&lArazi sahibi "+ sahip));
                     inventory.setItem(m,deneme);
@@ -66,7 +66,7 @@ public class ClaimListesi extends Menu {
                         m++;
                     }
                 }else{
-                    String sahip = yeniListe.claimWhoOwner(x.toString(),p.getWorld().toString());
+                    String sahip = claimListesi.arsaninSahibiKim(x.toString(),p.getWorld().toString());
                     if (m!=22){
                         deneme = makeItem(Material.GREEN_STAINED_GLASS, ColorTranslator.translateColorCodes("&e&lArazi sahibi " + sahip));
                         inventory.setItem(m,deneme);

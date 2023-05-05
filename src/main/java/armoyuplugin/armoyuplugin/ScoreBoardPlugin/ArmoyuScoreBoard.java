@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.yeniListe;
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.claimListesi;
 
 public class ArmoyuScoreBoard {
     public void setScoreBoard(ARMOYUPlugin plugin){
@@ -53,7 +53,7 @@ public class ArmoyuScoreBoard {
             Objective o = b.registerNewObjective("ARMOYU TEST SERVER", "ANA","");
 
 
-            String claim = yeniListe.claimWhoOwner(player.getLocation().getChunk().toString(),player.getWorld().toString());
+            String claim = claimListesi.arsaninSahibiKim(player.getLocation().getChunk().toString(),player.getWorld().toString());
 
 
             o.setDisplaySlot(DisplaySlot.SIDEBAR);

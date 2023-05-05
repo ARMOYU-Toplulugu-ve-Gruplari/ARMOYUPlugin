@@ -1,6 +1,6 @@
 package armoyuplugin.armoyuplugin.ClaimPlugin.Komutlar;
 
-import armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi.Link;
+import armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi.ArsaBilgiLink;
 
 import armoyuplugin.armoyuplugin.ClaimPlugin.menuler.AnaMenu;
 
@@ -15,11 +15,7 @@ import org.bukkit.entity.Player;
 
 import org.jetbrains.annotations.NotNull;
 
-
-
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.claimApiService;
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.yeniListe;
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.jsonService;
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.*;
 
 public class claimKomutlar implements CommandExecutor {
     String ARMOYUMESAJ = ChatColor.RED + "[ARMOYU Claim] ";
@@ -48,7 +44,7 @@ public class claimKomutlar implements CommandExecutor {
 
                 if (args.length == 1) {
 
-                    Link temp = yeniListe.listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
+                    ArsaBilgiLink temp = claimListesi.listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
                     if (temp!=null){
                         claimkontrol++;
                     }
@@ -56,13 +52,13 @@ public class claimKomutlar implements CommandExecutor {
                         p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Bu arsa sahipli");
                     } else {
                             String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsaal","0|0","0|0","2|2",p.getWorld().toString(),p.getLocation().getChunk().toString()};
-                            String[] durumVeAciklama = claimApiService.getDurumVeAciklama(p,linkElemanlar);
+                            String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
                             if (!durumVeAciklama[0].equals("null")) {
                                 if (durumVeAciklama[0].equals("0")) {
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                                 } else {
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                    yeniListe.buyClaim(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString());
+                                    claimListesi.arsaAl(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString());
                                 }
                             }else
                                 p.sendMessage("claimal null hatası yetkiliye danışın");
@@ -74,11 +70,11 @@ public class claimKomutlar implements CommandExecutor {
                 if (args.length == 2) {
 
                         String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"hissedar","ekle",p.getWorld().toString(),p.getLocation().getChunk().toString(),args[1]};
-                        String[] durumVeAciklama = claimApiService.getDurumVeAciklama(p,linkElemanlar);
+                        String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
                         if (!durumVeAciklama[0].equals("null")) {
                             if (durumVeAciklama[0].equals("1")) {
                                 p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                yeniListe.giveTrustForOneChunk(p.getLocation().getChunk().toString(), p.getName(), args[1], p.getWorld().toString());
+                                claimListesi.hissedarlaraEkleBir(p.getLocation().getChunk().toString(), p.getName(), args[1], p.getWorld().toString());
                             } else
                                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                         }
@@ -88,11 +84,11 @@ public class claimKomutlar implements CommandExecutor {
             } else if (args[0].equals("untrust")) {
                 if (args.length == 2) {
                         String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"hissedar","sil-heryer",p.getWorld().toString(),p.getLocation().getChunk().toString(),args[1]};
-                        String[] durumVeAciklama = claimApiService.getDurumVeAciklama(p,linkElemanlar);
+                        String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
                         if (!durumVeAciklama[0].equals("null")) {
                             if (durumVeAciklama[0].equals("1")) {
                             p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                            yeniListe.removeTrust(p.getLocation().getChunk().toString(), p.getName(), args[1], p.getWorld().toString());
+                                claimListesi.hissedarlardanCikar(p.getLocation().getChunk().toString(), p.getName(), args[1], p.getWorld().toString());
                         } else{
                             p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);}
                         }
@@ -103,13 +99,13 @@ public class claimKomutlar implements CommandExecutor {
                 if (args.length == 1) {
 
                         String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsasil","0|0","0|0","2|2",p.getWorld().toString(),p.getLocation().getChunk().toString()};
-                        String[] durumVeAciklama = claimApiService.getDurumVeAciklama(p,linkElemanlar);
+                        String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
                         if (!durumVeAciklama[0].equals("null")) {
                             if (durumVeAciklama[0].equals("0")) {
                             p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                         } else {
                             p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                            yeniListe.removeClaimForOneChunk(p, p.getWorld().toString());
+                                claimListesi.arsaKaldirBir(p, p.getWorld().toString());
                         }
                         }
 
@@ -125,13 +121,13 @@ public class claimKomutlar implements CommandExecutor {
                     if (args[1].equals("sil")){
 
                         String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsasil-heryer","0|0","0|0","2|2",p.getWorld().toString(),p.getLocation().getChunk().toString()};
-                        String[] durumVeAciklama = claimApiService.getDurumVeAciklama(p,linkElemanlar);
+                        String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
                         if (!durumVeAciklama[0].equals("null")) {
                             if (durumVeAciklama[0].equals("1")) {
                                         p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                                     }else{
                                         p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                        yeniListe.removeClaimForAll(p.getName());
+                                claimListesi.arsaKaldirHepsi(p.getName());
                                     }
                 }
                     }
@@ -148,11 +144,11 @@ public class claimKomutlar implements CommandExecutor {
                 if (args.length == 3){
                     if (args[1].equals("ekle")) {
                         String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"hissedar","ekle-heryer",p.getWorld().toString(),p.getLocation().getChunk().toString(),args[2]};
-                        String[] durumVeAciklama = claimApiService.getDurumVeAciklama(p,linkElemanlar);
+                        String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
                         if (!durumVeAciklama[0].equals("null")) {
                             if (durumVeAciklama[0].equals("1")) {
                                 p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                yeniListe.giveTrustForAll(p.getName(), args[2]);
+                                claimListesi.hissedarlaraEkleHepsi(p.getName(), args[2]);
                             } else
                                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                         }
@@ -168,11 +164,11 @@ public class claimKomutlar implements CommandExecutor {
                 if (args.length == 3){
                     if (args[1].equals("cikar")){
                             String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"hissedar","sil-heryer",p.getWorld().toString(),p.getLocation().getChunk().toString(),args[2]};
-                            String[] durumVeAciklama = claimApiService.getDurumVeAciklama(p,linkElemanlar);
+                            String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
                             if (!durumVeAciklama[0].equals("null")) {
                                 if (durumVeAciklama[0].equals("1")) {
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                    yeniListe.removeTrustForAll(p.getName(), args[2]);
+                                    claimListesi.hissedarlardanCikarHepsi(p.getName(), args[2]);
                                 } else
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                             }
@@ -186,24 +182,32 @@ public class claimKomutlar implements CommandExecutor {
 
 
             else if (args[0].equals("aciklama")) {
-                if (args.length == 1){
-                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claimaciklama <aciklama>");
-                }else {
-                    yeniListe.claimNotificationChange(p,args);
+                if (args[1].equals("hepsi")){
+                    if (args.length!=2){
+                        claimListesi.arsaAciklamaDegisHepsi(p,args);
+                    }else
+                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim aciklama hepsi <aciklama>");
                 }
-            } else if (args[0].equals("bahset")) {
+                else {
+                if (args.length == 1){
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim aciklama <aciklama>");
+                }else {
+                    claimListesi.arsaAciklamaDegisBir(p,args);
+                }
+                }
+            } else if (args[0].equals("rehin")) {
                 if (args.length==1){
-                    yeniListe.arsaBahset(p.getLocation().getChunk().toString(),p.getName(),p.getWorld().toString());
+                    claimListesi.arsaRehin(p.getLocation().getChunk().toString(),p.getName(),p.getWorld().toString());
                 }else
-                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim bahset");
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim rehin");
             } else if (args[0].equals("devret")) {
                 if (args.length==2){
                     String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsalar","deviret",args[1],p.getLocation().getChunk().toString(),p.getWorld().toString()};
-                    String[] durumVeAciklama = claimApiService.getDurumVeAciklama(p,linkElemanlar);
+                    String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
                     if (!durumVeAciklama[0].equals("null")) {
                         if (durumVeAciklama[0].equals("1")) {
                             p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                            yeniListe.claimTransfer(p.getLocation().getChunk().toString(),p.getName(),args[1],p.getWorld().toString());
+                            claimListesi.arsaDevret(p.getLocation().getChunk().toString(),p.getName(),args[1],p.getWorld().toString());
                         } else
                             p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                     }

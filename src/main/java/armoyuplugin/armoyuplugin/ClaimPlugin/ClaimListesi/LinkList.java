@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import java.time.Duration;
 
 public class LinkList {
-    public Link head;
+    public ArsaBilgiLink head;
 
 
     public LinkList() {
@@ -19,11 +19,11 @@ public class LinkList {
 
     }
 
-    public void buyClaim(String chunk, String pName,String dunya) {
-        Link current = listedeAraziBul(dunya,chunk);
-        Link temp = head;
+    public void arsaAl(String chunk, String pName,String dunya) {
+        ArsaBilgiLink current = listedeAraziBul(dunya,chunk);
+        ArsaBilgiLink temp = head;
         if (current == null){
-            Link arazi = new Link();
+            ArsaBilgiLink arazi = new ArsaBilgiLink();
             arazi.arsaoyuncuadi=pName;
             arazi.arsaChunk=chunk;
             arazi.arsaDunya=dunya;
@@ -34,9 +34,9 @@ public class LinkList {
             }
     }
 
-    public void removeTrust(String chunk,String silen,String silinen,String dunya){
+    public void hissedarlardanCikar(String chunk,String silen,String silinen,String dunya){
 
-        Link temp = listedeAraziBul(dunya,chunk);
+        ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
         if (temp!=null){
             if (temp.arsaoyuncuadi.equals(silen)){
 
@@ -51,8 +51,8 @@ public class LinkList {
         }
         }
 
-    public void giveTrustForOneChunk(String chunk,String ekleyen, String eklenen,String dunya){
-        Link temp = listedeAraziBul(dunya,chunk);
+    public void hissedarlaraEkleBir(String chunk,String ekleyen, String eklenen,String dunya){
+        ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
         if (temp!=null){
             if (temp.arsaoyuncuadi.equals(ekleyen)) {
                 int trustuVarmi = trustuVarmi(eklenen, dunya, chunk);
@@ -63,9 +63,9 @@ public class LinkList {
         }
     }
 
-    public void giveTrustForAll(String ekleyen,String eklenen){
+    public void hissedarlaraEkleHepsi(String ekleyen,String eklenen){
         int trustdurum;
-        Link temp=head;
+        ArsaBilgiLink temp=head;
         while (temp!=null){
             if (temp.arsaoyuncuadi.equals(ekleyen)){
                 trustdurum=0;
@@ -83,8 +83,8 @@ public class LinkList {
         }
     }
 
-    public void removeTrustForAll(String ekleyen, String silinen){
-        Link temp=head;
+    public void hissedarlardanCikarHepsi(String ekleyen, String silinen){
+        ArsaBilgiLink temp=head;
         while (temp!=null){
             if (temp.arsaoyuncuadi.equals(ekleyen)){
                 for (int i = 0; i < temp.hissedarlar.size(); i++) {
@@ -98,13 +98,13 @@ public class LinkList {
     }
 
 
-    public void removeClaimForOneChunk(Player silen,String dunya) {
+    public void arsaKaldirBir(Player silen,String dunya) {
         nesneyiSil(silen.getName(),dunya,silen.getLocation().getChunk().toString());
     }
 
-    public void removeClaimForAll(String silen) {
+    public void arsaKaldirHepsi(String silen) {
 
-        Link temp = head;
+        ArsaBilgiLink temp = head;
         while (temp!=null){
             if (temp.next.arsaoyuncuadi.equals(silen)){
                 temp.next=temp.next.next;
@@ -152,7 +152,7 @@ public class LinkList {
         String arsaSahibi = "";
         String aciklama="default arsa aciklamasi";
 
-        Link temp = listedeAraziBul(dunya,chunk.toString());
+        ArsaBilgiLink temp = listedeAraziBul(dunya,chunk.toString());
         arsaSahibi = temp.arsaoyuncuadi;
 
 //        temp = head;
@@ -201,12 +201,12 @@ public class LinkList {
 
     }
 
-    public void claimNotificationChange(Player oyuncu,String[] diziAciklama){
+    public void arsaAciklamaDegisBir(Player oyuncu,String[] diziAciklama){
         String aciklama= "";
         for (int i = 1; i < diziAciklama.length; i++) {
             aciklama = aciklama + diziAciklama[i] + " ";
         }
-        Link temp = listedeAraziBul(oyuncu.getWorld().toString(),oyuncu.getLocation().getChunk().toString());
+        ArsaBilgiLink temp = listedeAraziBul(oyuncu.getWorld().toString(),oyuncu.getLocation().getChunk().toString());
         if (temp != null) {
             if (oyuncu.getName().equals(temp.arsaoyuncuadi)){
             if (aciklama.length() < 25) {
@@ -217,11 +217,26 @@ public class LinkList {
 
 
     }
+    public void arsaAciklamaDegisHepsi(Player oyuncu,String[] diziAciklama){
+        String aciklama= "";
+        for (int i = 2; i < diziAciklama.length; i++) {
+            aciklama = aciklama + diziAciklama[i] + " ";
+        }
+        ArsaBilgiLink temp = head;
+        while (temp != null){
+            if (temp.arsaoyuncuadi.equals(oyuncu.getName())){
+                temp.arsaAciklamasi = aciklama;
+            }
+            temp=temp.next;
+        }
 
-    public int chunkControl(String playerName,String chunk,String dunya){
+
+    }
+
+    public int arsaKontrol(String playerName,String chunk,String dunya){
         int arsadolu = 0;
         int trustDurum = 0;
-        Link temp = listedeAraziBul(dunya,chunk);
+        ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
         if (temp!=null){
             for (int i = 0; i < temp.hissedarlar.size(); i++) {
                 if (temp.hissedarlar.get(i).equals(playerName)){
@@ -239,16 +254,16 @@ public class LinkList {
         }
        return 0;
     }
-    public String claimWhoOwner(String chunk,String dunya){
-        Link temp = listedeAraziBul(dunya,chunk);
+    public String arsaninSahibiKim(String chunk,String dunya){
+        ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
         if (temp!=null){
             return temp.arsaoyuncuadi;
         }
         return "Claimsiz";
     }
 
-    public void arsaBahset(String chunk, String arsayiKlanaBaglayan,String dunya){
-        Link temp = listedeAraziBul(dunya,chunk);
+    public void arsaRehin(String chunk, String arsayiKlanaBaglayan,String dunya){
+        ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
         if (temp != null){
             if (temp.arsaoyuncuadi.equals(arsayiKlanaBaglayan)){
                 temp.arsaKlanaBaglanmaDurumu = 1;
@@ -256,8 +271,8 @@ public class LinkList {
         }
     }
 
-    public void claimTransfer(String chunk, String bagislayan,String bagislanan,String dunya){
-                Link temp = listedeAraziBul(dunya,chunk);
+    public void arsaDevret(String chunk, String bagislayan,String bagislanan,String dunya){
+                ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
                 if (temp!=null) {
                     if (temp.arsaoyuncuadi.equals(bagislayan)){
                         temp.arsaoyuncuadi = bagislanan;
@@ -277,7 +292,7 @@ public class LinkList {
 
 
     private int trustuVarmi(String kimin,String dunya,String chunk){
-        Link temp = listedeAraziBul(dunya,chunk);
+        ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
         if (temp != null) {
             for (int i = 0; i < temp.hissedarlar.size(); i++) {
                 if (temp.hissedarlar.get(i).equals(kimin)){
@@ -288,8 +303,8 @@ public class LinkList {
         return 0;
     }
 
-    public Link listedeAraziBul(String dunya,String chunk){
-        Link temp = head;
+    public ArsaBilgiLink listedeAraziBul(String dunya, String chunk){
+        ArsaBilgiLink temp = head;
         while (temp!=null){
             if (temp.arsaDunya.equals(dunya)){
                 if (temp.arsaChunk.equals(chunk)){
@@ -303,7 +318,7 @@ public class LinkList {
 
 
     private void nesneyiSil(String oyuncuAdi,String dunya, String chunk){
-        Link temp = head;
+        ArsaBilgiLink temp = head;
         while (temp!=null){
             if (temp.next.arsaChunk.equals(chunk)){
                 if(temp.next.arsaDunya.equals(dunya)){

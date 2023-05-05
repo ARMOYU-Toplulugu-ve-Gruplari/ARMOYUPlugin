@@ -1,7 +1,7 @@
 package armoyuplugin.armoyuplugin.Listener;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
-import armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi.Link;
+import armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi.ArsaBilgiLink;
 import armoyuplugin.armoyuplugin.Services.TxtServices.models.Players;
 import armoyuplugin.armoyuplugin.Services.TxtServices.utils.JsonUtility;
 import com.google.gson.Gson;
@@ -31,8 +31,7 @@ import java.util.HashMap;
 
 import java.util.UUID;
 
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.jsonService;
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.yeniListe;
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.*;
 
 public class GenelListener implements Listener {
     private static String readAll(Reader rd) throws IOException {
@@ -76,10 +75,10 @@ public class GenelListener implements Listener {
         ItemStack stick = new ItemStack(Material.STICK);
         if (stick.equals(p.getInventory().getItemInMainHand())){
             if (event.getAction().toString().equals("RIGHT_CLICK_BLOCK")){
-                p.sendMessage(yeniListe.claimWhoOwner(p.getLocation().getChunk().toString(),p.getWorld().toString()));
+                p.sendMessage(claimListesi.arsaninSahibiKim(p.getLocation().getChunk().toString(),p.getWorld().toString()));
             }
             else if ("LEFT_CLICK_BLOCK".equals(event.getAction().toString())){
-                Link temp= yeniListe.listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
+                ArsaBilgiLink temp= claimListesi.listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
                 for (int i = 0; i < temp.hissedarlar.size(); i++) {
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + temp.hissedarlar.get(i));
                 }
@@ -230,7 +229,7 @@ public class GenelListener implements Listener {
 
         //CLAİM PLUGİN
 
-            int deneme = yeniListe.chunkControl(player.getName(), event.getBlockPlaced().getChunk().toString(), player.getWorld().toString());
+            int deneme = claimListesi.arsaKontrol(player.getName(), event.getBlockPlaced().getChunk().toString(), player.getWorld().toString());
 
             event.setCancelled(deneme == 2 || !oyuncucek.getHareket());
 
@@ -249,7 +248,7 @@ public class GenelListener implements Listener {
 
         //CLAİM PLUGİN
 
-            int deneme =yeniListe.chunkControl(p.getName(), event.getBlock().getChunk().toString(), p.getWorld().toString());
+            int deneme =claimListesi.arsaKontrol(p.getName(), event.getBlock().getChunk().toString(), p.getWorld().toString());
 
             event.setCancelled(deneme == 2 || !oyuncucek.getHareket());
 
