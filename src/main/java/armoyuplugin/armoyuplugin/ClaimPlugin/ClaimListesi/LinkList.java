@@ -12,11 +12,11 @@ import java.time.Duration;
 
 public class LinkList {
     public Link head;
-    public Link tail;
+
 
     public LinkList() {
         head = null;
-        tail = null;
+
     }
 
     public void buyClaim(String chunk, String pName,String dunya) {
