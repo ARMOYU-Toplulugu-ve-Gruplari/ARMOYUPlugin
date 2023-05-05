@@ -1,9 +1,9 @@
 package armoyuplugin.armoyuplugin;
 import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.LinkList;
 import armoyuplugin.armoyuplugin.Pluginler.Listener.GenelListener;
-import armoyuplugin.armoyuplugin.Services.ApiServices.ApiService;
-import armoyuplugin.armoyuplugin.Services.CommandService.SetupCommandsService;
-import armoyuplugin.armoyuplugin.Services.TxtServices.JsonService;
+import armoyuplugin.armoyuplugin.Servisler.ApiServices.ApiService;
+import armoyuplugin.armoyuplugin.Servisler.CommandService.SetupCommandsService;
+import armoyuplugin.armoyuplugin.Servisler.TxtServices.JsonService;
 import armoyuplugin.armoyuplugin.Pluginler.ScoreBoard.ArmoyuScoreBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

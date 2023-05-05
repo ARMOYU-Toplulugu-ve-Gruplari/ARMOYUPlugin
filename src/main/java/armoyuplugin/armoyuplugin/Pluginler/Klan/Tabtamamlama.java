@@ -1,7 +1,7 @@
 package armoyuplugin.armoyuplugin.Pluginler.Klan;
 
-import armoyuplugin.armoyuplugin.Services.TxtServices.models.Players;
-import armoyuplugin.armoyuplugin.Services.TxtServices.utils.JsonUtility;
+import armoyuplugin.armoyuplugin.Servisler.TxtServices.models.Players;
+import armoyuplugin.armoyuplugin.Servisler.TxtServices.utils.JsonUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

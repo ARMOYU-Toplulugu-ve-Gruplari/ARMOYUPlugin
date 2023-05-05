@@ -1,4 +1,4 @@
-package armoyuplugin.armoyuplugin.Services.TxtServices.models;
+package armoyuplugin.armoyuplugin.Servisler.TxtServices.models;
 
 
 import java.util.UUID;

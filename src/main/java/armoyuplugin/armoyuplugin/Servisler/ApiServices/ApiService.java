@@ -1,4 +1,4 @@
-package armoyuplugin.armoyuplugin.Services.ApiServices;
+package armoyuplugin.armoyuplugin.Servisler.ApiServices;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

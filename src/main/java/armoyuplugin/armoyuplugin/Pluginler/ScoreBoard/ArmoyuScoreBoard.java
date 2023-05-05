@@ -1,8 +1,8 @@
 package armoyuplugin.armoyuplugin.Pluginler.ScoreBoard;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
-import armoyuplugin.armoyuplugin.Services.TxtServices.models.Players;
-import armoyuplugin.armoyuplugin.Services.TxtServices.utils.JsonUtility;
+import armoyuplugin.armoyuplugin.Servisler.TxtServices.models.Players;
+import armoyuplugin.armoyuplugin.Servisler.TxtServices.utils.JsonUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
