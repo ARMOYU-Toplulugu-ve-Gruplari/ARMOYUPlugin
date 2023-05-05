@@ -1,4 +1,4 @@
-package armoyuplugin.armoyuplugin.BasePlugin;
+package armoyuplugin.armoyuplugin.Pluginler.Klan;
 
 import armoyuplugin.armoyuplugin.Services.TxtServices.models.Players;
 import armoyuplugin.armoyuplugin.Services.TxtServices.utils.JsonUtility;

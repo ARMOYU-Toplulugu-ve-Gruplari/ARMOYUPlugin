@@ -1,4 +1,4 @@
-package armoyuplugin.armoyuplugin.ClaimPlugin.menuler;
+package armoyuplugin.armoyuplugin.Pluginler.Claim.menuler;
 
 import me.kodysimpson.simpapi.colors.ColorTranslator;
 import me.kodysimpson.simpapi.exceptions.MenuManagerException;

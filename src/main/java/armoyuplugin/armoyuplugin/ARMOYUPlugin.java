@@ -1,10 +1,10 @@
 package armoyuplugin.armoyuplugin;
-import armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi.LinkList;
-import armoyuplugin.armoyuplugin.Listener.GenelListener;
+import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.LinkList;
+import armoyuplugin.armoyuplugin.Pluginler.Listener.GenelListener;
 import armoyuplugin.armoyuplugin.Services.ApiServices.ApiService;
 import armoyuplugin.armoyuplugin.Services.CommandService.SetupCommandsService;
 import armoyuplugin.armoyuplugin.Services.TxtServices.JsonService;
-import armoyuplugin.armoyuplugin.ScoreBoardPlugin.ArmoyuScoreBoard;
+import armoyuplugin.armoyuplugin.Pluginler.ScoreBoard.ArmoyuScoreBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.kodysimpson.simpapi.menu.MenuManager;

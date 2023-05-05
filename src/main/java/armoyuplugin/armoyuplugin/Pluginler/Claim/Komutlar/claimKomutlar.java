@@ -1,8 +1,8 @@
-package armoyuplugin.armoyuplugin.ClaimPlugin.Komutlar;
+package armoyuplugin.armoyuplugin.Pluginler.Claim.Komutlar;
 
-import armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi.ArsaBilgiLink;
+import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.ArsaBilgiLink;
 
-import armoyuplugin.armoyuplugin.ClaimPlugin.menuler.AnaMenu;
+import armoyuplugin.armoyuplugin.Pluginler.Claim.menuler.AnaMenu;
 
 import me.kodysimpson.simpapi.exceptions.MenuManagerException;
 import me.kodysimpson.simpapi.exceptions.MenuManagerNotSetupException;

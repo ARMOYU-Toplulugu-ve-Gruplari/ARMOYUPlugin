@@ -1,4 +1,4 @@
-package armoyuplugin.armoyuplugin.BasePlugin.KlanListesi;
+package armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi;
 
 public class LinkList {
     public KlanBilgiLink head;

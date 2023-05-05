@@ -1,9 +1,9 @@
 package armoyuplugin.armoyuplugin.Services.CommandService;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
-import armoyuplugin.armoyuplugin.BasePlugin.Komutlar;
-import armoyuplugin.armoyuplugin.BasePlugin.Tabtamamlama;
-import armoyuplugin.armoyuplugin.ClaimPlugin.Komutlar.claimKomutlar;
+import armoyuplugin.armoyuplugin.Pluginler.Klan.Komutlar;
+import armoyuplugin.armoyuplugin.Pluginler.Klan.Tabtamamlama;
+import armoyuplugin.armoyuplugin.Pluginler.Claim.Komutlar.claimKomutlar;
 
 public class SetupCommandsService {
     public void setupCommands(ARMOYUPlugin plugin){

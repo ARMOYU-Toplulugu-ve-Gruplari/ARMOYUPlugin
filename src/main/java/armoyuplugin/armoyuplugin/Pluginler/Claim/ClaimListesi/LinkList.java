@@ -1,4 +1,4 @@
-package armoyuplugin.armoyuplugin.ClaimPlugin.ClaimListesi;
+package armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
 import net.kyori.adventure.audience.Audience;
