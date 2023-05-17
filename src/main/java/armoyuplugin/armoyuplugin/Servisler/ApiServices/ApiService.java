@@ -2,6 +2,7 @@ package armoyuplugin.armoyuplugin.Servisler.ApiServices;
 
 import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.ArsaBilgiLink;
 import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanBilgiLink;
+import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanRutbeleri;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -118,14 +119,16 @@ public class ApiService {
                     JSONArray recsTwo = rec.getJSONArray("klanrutbeler");
                     for (int j = 0; j < recsTwo.length(); j++) {
                         JSONObject recTwo = recsTwo.getJSONObject(j);
-                        klanListesi.rutbeOlustur(recTwo.get("rutbeadi").toString(),(int)recTwo.get("rutbesira"),(int)recTwo.get("davet"),(int)recTwo.get("kurucu"),1,(int)recTwo.get("uyeduzenle"));
+                        KlanRutbeleri rutbe = klanListesi.rutbeOlustur(recTwo.get("rutbeadi").toString(),(int)recTwo.get("rutbesira"),(int)recTwo.get("davet"),(int)recTwo.get("kurucu"),1,(int)recTwo.get("uyeduzenle"));
+                        klan.klanRutbeleri.add(rutbe);
                     }
                     System.out.println("3");
+                    if (!rec.get("klanoyuncular").toString().equals("null")){
                     JSONArray recsThree = rec.getJSONArray("klanoyuncular");
                     for (int j = 0; j < recsThree.length(); j++) {
                         JSONObject recTwo = recsThree.getJSONObject(j);
                         klanListesi.klanaOyuncuEkle(recTwo.get("mcuyeadi").toString(),klanListesi.rutbeBul(recTwo.get("mcuyerolu").toString(),klan),klan);
-                    }
+                    }}
                 }
             }
 

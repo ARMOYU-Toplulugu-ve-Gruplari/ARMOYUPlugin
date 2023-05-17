@@ -93,7 +93,26 @@ public class KlanLinkList {
     }
 
     public void klandanAt(String atan,String atilan){
-
+        KlanBilgiLink temp = head;
+        int atanSira = -1;
+        int atilanSira = -1;
+        while (temp != null){
+            for (int i = 0; i < temp.klanUyeleri.size(); i++) {
+                if (temp.klanUyeleri.get(i).oyuncuAdi.equals(atan)){
+                    if (temp.klanUyeleri.get(i).rutbe.uyeDuzenle == 1){
+                    atanSira = i;
+                        }
+                    }
+                if (temp.klanUyeleri.get(i).oyuncuAdi.equals(atilan)){
+                    atilanSira = i;
+                }
+                if (atanSira != -1 && atilanSira != -1){
+                    klandanCikar(atilan);
+                    claimListesi.klandanAyrilClaim(atilan);
+                }
+            }
+            temp = temp.next;
+        }
     }
     public void yetkiVer(String yetkiyiVeren,String kime,String yetkiIsmi){
 
@@ -132,6 +151,7 @@ public class KlanLinkList {
         }
         return false;
     }
+
 
     private void klandanCikar(String oyuncuAdi){
         KlanBilgiLink temp = head;

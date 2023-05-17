@@ -97,7 +97,7 @@ public class ArmoyuScoreBoard {
             if (klanAdi!=null){
 
                 Score slotklanadi = o.getScore(ChatColor.DARK_AQUA + "Klan: " + ChatColor.GOLD+ klanAdi );
-                Score slotklanrutbe = o.getScore(ChatColor.DARK_AQUA  + "Rütbe: " + ChatColor.DARK_GREEN+ oyuncuBilgi.rutbe );
+                Score slotklanrutbe = o.getScore(ChatColor.DARK_AQUA  + "Rütbe: " + ChatColor.DARK_GREEN+ oyuncuBilgi.rutbe.rutbeAdi );
 
                 slotklanadi.setScore(4);
                 slotklanrutbe.setScore(3);
@@ -148,14 +148,14 @@ public class ArmoyuScoreBoard {
                     }
 
 
-                    team.setSuffix(ChatColor.GREEN + " " + oyuncuBilgi.rutbe);
+                    team.setSuffix(ChatColor.GREEN + " " + oyuncuBilgi.rutbe.rutbeAdi);
                     team.setPrefix(klanAdi);
 
 
 
                     if (oyuncuBilgi!= null) {
-                        player.setDisplayName(klanAdi + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe);
-                        player.setPlayerListName(klanAdi+ ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe);
+                        player.setDisplayName(ChatColor.GRAY +klanAdi+" " + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe.rutbeAdi);
+                        player.setPlayerListName(ChatColor.GRAY + klanAdi+" "+ ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe.rutbeAdi);
 
 
                     }
