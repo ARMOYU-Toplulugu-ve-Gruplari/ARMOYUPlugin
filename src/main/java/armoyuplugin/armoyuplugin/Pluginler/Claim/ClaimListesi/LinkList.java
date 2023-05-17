@@ -10,16 +10,16 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.klanListesi;
+
 public class LinkList {
     public ArsaBilgiLink head;
 
-
     public LinkList() {
         head = null;
-
     }
 
-    public void arsaAl(String chunk, String pName,String dunya) {
+    public void arsaAl(String chunk, String pName,String dunya,String arsaKlanAdi) {
         ArsaBilgiLink current = listedeAraziBul(dunya,chunk);
         ArsaBilgiLink temp = head;
         if (current == null){
@@ -27,8 +27,10 @@ public class LinkList {
             arazi.arsaoyuncuadi=pName;
             arazi.arsaChunk=chunk;
             arazi.arsaDunya=dunya;
-            arazi.arsaKlanaBaglanmaDurumu=0;
+            arazi.arsaKlan="null";
             arazi.hissedarlar.add(pName);
+            if (!arsaKlanAdi.equals("null"))
+                arazi.arsaKlan=arsaKlanAdi;
             arazi.next=head;
             head=arazi;
             }
@@ -266,7 +268,7 @@ public class LinkList {
         ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
         if (temp != null){
             if (temp.arsaoyuncuadi.equals(arsayiKlanaBaglayan)){
-                temp.arsaKlanaBaglanmaDurumu = 1;
+                temp.arsaKlan = klanListesi.hangiKlanaUye(arsayiKlanaBaglayan);
             }
         }
     }
@@ -327,6 +329,29 @@ public class LinkList {
                     }
                 }
             }
+        }
+    }
+
+
+
+
+
+
+
+
+
+    // klanla ilgili işlemler
+
+    public void klandanAyrilClaim(String ayrilan){
+        ArsaBilgiLink temp = head;
+        while (temp != null){
+            if (temp.arsaoyuncuadi.equals(ayrilan))
+                if (!temp.arsaKlan.equals("null")){
+                    temp.arsaoyuncuadi = "null";
+                    temp.hissedarlar.clear();
+                    temp.arsaAciklamasi = "";
+                }
+            temp = temp.next;
         }
     }
 

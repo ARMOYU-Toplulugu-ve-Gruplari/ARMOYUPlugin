@@ -1,8 +1,9 @@
 package armoyuplugin.armoyuplugin.Pluginler.ScoreBoard;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
-import armoyuplugin.armoyuplugin.Servisler.TxtServices.models.Players;
-import armoyuplugin.armoyuplugin.Servisler.TxtServices.utils.JsonUtility;
+import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanOyuncuBilgi;
+import armoyuplugin.armoyuplugin.Servisler.JsonFileServices.models.Players;
+import armoyuplugin.armoyuplugin.Servisler.JsonFileServices.utils.JsonUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -14,21 +15,21 @@ import java.util.Date;
 import java.util.List;
 
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.claimListesi;
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.klanListesi;
 
 public class ArmoyuScoreBoard {
     public void setScoreBoard(ARMOYUPlugin plugin){
 
         Scoreboard scoreboard = plugin.getServer().getScoreboardManager().getMainScoreboard();
-        String oyuncuadi = "";
-        String oyuncuklanadi = "";
-        String oyuncuklanrutbe = "";
         int oyuncupara = 0;
         int oyunculeslerim=0;
 
 
-
-
         for (Player player : plugin.getServer().getOnlinePlayers()){
+
+
+            KlanOyuncuBilgi oyuncuBilgi = klanListesi.oyuncuBilgi(player.getName());
+            String klanAdi = klanListesi.hangiKlanaUye(player.getName());
 
             try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
 
@@ -37,9 +38,6 @@ public class ArmoyuScoreBoard {
                 Players oyuncucek = findAllNotes.get(i);
                 if(oyuncucek.getOyuncuadi().equals(player.getName())){
 
-                    oyuncuadi=oyuncucek.getOyuncuadi();
-                    oyuncuklanadi=oyuncucek.getKlan();
-                    oyuncuklanrutbe=oyuncucek.getKlanrutbe();
                     oyuncupara=oyuncucek.getPara();
                     oyunculeslerim=oyuncucek.getLeslerim();
 
@@ -60,7 +58,7 @@ public class ArmoyuScoreBoard {
 
             o.setDisplayName(ChatColor.DARK_AQUA + o.getName());
 
-            Score slotoyuncuadi = o.getScore(ChatColor.YELLOW + "Oyuncu Adı: " + ChatColor.WHITE + oyuncuadi );
+            Score slotoyuncuadi = o.getScore(ChatColor.YELLOW + "Oyuncu Adı: " + ChatColor.WHITE + player.getName() );
 
             Score slotpara = o.getScore(ChatColor.YELLOW + "Para: " + ChatColor.WHITE + oyuncupara );
 
@@ -96,10 +94,10 @@ public class ArmoyuScoreBoard {
             slotles.setScore(6);
             slotbosluk3.setScore(5);
 
-            if (!oyuncuklanadi.equals("")){
+            if (klanAdi!=null){
 
-                Score slotklanadi = o.getScore(ChatColor.DARK_AQUA + "Klan: " + ChatColor.GOLD+ oyuncuklanadi );
-                Score slotklanrutbe = o.getScore(ChatColor.DARK_AQUA  + "Rütbe: " + ChatColor.DARK_GREEN+ oyuncuklanrutbe );
+                Score slotklanadi = o.getScore(ChatColor.DARK_AQUA + "Klan: " + ChatColor.GOLD+ klanAdi );
+                Score slotklanrutbe = o.getScore(ChatColor.DARK_AQUA  + "Rütbe: " + ChatColor.DARK_GREEN+ oyuncuBilgi.rutbe );
 
                 slotklanadi.setScore(4);
                 slotklanrutbe.setScore(3);
@@ -135,31 +133,36 @@ public class ArmoyuScoreBoard {
 
                 if(oyuncucek.getOyuncuadi().equals(player.getName())){
 
-                    if(oyuncucek.getHareket() == false){
+                    if(!oyuncucek.getHareket()){
                         player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "giriş yapmak için /giris <sifre>");
                         return;
                     }
 
-                    if (oyuncucek.getKlan().equals("")){
+                    if (klanAdi==null){
                         klanad = "";
 
                     }else {
 
-                        klanad = ChatColor.GOLD + "[" + oyuncucek.getKlan() + "] ";
+                        klanad = ChatColor.GOLD + "[" + klanAdi + "] ";
 
                     }
 
-                    team.setSuffix(ChatColor.GREEN + " " + oyuncucek.getKlanrutbe());
-                    team.setPrefix(klanad);
 
-                    player.setDisplayName(klanad + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncucek.getKlanrutbe());
-                    player.setPlayerListName(klanad + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncucek.getKlanrutbe());
+                    team.setSuffix(ChatColor.GREEN + " " + oyuncuBilgi.rutbe);
+                    team.setPrefix(klanAdi);
 
+
+
+                    if (oyuncuBilgi!= null) {
+                        player.setDisplayName(klanAdi + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe);
+                        player.setPlayerListName(klanAdi+ ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe);
+
+
+                    }
                     team.addEntry(player.getName());
                 }
             }
         }
-
 
     }
     }

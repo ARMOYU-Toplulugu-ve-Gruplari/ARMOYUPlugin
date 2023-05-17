@@ -1,5 +1,7 @@
 package armoyuplugin.armoyuplugin.Servisler.ApiServices;
 
+import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.ArsaBilgiLink;
+import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanBilgiLink;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,6 +14,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.claimListesi;
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.klanListesi;
 
 public class ApiService {
     private static String readAll(Reader rd) throws IOException {
@@ -70,35 +73,75 @@ public class ApiService {
                 JSONArray recs = json.getJSONArray("arsalar");
                 for (int i = 0; i < recs.length(); ++i) {
                     JSONObject rec = recs.getJSONObject(i);
-                    claimListesi.arsaAl(rec.get("arsachunk").toString(),rec.get("arsaoyuncuadi").toString(),rec.get("arsadunya").toString());
+                    claimListesi.arsaAl(rec.get("arsachunk").toString(),rec.get("arsaoyuncuadi").toString(),rec.get("arsadunya").toString(),rec.get("arsaklanadi").toString());
 
                     JSONArray recsTwo = rec.getJSONArray("hissedarlar");
 
-                    for (int k = 0; k < recsTwo.length(); k++) {
+                    for (int k = 1; k < recsTwo.length(); k++) {
                         JSONObject recThree = recsTwo.getJSONObject(k);
                         claimListesi.hissedarlaraEkleBir(rec.get("arsachunk").toString(), rec.get("arsaoyuncuadi").toString(), recThree.get("oyuncuadi").toString(), rec.get("arsadunya").toString());
                     }
                 }
             }
+
+
+            ArsaBilgiLink temp = claimListesi.head;
+            while (temp != null){
+                System.out.println(temp.arsaChunk);
+                for (int i = 0; i < temp.hissedarlar.size(); i++) {
+                    System.out.println(temp.hissedarlar.get(i));
+                }
+                temp = temp.next;
+            }
+            System.out.println("------------------------------------------------------------------------------------");
+
         } catch (IOException e) {
             Bukkit.getLogger().info("Catch claimOnEnable");
         }
     }
     public void klanListesiniDoldur() {
-        //Server çalıştırıldığına Claim LinkListini siteden gelen verilerle doldurur.
 
         try {
-            String[] linkDizi = {"deneme", "deneme", "arsalar", "0", "0"};
+            String[] linkDizi = {"deneme", "deneme", "klanlar", "0", "0"};
             String link = linkOlustur(linkDizi);
 
             JSONObject json = readJsonFromUrl(link);
 
-            if (!json.get("").toString().equals("null")) {
-                JSONArray recs = json.getJSONArray("");
+            if (!json.get("klanlar").toString().equals("null")) {
+                System.out.println("1");
+                JSONArray recs = json.getJSONArray("klanlar");
                 for (int i = 0; i < recs.length(); ++i) {
                     JSONObject rec = recs.getJSONObject(i);
+                    KlanBilgiLink klan = klanListesi.klanOlustur(rec.get("klankurucu").toString(),rec.get("klanadi").toString());
 
+                    System.out.println("2");
+                    JSONArray recsTwo = rec.getJSONArray("klanrutbeler");
+                    for (int j = 0; j < recsTwo.length(); j++) {
+                        JSONObject recTwo = recsTwo.getJSONObject(j);
+                        klanListesi.rutbeOlustur(recTwo.get("rutbeadi").toString(),(int)recTwo.get("rutbesira"),(int)recTwo.get("davet"),(int)recTwo.get("kurucu"),1,(int)recTwo.get("uyeduzenle"));
+                    }
+                    System.out.println("3");
+                    JSONArray recsThree = rec.getJSONArray("klanoyuncular");
+                    for (int j = 0; j < recsThree.length(); j++) {
+                        JSONObject recTwo = recsThree.getJSONObject(j);
+                        klanListesi.klanaOyuncuEkle(recTwo.get("mcuyeadi").toString(),klanListesi.rutbeBul(recTwo.get("mcuyerolu").toString(),klan),klan);
+                    }
                 }
+            }
+
+            KlanBilgiLink temp = klanListesi.head;
+            while (temp !=null){
+                System.out.println(temp.klanAdi);
+                System.out.println();
+                for (int i = 0; i < temp.klanRutbeleri.size(); i++) {
+                    System.out.println(temp.klanRutbeleri.get(i).rutbeAdi);
+                }
+                System.out.println();
+                for (int i = 0; i < temp.klanUyeleri.size(); i++) {
+                    System.out.println(temp.klanUyeleri.get(i).oyuncuAdi);
+                    System.out.println(temp.klanUyeleri.get(i).rutbe.rutbeAdi);
+                }
+                temp = temp.next;
             }
         } catch(IOException e){
             Bukkit.getLogger().info("Catch claimOnEnable");

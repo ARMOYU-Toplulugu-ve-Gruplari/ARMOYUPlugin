@@ -1,7 +1,8 @@
 package armoyuplugin.armoyuplugin.Pluginler.Klan;
 
-import armoyuplugin.armoyuplugin.Servisler.TxtServices.models.Players;
-import armoyuplugin.armoyuplugin.Servisler.TxtServices.utils.JsonUtility;
+import armoyuplugin.armoyuplugin.Servisler.ApiServices.ApiService;
+import armoyuplugin.armoyuplugin.Servisler.JsonFileServices.models.Players;
+import armoyuplugin.armoyuplugin.Servisler.JsonFileServices.utils.JsonUtility;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -22,6 +23,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.apiService;
 import static org.bukkit.Bukkit.*;
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.jsonService;
 
@@ -261,13 +263,14 @@ public class Komutlar  implements CommandExecutor {
 
 
                 try {
-                    JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/" + oyuncu.getName() + "/" + oyuncuparola + "/klan/olustur/" + args[1] + "/" + args[1]);
 
-                    String durum = json.get("durum").toString();
-                    String aciklama = json.get("aciklama").toString();
+                    String[] oyuncuAdiSifresi = jsonService.getOyuncuAdiVeParola(oyuncu);
+                    String[] linkElemanlar = {oyuncuAdiSifresi[0],oyuncuAdiSifresi[1],"klan","olustur",args[1],args[1]};
+                    String[] durumVeAciklama = apiService.getDurumVeAciklama(oyuncu,linkElemanlar);
 
-                    if(durum.equals("1")){
-                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + aciklama );
+
+                    if(durumVeAciklama[0].equals("1")){
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1] );
 
                         JsonUtility.updateklan(oyuncu.getName(),args[1],"Kurucu");
                         try {JsonUtility.saveNotes();}catch (Exception e){Bukkit.getLogger().info("Değişiklik Kayıt Edilemedi:"+ e);}
@@ -430,7 +433,7 @@ public class Komutlar  implements CommandExecutor {
 
 
                     }else{
-                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + aciklama );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1] );
 
                     }
 

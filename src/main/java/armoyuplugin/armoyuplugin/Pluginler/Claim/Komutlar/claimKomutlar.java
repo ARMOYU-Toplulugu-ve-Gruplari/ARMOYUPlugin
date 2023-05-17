@@ -58,7 +58,7 @@ public class claimKomutlar implements CommandExecutor {
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                                 } else {
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                    claimListesi.arsaAl(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString());
+                                    claimListesi.arsaAl(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString(),"null");
                                 }
                             }else
                                 p.sendMessage("claimal null hatası yetkiliye danışın");

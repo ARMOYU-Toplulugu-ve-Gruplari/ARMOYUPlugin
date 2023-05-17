@@ -1,8 +1,8 @@
-package armoyuplugin.armoyuplugin.Servisler.TxtServices.utils;
+package armoyuplugin.armoyuplugin.Servisler.JsonFileServices.utils;
 
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
-import armoyuplugin.armoyuplugin.Servisler.TxtServices.models.Players;
+import armoyuplugin.armoyuplugin.Servisler.JsonFileServices.models.Players;
 import com.google.gson.Gson;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

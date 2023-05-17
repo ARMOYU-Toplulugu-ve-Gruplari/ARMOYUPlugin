@@ -1,5 +1,7 @@
 package armoyuplugin.armoyuplugin.OyuncuBilgiListesi;
 
+import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanBilgiLink;
+
 public class LinkList {
     public OyuncuBilgiLink head;
 
@@ -13,7 +15,7 @@ public class LinkList {
     public String klanAdiBul(String oyuncuAdi){
         OyuncuBilgiLink temp = oyuncuBul(oyuncuAdi);
         if (temp != null){
-            return temp.oyuncuKlani;
+            return temp.oyuncuAdi;
         }
         return "";
     }

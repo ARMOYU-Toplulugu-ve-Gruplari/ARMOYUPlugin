@@ -1,9 +1,10 @@
 package armoyuplugin.armoyuplugin;
 import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.LinkList;
+import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanLinkList;
 import armoyuplugin.armoyuplugin.Pluginler.Listener.GenelListener;
 import armoyuplugin.armoyuplugin.Servisler.ApiServices.ApiService;
 import armoyuplugin.armoyuplugin.Servisler.CommandService.SetupCommandsService;
-import armoyuplugin.armoyuplugin.Servisler.TxtServices.JsonService;
+import armoyuplugin.armoyuplugin.Servisler.JsonFileServices.JsonService;
 import armoyuplugin.armoyuplugin.Pluginler.ScoreBoard.ArmoyuScoreBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,6 +16,7 @@ import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 public final class ARMOYUPlugin extends JavaPlugin {
 
     private BukkitAudiences adventure;
+    public static KlanLinkList klanListesi = new KlanLinkList();
     public static LinkList claimListesi = new LinkList();
     private static ARMOYUPlugin plugin;
     public static ARMOYUPlugin getPlugin(){
@@ -33,8 +35,9 @@ public final class ARMOYUPlugin extends JavaPlugin {
         plugin = this;
         this.adventure = BukkitAudiences.create(plugin);
 
-
         apiService.claimListesiniDoldur();
+        apiService.klanListesiniDoldur();
+
         commandsService.setupCommands(plugin);
 
 
