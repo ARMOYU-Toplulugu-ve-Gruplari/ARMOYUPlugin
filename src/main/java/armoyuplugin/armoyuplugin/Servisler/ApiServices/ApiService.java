@@ -27,7 +27,7 @@ public class ApiService {
         return sb.toString();
     }
 
-    public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+    public JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
         InputStream is = new URL(url).openStream();
         try {
             BufferedReader rd = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
@@ -86,15 +86,15 @@ public class ApiService {
             }
 
 
-            ArsaBilgiLink temp = claimListesi.head;
-            while (temp != null){
-                System.out.println(temp.arsaChunk);
-                for (int i = 0; i < temp.hissedarlar.size(); i++) {
-                    System.out.println(temp.hissedarlar.get(i));
-                }
-                temp = temp.next;
-            }
-            System.out.println("------------------------------------------------------------------------------------");
+//            ArsaBilgiLink temp = claimListesi.head;
+//            while (temp != null){
+//                System.out.println(temp.arsaChunk);
+//                for (int i = 0; i < temp.hissedarlar.size(); i++) {
+//                    System.out.println(temp.hissedarlar.get(i));
+//                }
+//                temp = temp.next;
+//            }
+//            System.out.println("------------------------------------------------------------------------------------");
 
         } catch (IOException e) {
             Bukkit.getLogger().info("Catch claimOnEnable");
@@ -109,43 +109,44 @@ public class ApiService {
             JSONObject json = readJsonFromUrl(link);
 
             if (!json.get("klanlar").toString().equals("null")) {
-                System.out.println("1");
+
                 JSONArray recs = json.getJSONArray("klanlar");
                 for (int i = 0; i < recs.length(); ++i) {
                     JSONObject rec = recs.getJSONObject(i);
-                    KlanBilgiLink klan = klanListesi.klanOlustur(rec.get("klankurucu").toString(),rec.get("klanadi").toString());
+                    KlanBilgiLink klan = klanListesi.apiKlanOlustur(rec.get("klankurucu").toString(),rec.get("klanadi").toString());
 
-                    System.out.println("2");
+
                     JSONArray recsTwo = rec.getJSONArray("klanrutbeler");
                     for (int j = 0; j < recsTwo.length(); j++) {
                         JSONObject recTwo = recsTwo.getJSONObject(j);
                         KlanRutbeleri rutbe = klanListesi.rutbeOlustur(recTwo.get("rutbeadi").toString(),(int)recTwo.get("rutbesira"),(int)recTwo.get("davet"),(int)recTwo.get("kurucu"),1,(int)recTwo.get("uyeduzenle"));
                         klan.klanRutbeleri.add(rutbe);
                     }
-                    System.out.println("3");
+
                     if (!rec.get("klanoyuncular").toString().equals("null")){
                     JSONArray recsThree = rec.getJSONArray("klanoyuncular");
                     for (int j = 0; j < recsThree.length(); j++) {
                         JSONObject recTwo = recsThree.getJSONObject(j);
                         klanListesi.klanaOyuncuEkle(recTwo.get("mcuyeadi").toString(),klanListesi.rutbeBul(recTwo.get("mcuyerolu").toString(),klan),klan);
-                    }}
+                    }
+                    }
                 }
             }
 
-            KlanBilgiLink temp = klanListesi.head;
-            while (temp !=null){
-                System.out.println(temp.klanAdi);
-                System.out.println();
-                for (int i = 0; i < temp.klanRutbeleri.size(); i++) {
-                    System.out.println(temp.klanRutbeleri.get(i).rutbeAdi);
-                }
-                System.out.println();
-                for (int i = 0; i < temp.klanUyeleri.size(); i++) {
-                    System.out.println(temp.klanUyeleri.get(i).oyuncuAdi);
-                    System.out.println(temp.klanUyeleri.get(i).rutbe.rutbeAdi);
-                }
-                temp = temp.next;
-            }
+//            KlanBilgiLink temp = klanListesi.head;
+//            while (temp !=null){
+//                System.out.println(temp.klanAdi);
+//                System.out.println();
+//                for (int i = 0; i < temp.klanRutbeleri.size(); i++) {
+//                    System.out.println(temp.klanRutbeleri.get(i).rutbeAdi);
+//                }
+//                System.out.println();
+//                for (int i = 0; i < temp.klanUyeleri.size(); i++) {
+//                    System.out.println(temp.klanUyeleri.get(i).oyuncuAdi);
+//                    System.out.println(temp.klanUyeleri.get(i).rutbe.rutbeAdi);
+//                }
+//                temp = temp.next;
+//            }
         } catch(IOException e){
             Bukkit.getLogger().info("Catch claimOnEnable");
         }

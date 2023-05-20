@@ -126,8 +126,6 @@ public class ArmoyuScoreBoard {
 
 
 
-            String klanad = "";
-
             for (int i = 0; i < findAllNotes.size(); i++) {
                 Players oyuncucek = findAllNotes.get(i);
 
@@ -138,30 +136,29 @@ public class ArmoyuScoreBoard {
                         return;
                     }
 
-                    if (klanAdi==null){
-                        klanad = "";
-
-                    }else {
-
-                        klanad = ChatColor.GOLD + "[" + klanAdi + "] ";
-
-                    }
-
-
-                    team.setSuffix(ChatColor.GREEN + " " + oyuncuBilgi.rutbe.rutbeAdi);
-                    team.setPrefix(klanAdi);
+//                    if (klanAdi != null){
+//                        team.setSuffix(ChatColor.GREEN + " " + oyuncuBilgi.rutbe.rutbeAdi);
+//                        team.setPrefix(klanAdi);
+//                    }
+//
 
 
 
-                    if (oyuncuBilgi!= null) {
-                        player.setDisplayName(ChatColor.GRAY +klanAdi+" " + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe.rutbeAdi);
-                        player.setPlayerListName(ChatColor.GRAY + klanAdi+" "+ ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe.rutbeAdi);
 
-
-                    }
                     team.addEntry(player.getName());
                 }
             }
+
+            if (klanAdi != null) {
+                player.setDisplayName(ChatColor.GRAY +klanAdi+" " + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe.rutbeAdi);
+                player.setPlayerListName(ChatColor.GRAY + klanAdi+" "+ ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe.rutbeAdi);
+            }
+            else {
+                player.setDisplayName(ChatColor.GOLD+"Klansız |"+" " + ChatColor.WHITE + player.getName());
+                player.setPlayerListName(ChatColor.GOLD+"Klansız |"+" "+ ChatColor.WHITE + player.getName()) ;
+
+            }
+
         }
 
     }

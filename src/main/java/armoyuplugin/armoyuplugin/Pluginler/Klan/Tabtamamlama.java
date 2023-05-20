@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.klanListesi;
+
 public class Tabtamamlama  implements TabCompleter {
 
     @Override
@@ -20,30 +22,16 @@ public class Tabtamamlama  implements TabCompleter {
 
         if (cmd.getName().equalsIgnoreCase("klan")) {
 
-            try {
-                JsonUtility.loadNotes();
-            } catch (IOException err) {
-                err.printStackTrace();
-            }
-            List<Players> findAllNotes = JsonUtility.findAllNotes();
-            String oyuncuparola = "";
-            String klan = "";
 
-            for (int i = 0; i < findAllNotes.size(); i++) {
-                Players oyuncucek = findAllNotes.get(i);
 
-                if (oyuncucek.getOyuncuadi().equals(oyuncu.getName())) {
-                    oyuncuparola = oyuncucek.getOyuncuparola();
-                    klan = oyuncucek.getKlan();
-                    break;
-                }
-            }
+            String klan = klanListesi.hangiKlanaUye(oyuncu.getName());
+
 
             if (args.length == 1) {
 
                 List<String> arguments = new ArrayList<>();
 
-                if (!klan.equals("")) {
+                if (klan != null) {
                     arguments.add("acil");
                     arguments.add("git");
                     arguments.add("ayril");

@@ -1,4 +1,4 @@
-package armoyuplugin.armoyuplugin.Pluginler.Klan.ozelesyalar;
+package armoyuplugin.armoyuplugin.Pluginler.OzelEsyalar;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -40,6 +40,21 @@ public class KlanLinkList {
             return null;
 
     }
+    public KlanBilgiLink apiKlanOlustur(String olusturan,String klanAdi){
+
+        if (klanBulKlanAdi(klanAdi)==null){
+            KlanBilgiLink klan = new KlanBilgiLink();
+            klan.klanAdi = klanAdi;
+            klan.klanKurucu = olusturan;
+
+            klan.next = head;
+            head = klan;
+            return klan;
+        }
+
+        return null;
+
+    }
     public void klanaKatil(String katilan,String katan,String klanAdi){
         String uyeOlabilirmi = hangiKlanaUye(katilan);
         KlanBilgiLink temp = head;

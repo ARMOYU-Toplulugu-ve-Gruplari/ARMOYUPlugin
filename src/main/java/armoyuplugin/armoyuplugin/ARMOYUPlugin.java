@@ -46,12 +46,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
         Bukkit.getLogger().info(ARMOYUMESAJ + "----Aktif---- aramizdakioyuncu.com");
 
 
-        getServer().getScheduler().runTaskTimer(this, new Runnable() {
-            @Override
-            public void run() {
-               tablo.setScoreBoard(plugin);
-            }
-        },0,100);
+        getServer().getScheduler().runTaskTimer(this, () -> tablo.setScoreBoard(plugin),0,100);
     }
     @Override
     public void onDisable() {
