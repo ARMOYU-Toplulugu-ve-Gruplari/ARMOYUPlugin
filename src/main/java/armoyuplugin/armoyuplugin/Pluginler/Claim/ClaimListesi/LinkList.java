@@ -1,6 +1,7 @@
 package armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
+import armoyuplugin.armoyuplugin.OyuncuBilgiListesi.OyuncuBilgiLink;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 import java.time.Duration;
 
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.klanListesi;
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.oyuncuListesi;
 
 public class LinkList {
     public ArsaBilgiLink head;
@@ -19,23 +21,36 @@ public class LinkList {
         head = null;
     }
 
-    public void arsaAl(String chunk, String pName,String dunya,String arsaKlanAdi) {
+    public void arsaAl(String chunk, String pName,String dunya) {
         ArsaBilgiLink current = listedeAraziBul(dunya,chunk);
-        ArsaBilgiLink temp = head;
         if (current == null){
             ArsaBilgiLink arazi = new ArsaBilgiLink();
             arazi.arsaoyuncuadi=pName;
             arazi.arsaChunk=chunk;
             arazi.arsaDunya=dunya;
-            arazi.arsaKlan="null";
+            arazi.arsaKlan= "";
             arazi.hissedarlar.add(pName);
-            if (!arsaKlanAdi.equals("null"))
-                arazi.arsaKlan=arsaKlanAdi;
+            arazi.arsaAciklamasi = "Arsa açıklaması.";
+
             arazi.next=head;
             head=arazi;
             }
     }
+    public void arsaAlSite(String chunk, String pName,String dunya,String arsaKlanAdi,String arsaAciklaması) {
+        ArsaBilgiLink current = listedeAraziBul(dunya,chunk);
+        if (current == null){
+            ArsaBilgiLink arazi = new ArsaBilgiLink();
+            arazi.arsaoyuncuadi=pName;
+            arazi.arsaChunk=chunk;
+            arazi.arsaDunya=dunya;
+            arazi.arsaKlan=arsaKlanAdi;
+            arazi.hissedarlar.add(pName);
+            arazi.arsaAciklamasi = arsaAciklaması;
 
+            arazi.next=head;
+            head=arazi;
+        }
+    }
     public void hissedarlardanCikar(String chunk,String silen,String silinen,String dunya){
 
         ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
@@ -151,79 +166,68 @@ public class LinkList {
         int arsadolu = 0;
         int trustvarmi = 0;
         int durmadanYazmasiniEngelleme = 0;
-        String arsaSahibi = "";
-        String aciklama="default arsa aciklamasi";
+        String arsaSahibi;
+        String aciklama = arsaAciklamaBul(dunya,chunk.toString());
 
         ArsaBilgiLink temp = listedeAraziBul(dunya,chunk.toString());
-        arsaSahibi = temp.arsaoyuncuadi;
+        if (temp != null){
+            arsaSahibi = temp.arsaoyuncuadi;
+        }else {
+            arsaSahibi = "";
+        }
 
-//        temp = head;
-//        while (temp != null) {
-//            if (temp.oyuncu.equals(p.getName())){
-//
-//                    if (temp.oncekiGecilenAraziSahibi.equals(arsaSahibi)) {
-//                        durmadanYazmasiniEngelleme = 1;
-//                    } else {
-//                        durmadanYazmasiniEngelleme = 0;
-//                        temp.oncekiGecilenAraziSahibi = arsaSahibi;
-//                    }
-//            }
-//
-//            temp = temp.next;
-//        }
-//        if (durmadanYazmasiniEngelleme==0) {
-//            temp = head;
-//            while (temp != null) {
-//                for (int i = 0; i < temp.trustlar.size(); i++) {
-//                    if (temp.trustlar.get(i).arsaDunya.equals(dunya)){
-//                    if (temp.trustlar.get(i).arsaKonum.equals(chunk.toString())) {
-//                        for (int j = 0; j < temp.trustlar.get(i).trustVerilenler.size(); j++) {
-//                            if (temp.trustlar.get(i).trustVerilenler.get(j).equals(p.getName())) {
-//                                trustvarmi++;
-//                                break;
-//                            }
-//                        }
-//                        arsaSahibi = temp.trustlar.get(i).trustVerilenler.get(0);
-//                        aciklama = temp.arsaAciklamasi;
-//                        arsadolu++;
-//                        break;
-//                    }
-//                    }
-//                }
-//
-//                temp = temp.next;
-//            }
-//            if (trustvarmi!=0){
-//                dostBolgeGiris(plugin.getAdventure().player(p),arsaSahibi,aciklama);
-//            }else if(arsadolu != 0){
-//                dusmanBolgeGiris(plugin.getAdventure().player(p),arsaSahibi,aciklama);
-//            }else
-//                bosAraziGiris(plugin.getAdventure().player(p));
-//        }
+
+        OyuncuBilgiLink oyuncu = oyuncuListesi.head;
+        while (oyuncu != null) {
+            if (oyuncu.oyuncuAdi.equals(p.getName())){
+
+                    if (oyuncu.oncekiGecilenAraziSahibi.equals(arsaSahibi)) {
+                        durmadanYazmasiniEngelleme = 1;
+                    } else {
+                        durmadanYazmasiniEngelleme = 0;
+                        oyuncu.oncekiGecilenAraziSahibi = arsaSahibi;
+                    }
+            }
+
+            oyuncu = oyuncu.next;
+        }
+        if (durmadanYazmasiniEngelleme==0) {
+            if (temp != null) {
+                for (int i = 0; i < temp.hissedarlar.size(); i++) {
+                    if(temp.hissedarlar.get(i).equals(p.getName())){
+                        trustvarmi = 1;
+                        break;
+                }
+                    arsadolu = 1;
+            }
+            }
+            if (trustvarmi!=0){
+                dostBolgeGiris(plugin.getAdventure().player(p),arsaSahibi,aciklama);
+            }else if(arsadolu != 0){
+                dusmanBolgeGiris(plugin.getAdventure().player(p),arsaSahibi,aciklama);
+            }else
+                bosAraziGiris(plugin.getAdventure().player(p));
+        }
 
     }
 
-    public void arsaAciklamaDegisBir(Player oyuncu,String[] diziAciklama){
-        String aciklama= "";
-        for (int i = 1; i < diziAciklama.length; i++) {
-            aciklama = aciklama + diziAciklama[i] + " ";
-        }
+    public void arsaAciklamaDegisBir(Player oyuncu,String aciklama,String dunya,String chunk){
+
         ArsaBilgiLink temp = listedeAraziBul(oyuncu.getWorld().toString(),oyuncu.getLocation().getChunk().toString());
         if (temp != null) {
             if (oyuncu.getName().equals(temp.arsaoyuncuadi)){
-            if (aciklama.length() < 25) {
-                temp.arsaAciklamasi = aciklama;
+                if (dunya.equals(oyuncu.getWorld().toString())){
+                    if (chunk.equals(oyuncu.getLocation().getChunk().toString())) {
+                        temp.arsaAciklamasi = aciklama;
+                    }
                 }
+
             }
+
         }
-
-
     }
-    public void arsaAciklamaDegisHepsi(Player oyuncu,String[] diziAciklama){
-        String aciklama= "";
-        for (int i = 2; i < diziAciklama.length; i++) {
-            aciklama = aciklama + diziAciklama[i] + " ";
-        }
+    public void arsaAciklamaDegisHepsi(Player oyuncu,String aciklama){
+
         ArsaBilgiLink temp = head;
         while (temp != null){
             if (temp.arsaoyuncuadi.equals(oyuncu.getName())){
@@ -332,7 +336,24 @@ public class LinkList {
         }
     }
 
+    private String arsaAciklamaBul(String arsaDunya,String arsaChunk){
+        ArsaBilgiLink temp = head;
 
+        while (temp != null){
+            if (temp.arsaDunya.equals(arsaDunya)){
+                if (temp.arsaChunk.equals(arsaChunk)){
+                    if (temp.arsaKlan.isEmpty()){
+                        return temp.arsaAciklamasi;
+                    }else{
+                        return klanListesi.arsaAciklamaBul(temp.arsaKlan);}
+
+
+                }
+            }
+            temp = temp.next;
+        }
+    return "";
+    }
 
 
 
@@ -346,23 +367,14 @@ public class LinkList {
         ArsaBilgiLink temp = head;
         while (temp != null){
             if (temp.arsaoyuncuadi.equals(ayrilan))
-                if (!temp.arsaKlan.equals("null")){
-                    temp.arsaoyuncuadi = "null";
+                if (temp.arsaKlan != null){
+                    temp.arsaoyuncuadi = "";
                     temp.hissedarlar.clear();
                     temp.arsaAciklamasi = "";
                 }
             temp = temp.next;
         }
     }
-
-
-
-
-
-
-
-
-
 
 
 }

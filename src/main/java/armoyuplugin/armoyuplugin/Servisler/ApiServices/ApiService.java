@@ -63,18 +63,29 @@ public class ApiService {
 
     public void claimListesiniDoldur(){
         //Server çalıştırıldığına Claim LinkListini siteden gelen verilerle doldurur.
-
         try {
             String[] linkDizi = {"deneme","deneme","arsalar","0","0"};
             String link = linkOlustur(linkDizi);
-
+            String arsaOyuncuAdi = "";
+            String arsaKlanAdi = "";
+            String arsaAciklamasi = "Arsa açıklaması";
             JSONObject json = readJsonFromUrl(link);
 
             if (!json.get("arsalar").toString().equals("null")) {
                 JSONArray recs = json.getJSONArray("arsalar");
                 for (int i = 0; i < recs.length(); ++i) {
                     JSONObject rec = recs.getJSONObject(i);
-                    claimListesi.arsaAl(rec.get("arsachunk").toString(),rec.get("arsaoyuncuadi").toString(),rec.get("arsadunya").toString(),rec.get("arsaklanadi").toString());
+                    if (!rec.isNull("arsaoyuncuadi")){
+                        arsaOyuncuAdi = rec.get("arsaoyuncuadi").toString();
+                    }
+                    if (!rec.isNull("arsaklanadi")){
+                        arsaKlanAdi = rec.get("arsaklanadi").toString();
+                    }
+                    if (!rec.isNull("arsaaciklama")){
+                        arsaAciklamasi = rec.get("arsaaciklama").toString();
+                    }
+
+                    claimListesi.arsaAlSite(rec.get("arsachunk").toString(),arsaOyuncuAdi,rec.get("arsadunya").toString(),arsaKlanAdi,arsaAciklamasi);
 
                     JSONArray recsTwo = rec.getJSONArray("hissedarlar");
 

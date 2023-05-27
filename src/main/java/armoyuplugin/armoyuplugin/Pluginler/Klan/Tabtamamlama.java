@@ -31,7 +31,7 @@ public class Tabtamamlama  implements TabCompleter {
 
                 List<String> arguments = new ArrayList<>();
 
-                if (klan != null) {
+                if (!klan.isEmpty()) {
                     arguments.add("acil");
                     arguments.add("git");
                     arguments.add("ayril");

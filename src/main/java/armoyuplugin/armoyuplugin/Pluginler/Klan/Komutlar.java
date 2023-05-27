@@ -269,7 +269,7 @@ public class Komutlar  implements CommandExecutor {
             }else if(args[0].equals("acil")){
 
                 String oyuncuKlan = klanListesi.hangiKlanaUye(oyuncu.getName());
-                if (oyuncuKlan != null){
+                if (!oyuncuKlan.isEmpty()){
 
                     int klanuyesay=0;
                     for (Player player : getServer().getOnlinePlayers()) {
@@ -321,7 +321,6 @@ public class Komutlar  implements CommandExecutor {
 
             }else if (args[0].equals("git")){
 
-
                 try {
                     String[] arrayLink = {oyuncuAdiSifresi[0],oyuncuAdiSifresi[1],"klan","git"};
                     String link = apiService.linkOlustur(arrayLink);
@@ -363,6 +362,7 @@ public class Komutlar  implements CommandExecutor {
                     String aciklama = json.get("aciklama").toString();
 
                     if(durum.equals("1")){
+                        wait(1000);
                         oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + aciklama );
                     }else{
                         oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + aciklama );
@@ -370,7 +370,24 @@ public class Komutlar  implements CommandExecutor {
                 } catch (Exception err) {
                     Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
                 }
-            }else{
+            }else if(args[0].equals("arsa")){
+                if (args[1].equals("devret")){
+
+                } else if (args[1].equals("sil")) {
+
+                } else if (args[1].equals("liste")){
+
+                } else {
+                    oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Böyle bir komut yok");
+                }
+            } else if (args[0].equals("aciklama")) {
+                String aciklama= "";
+                for (int i = 1; i < args.length; i++) {
+                    aciklama = aciklama + args[i] + " ";
+                }
+                klanListesi.klanAciklamaDegis(oyuncu.getName(),aciklama);
+                
+            } else{
                 oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Böyle bir komut yok");
             }
         return true;

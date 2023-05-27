@@ -94,7 +94,7 @@ public class ArmoyuScoreBoard {
             slotles.setScore(6);
             slotbosluk3.setScore(5);
 
-            if (klanAdi!=null){
+            if (!klanAdi.isEmpty()){
 
                 Score slotklanadi = o.getScore(ChatColor.DARK_AQUA + "Klan: " + ChatColor.GOLD+ klanAdi );
                 Score slotklanrutbe = o.getScore(ChatColor.DARK_AQUA  + "Rütbe: " + ChatColor.DARK_GREEN+ oyuncuBilgi.rutbe.rutbeAdi );
@@ -149,7 +149,7 @@ public class ArmoyuScoreBoard {
                 }
             }
 
-            if (klanAdi != null) {
+            if (!klanAdi.isEmpty()) {
                 player.setDisplayName(ChatColor.GRAY +klanAdi+" " + ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe.rutbeAdi);
                 player.setPlayerListName(ChatColor.GRAY + klanAdi+" "+ ChatColor.WHITE + player.getName() + " " + ChatColor.DARK_GREEN + oyuncuBilgi.rutbe.rutbeAdi);
             }

@@ -58,7 +58,7 @@ public class claimKomutlar implements CommandExecutor {
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
                                 } else {
                                     p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                    claimListesi.arsaAl(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString(),"null");
+                                    claimListesi.arsaAl(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString());
                                 }
                             }else
                                 p.sendMessage("claimal null hatası yetkiliye danışın");
@@ -184,17 +184,43 @@ public class claimKomutlar implements CommandExecutor {
             else if (args[0].equals("aciklama")) {
                 if (args[1].equals("hepsi")){
                     if (args.length!=2){
-                        claimListesi.arsaAciklamaDegisHepsi(p,args);
+                        String aciklama= "";
+                        for (int i = 1; i < args.length; i++) {
+                            aciklama = aciklama + args[i] + " ";
+                        }
+                        if (aciklama.length()<25){
+                            String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsalar","hepsi-aciklama",aciklama,"",""};
+                            String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
+                            if (durumVeAciklama[0].equals("1")){
+                                claimListesi.arsaAciklamaDegisHepsi(p,aciklama);
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
+                            }else
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);}
+                        else
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arsa açıklaması 25 karakterden uzun olamaz.");
                     }else
                         p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim aciklama hepsi <aciklama>");
                 }
                 else {
-                if (args.length == 1){
-                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim aciklama <aciklama>");
-                }else {
-                    claimListesi.arsaAciklamaDegisBir(p,args);
+                    String aciklama= "";
+                    for (int i = 1; i < args.length; i++) {
+                        aciklama = aciklama + args[i] + " ";
+                    }
+                    if (aciklama.length()<25){
+                    String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsalar","aciklama",aciklama,p.getLocation().getChunk().toString(),p.getWorld().toString()};
+                    String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
+                    if (durumVeAciklama[0].equals("1")){
+                        claimListesi.arsaAciklamaDegisBir(p,aciklama,p.getWorld().toString(),p.getLocation().getChunk().toString());
+                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
+                    }else
+                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);}
+                    else
+                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arsa açıklaması 25 karakterden uzun olamaz.");
+
                 }
-                }
+
+            } else if (args[0].equals("liste")) {
+                //tüm arsalarının konumlarını gösterir.
             } else if (args[0].equals("rehin")) {
                 if (args.length==1){
                     claimListesi.arsaRehin(p.getLocation().getChunk().toString(),p.getName(),p.getWorld().toString());

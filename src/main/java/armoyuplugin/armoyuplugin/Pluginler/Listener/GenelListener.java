@@ -1,6 +1,7 @@
 package armoyuplugin.armoyuplugin.Pluginler.Listener;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
+import armoyuplugin.armoyuplugin.OyuncuBilgiListesi.OyuncuBilgiLink;
 import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.ArsaBilgiLink;
 import armoyuplugin.armoyuplugin.Servisler.JsonFileServices.models.Players;
 import armoyuplugin.armoyuplugin.Servisler.JsonFileServices.utils.JsonUtility;
@@ -115,7 +116,7 @@ public class GenelListener implements Listener {
 
             if (timeElapsed > 2000){
                 this.cooldown.put(p.getUniqueId(),System.currentTimeMillis());
-//                yeniListe.chunkControlOnScreen(p,p.getLocation().getChunk(),p.getWorld().toString(),plugin);
+                claimListesi.chunkControlOnScreen(p,p.getLocation().getChunk(),p.getWorld().toString(),plugin);
             }
 
         }
@@ -140,6 +141,13 @@ public class GenelListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
+        //oyuncu listesi
+        OyuncuBilgiLink oyuncu = oyuncuListesi.oyuncuBul(event.getPlayer().getName());
+        if (oyuncu==null){
+            oyuncuListesi.oyuncuEkle(event.getPlayer().getName());
+        }
+
+
         //CLAİM PLUGİNİ
 
 

@@ -16,11 +16,11 @@ public class KlanLinkList {
                 KlanBilgiLink klan = new KlanBilgiLink();
                 klan.klanAdi = klanAdi;
                 klan.klanKurucu = olusturan;
-
+                klan.arsaAciklamasi = "";
                 KlanRutbeleri kurucuRutbesi = new KlanRutbeleri();
                 kurucuRutbesi.kurucu = 1;
                 kurucuRutbesi.davet = 1;
-                kurucuRutbesi.rutbeAdi = "kurucu";
+                kurucuRutbesi.rutbeAdi = "Lider";
                 kurucuRutbesi.rutbeSira = 1;
                 kurucuRutbesi.uyeDuzenle = 1;
                 kurucuRutbesi.klanBaslangicAyarla = 1;
@@ -55,6 +55,15 @@ public class KlanLinkList {
         return null;
 
     }
+
+    public void klanAciklamaDegis(String oyuncuAdi,String aciklama){
+        KlanBilgiLink klan = hangiKlandaKurucu(oyuncuAdi);
+        if (klan!=null){
+            klan.arsaAciklamasi = aciklama;
+        }
+    }
+
+
     public void klanaKatil(String katilan,String katan,String klanAdi){
         String uyeOlabilirmi = hangiKlanaUye(katilan);
         KlanBilgiLink temp = head;
@@ -91,21 +100,6 @@ public class KlanLinkList {
         claimListesi.klandanAyrilClaim(ayrilan);
         klandanCikar(ayrilan);
     }
-    public void klanaDavetEt(String davetiYollayan,String katilacakOlan){
-
-    }
-    public void klanBaslangicAyarla(String baslangicAyarlayan,int x,int y,int z){
-        String klanAdi = hangiKlanaUye(baslangicAyarlayan);
-        if (klanAdi != null){
-            KlanBilgiLink temp = klanBulKlanAdi(klanAdi);
-            if (temp != null){
-                if (oyuncuBilgi(baslangicAyarlayan).rutbe.klanBaslangicAyarla == 1){
-                    temp.klanBaslangicNoktasi = new int[]{x,y,z};
-                }
-            }
-        }
-
-    }
 
     public void klandanAt(String atan,String atilan){
         KlanBilgiLink temp = head;
@@ -133,7 +127,7 @@ public class KlanLinkList {
 
     }
     public String klanLideri(String oyuncuIsmi){
-        return null;
+        return "";
     }
 
 
@@ -147,24 +141,19 @@ public class KlanLinkList {
         }
         return null;
     }
-    private boolean kurucuMu(String oyuncuIsmi){
+    private KlanBilgiLink hangiKlandaKurucu(String oyuncuIsmi){
         KlanBilgiLink temp = head;
-        int k = 0;
         while (temp!= null){
             for (int i = 0; i < temp.klanUyeleri.size(); i++) {
                 if (temp.klanUyeleri.get(i).oyuncuAdi.equals(oyuncuIsmi)){
-                    k++;
                     if (temp.klanUyeleri.get(i).rutbe.kurucu == 1){
-                        return true;
+                        return temp;
                     }
                 }
             }
-            if (k!=0){
-                return false;
-            }
             temp = temp.next;
         }
-        return false;
+        return null;
     }
 
 
@@ -197,7 +186,7 @@ public class KlanLinkList {
             }
             temp = temp.next;
         }
-        return null;
+        return "";
     }
 
     public KlanOyuncuBilgi oyuncuBilgi(String oyuncuAdi){
@@ -252,6 +241,12 @@ public class KlanLinkList {
 
     //claim işlemleri
 
-
+    public String arsaAciklamaBul(String klanAdi){
+        KlanBilgiLink klan = klanBulKlanAdi(klanAdi);
+        if (klan != null){
+            return klan.arsaAciklamasi;
+        }
+        return "";
+    }
 
 }

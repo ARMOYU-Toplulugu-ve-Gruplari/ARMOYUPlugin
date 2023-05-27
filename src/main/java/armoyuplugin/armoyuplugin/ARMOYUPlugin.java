@@ -1,4 +1,5 @@
 package armoyuplugin.armoyuplugin;
+import armoyuplugin.armoyuplugin.OyuncuBilgiListesi.OyuncuLinkList;
 import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.LinkList;
 import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanLinkList;
 import armoyuplugin.armoyuplugin.Pluginler.Listener.GenelListener;
@@ -18,6 +19,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
     private BukkitAudiences adventure;
     public static KlanLinkList klanListesi = new KlanLinkList();
     public static LinkList claimListesi = new LinkList();
+    public static OyuncuLinkList oyuncuListesi = new OyuncuLinkList();
     private static ARMOYUPlugin plugin;
     public static ARMOYUPlugin getPlugin(){
         return plugin;
