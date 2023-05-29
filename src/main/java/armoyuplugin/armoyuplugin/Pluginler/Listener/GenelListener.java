@@ -162,25 +162,26 @@ public class GenelListener implements Listener {
         Player player = event.getPlayer();
 
         try {
-            JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/ana-arama-motoru.php?ozellik=tamarama&deger="+player.getName());
+            JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/ana-arama-motoru.php?ozellik=minecraft&deger="+player.getName());
 
-            if (json.get("kontrol").equals("1")){
+            if (json.get("kontrol").toString().equals("1")){
                 player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "Siteye Kayıtlı");
                 player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.YELLOW + "/giris <sifreniz>");
 
             }else{
-                //player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.DARK_PURPLE + "SİTEYE KAYDOLUN");
                 player.kickPlayer(ChatColor.RED+"!!!!!! Siteye kayıt olmanız gerekli !!!!!!"+ChatColor.YELLOW +"\n\n aramizdakioyuncu.com/kayit-ol");
-                // player.sendMessage(ChatColor.RED +"[ARMOYU] " + ChatColor.GREEN + "https://aramizdakioyuncu.com/kayit-ol");
                 return;
             }
+
         }catch (Exception aa){
-            player.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " Sunucu Bağlanısı Kurulamadı");
+            player.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " Sunucu Bağlanısı Kurulamadı (Oyuncu Kontrol)");
             Bukkit.getLogger().info(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");
         }
 
 
 //        player.setGameMode(GameMode.SURVIVAL);
+
+
         String dunya = "world";
         event.setJoinMessage(ChatColor.YELLOW +"Aktif Oyuncular: "+ Bukkit.getOnlinePlayers().size() + "/20");
 
@@ -191,14 +192,21 @@ public class GenelListener implements Listener {
             JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/0/0/0/0");
             JSONObject ozellik = (JSONObject)json.get("ozellik");
 
-            cekozellikx = Integer.parseInt(ozellik.get("sunucux").toString());
-            cekozelliky = Integer.parseInt(ozellik.get("sunucuy").toString());
-            cekozellikz = Integer.parseInt(ozellik.get("sunucuz").toString());
+            if (!ozellik.isNull("sunucux")) {
+
+
+                cekozellikx = Integer.parseInt(ozellik.get("sunucux").toString());
+                cekozelliky = Integer.parseInt(ozellik.get("sunucuy").toString());
+                cekozellikz = Integer.parseInt(ozellik.get("sunucuz").toString());
+
+            }
+
 
         }catch (Exception aa){
-            player.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " Sunucu Bağlanısı Kurulamadı");
-            Bukkit.getLogger().info(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı");
+            player.sendMessage(ChatColor.YELLOW + player.getName() + ChatColor.RED + " Sunucu Bağlanısı Kurulamadı (Sunucu X Y Z)");
+            Bukkit.getLogger().info(ChatColor.RED +"[ARMOYU] " +"Sunucu Bağlanısı Kurulamadı(Sunucu X Y Z) ");
         }
+
         player.teleport(new Location(Bukkit.getWorld(dunya),cekozellikx,cekozelliky,cekozellikz));
 
 

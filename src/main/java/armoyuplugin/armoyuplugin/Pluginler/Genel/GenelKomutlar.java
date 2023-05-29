@@ -186,7 +186,7 @@ public class GenelKomutlar implements CommandExecutor {
                 String link = apiService.linkOlustur(arrayLink);
                 JSONObject json = apiService.readJsonFromUrl(link);
                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW  + json.get("aciklama").toString());
-                if (json.get("durum").equals("1")){
+                if (json.get("durum").toString().equals("1")){
                     oyuncuarkadas.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW  + "Arkadaşına gidiyorsun : " + ChatColor.AQUA + p.getName());
                     oyuncuarkadas.teleport(new Location(Bukkit.getWorld("world"),p.getLocation().getBlockX(),p.getLocation().getBlockY(),p.getLocation().getBlockZ()));
                 }
@@ -261,54 +261,38 @@ public class GenelKomutlar implements CommandExecutor {
                     String link = apiService.linkOlustur(arrayLink);
                     JSONObject json = apiService.readJsonFromUrl(link);
 
-                    if (json.get("kontrol").equals("1")){
-                        JSONArray recs = json.getJSONArray("niteliklioyunlar");
-                        String klanadi = "";
-                        String klanrutbe = "";
-                        String klanrenk = "";
-                        int mcpara = 0;
-                        int leslerim=0;
-                        float sunucux =0;
-                        float sunucuy =76;
-                        float sunucuz =-8;
+                    if (!json.get("kontrol").equals("1")){
+                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Hatalı GİRİŞ");
+                        return true;
+                    }
 
-                        float evx=123;
-                        float evy=456;
-                        float evz=789;
-                        String evdunya ="";
+                    String klanadi = "";
+                    String klanrutbe = "";
+                    String klanrenk = "";
 
-                        JSONObject ozellik = (JSONObject)json.get("ozellik");
+                    int mcpara = 0;
+                    int leslerim=0;
+                    float sunucux =0;
+                    float sunucuy =76;
+                    float sunucuz =-8;
 
-                        try {
-                            evx = Integer.parseInt(ozellik.get("evx").toString());
-                            evy = Integer.parseInt(ozellik.get("evy").toString());
-                            evz = Integer.parseInt(ozellik.get("evz").toString());
-                            evdunya = ozellik.get("evdunya").toString();
-                        }catch(Exception e){
 
-                        }
+                    JSONObject ozellik = (JSONObject)json.get("ozellik");
+
+
+                    if (!ozellik.isNull("sunucux")) {
                         try {
                             sunucux = Integer.parseInt(ozellik.get("sunucux").toString());
                             sunucuy = Integer.parseInt(ozellik.get("sunucuy").toString());
                             sunucuz = Integer.parseInt(ozellik.get("sunucuz").toString());
                         }catch(Exception e){
-
+                            Bukkit.getLogger().info(ARMOYUMESAJ + "Sunucu X Y Z bilgisi çekilemedi!");
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Sunucu X Y Z bilgisi çekilemedi!");
                         }
+                    }
 
 
-                        for (int i = 0; i < recs.length(); ++i) {
-                            JSONObject rec = recs.getJSONObject(i);
-                            if (rec.get("etkinlikkisaad").equals("minecraft")) {
-                                klanadi = rec.get("grupkisaad").toString();
-                                klanrutbe = rec.get("gruprutbe").toString();
-                                klanrenk = rec.get("gruprenk").toString();
-                                mcpara = (int) rec.get("oyunbakiye");
-                                leslerim = (int) rec.get("skor");
-
-                            }
-                        }
-
-                        try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
+                    try { JsonUtility.loadNotes(); } catch (IOException err) {    err.printStackTrace();   }
 
                         try {
                             List<Players> findAllNotes = JsonUtility.findAllNotes();
@@ -317,14 +301,12 @@ public class GenelKomutlar implements CommandExecutor {
                                 if(oyuncucek.getOyuncuadi().equals(p.getName())){
 
                                     if (!oyuncucek.getHareket()){
-                                        if(evx != 123 && evy !=456 && evz != 789){
-                                            p.teleport(new Location(Bukkit.getWorld(evdunya),evx,evy,evz));
-                                        }
-                                        else if (oyuncucek.getX() == 0.0 && oyuncucek.getY() == 0.0 && oyuncucek.getZ() == 0.0){
+                                        if (oyuncucek.getX() == 0.0 && oyuncucek.getY() == 0.0 && oyuncucek.getZ() == 0.0){
                                             p.teleport(new Location(Bukkit.getWorld(oyuncucek.getLocation()),sunucux,sunucuy,sunucuz));
                                         }else{
                                             p.teleport(new Location(Bukkit.getWorld(oyuncucek.getLocation()),oyuncucek.getX(),oyuncucek.getY(),oyuncucek.getZ()));
                                         }
+
                                         int aclik = (int) oyuncucek.getAclik();
                                         p.setFoodLevel(aclik);
                                         p.setHealth(oyuncucek.getSaglik());
@@ -338,19 +320,16 @@ public class GenelKomutlar implements CommandExecutor {
                                 }
                             }
                         } catch (Exception E) {
-                            Bukkit.getLogger().info("[ARMOYU] "+"Giriş komutları işlenemed!");
-
+                            Bukkit.getLogger().info("[ARMOYU] "+"Giriş komutları işlenemedi!");
                         }
+
                         p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + "Giriş Başarılı");
 
-                    }else {
-                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Hatalı GİRİŞ");
 
-                    }
 
                 }catch (Exception aa){
-                    Bukkit.getLogger().info(ARMOYUMESAJ + "oyuncu giriş yaparken sunucuyla bağlantı kurulamadı!");
-                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Sunucu ile Bağlantı Kurulamadı");
+                    Bukkit.getLogger().info(ARMOYUMESAJ + "Oyuncu giriş yaparken sunucuyla bağlantı kurulamadı!");
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Sunucu ile Bağlantı Kurulamadı (Giriş)");
                 }
 
             }
