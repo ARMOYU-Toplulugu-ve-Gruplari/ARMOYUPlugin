@@ -14,8 +14,7 @@ import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.claimListesi;
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.klanListesi;
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.*;
 
 public class ApiService {
     private static String readAll(Reader rd) throws IOException {
@@ -45,20 +44,6 @@ public class ApiService {
             link.append(s).append("/");
         }
         return link.toString();
-    }
-
-
-    public String[] getDurumVeAciklama(Player p, String[] linkElemanlar){
-        //Dönüş olarak sadece durum ve açiklama aldığımız linkler için kullanılır
-        String ARMOYUMESAJ = ChatColor.RED + "[ARMOYU Claim] ";
-        String link = linkOlustur(linkElemanlar);
-        try {
-            JSONObject json = readJsonFromUrl(link);
-            return new String[]{json.get("durum").toString(),json.get("aciklama").toString()};
-        } catch (IOException e) {
-            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Sunucu ile bağlantı sorunu!");
-        }
-        return new String[]{"null","null"};
     }
 
     public void claimListesiniDoldur(){

@@ -151,7 +151,7 @@ public class GenelKomutlar implements CommandExecutor {
                     String link = apiService.linkOlustur(arrayLink);
                     JSONObject json = apiService.readJsonFromUrl(link);
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW  + json.get("aciklama").toString());
-                    if (json.get("durum").equals("1")){
+                    if (json.get("durum").toString().equals("1")){
                         oyuncuarkadas.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + p.getName() + " adlı oyuncu yanına gelmek istiyor.");
                     }
                 } catch (Exception err) {

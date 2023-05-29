@@ -14,6 +14,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.*;
 
@@ -51,46 +54,55 @@ public class claimKomutlar implements CommandExecutor {
                     if (claimkontrol != 0) {
                         p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Bu arsa sahipli");
                     } else {
-                            String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsaal","0|0","0|0","2|2",p.getWorld().toString(),p.getLocation().getChunk().toString()};
-                            String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
-                            if (!durumVeAciklama[0].equals("null")) {
-                                if (durumVeAciklama[0].equals("0")) {
-                                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
-                                } else {
-                                    p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                    claimListesi.arsaAl(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString());
-                                }
-                            }else
-                                p.sendMessage("claimal null hatası yetkiliye danışın");
-                        return true;
+
+                        p.sendMessage(oyuncuAdiVeParola[0] + " " + oyuncuAdiVeParola[1]);
+                        String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsaal","0","0","0",p.getWorld().toString(),p.getLocation().getChunk().toString()};
+                        try {
+                            JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                            if (json.get("durum").toString().equals("0")) {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                            } else {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                                claimListesi.arsaAl(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString());
+                            }
+                        } catch (IOException e) {
+                            System.out.println("claim al hatası");
+                        }
+
+
+
                     }
                 } else
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Doğru kullanım şekli /claim al");
             } else if (args[0].equals("trust")) {
                 if (args.length == 2) {
-
+                        try{
                         String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"hissedar","ekle",p.getWorld().toString(),p.getLocation().getChunk().toString(),args[1]};
-                        String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
-                        if (!durumVeAciklama[0].equals("null")) {
-                            if (durumVeAciklama[0].equals("1")) {
-                                p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
+                        JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                            if (json.get("durum").toString().equals("1")) {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString());
                                 claimListesi.hissedarlaraEkleBir(p.getLocation().getChunk().toString(), p.getName(), args[1], p.getWorld().toString());
                             } else
-                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());} catch (
+                                IOException e) {
+                            throw new RuntimeException(e);
                         }
+
 
                 } else
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim trust oyuncuismi");
             } else if (args[0].equals("untrust")) {
                 if (args.length == 2) {
                         String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"hissedar","sil-heryer",p.getWorld().toString(),p.getLocation().getChunk().toString(),args[1]};
-                        String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
-                        if (!durumVeAciklama[0].equals("null")) {
-                            if (durumVeAciklama[0].equals("1")) {
-                            p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
+                        try{
+                            JSONObject json= apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                            if (json.get("durum").toString().equals("1")) {
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString());
                                 claimListesi.hissedarlardanCikar(p.getLocation().getChunk().toString(), p.getName(), args[1], p.getWorld().toString());
                         } else{
-                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);}
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());}
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
 
                 } else
@@ -99,16 +111,16 @@ public class claimKomutlar implements CommandExecutor {
                 if (args.length == 1) {
 
                         String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsasil","0|0","0|0","2|2",p.getWorld().toString(),p.getLocation().getChunk().toString()};
-                        String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
-                        if (!durumVeAciklama[0].equals("null")) {
-                            if (durumVeAciklama[0].equals("0")) {
-                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
+                        try{JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                            if (json.get("durum").toString().equals("0")) {
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
                         } else {
-                            p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                claimListesi.arsaKaldirBir(p, p.getWorld().toString());
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString());
+                            claimListesi.arsaKaldirBir(p, p.getWorld().toString());
                         }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
-
 
 
                 } else
@@ -121,15 +133,19 @@ public class claimKomutlar implements CommandExecutor {
                     if (args[1].equals("sil")){
 
                         String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsasil-heryer","0|0","0|0","2|2",p.getWorld().toString(),p.getLocation().getChunk().toString()};
-                        String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
-                        if (!durumVeAciklama[0].equals("null")) {
-                            if (durumVeAciklama[0].equals("1")) {
-                                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
-                                    }else{
-                                        p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
+                        try{JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                            if (json.get("durum").toString().equals("0")) {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                            } else {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString());
                                 claimListesi.arsaKaldirHepsi(p.getName());
-                                    }
-                }
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+
+
                     }
                     else
                         p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanim /claim heryeri sil");
@@ -144,13 +160,15 @@ public class claimKomutlar implements CommandExecutor {
                 if (args.length == 3){
                     if (args[1].equals("ekle")) {
                         String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"hissedar","ekle-heryer",p.getWorld().toString(),p.getLocation().getChunk().toString(),args[2]};
-                        String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
-                        if (!durumVeAciklama[0].equals("null")) {
-                            if (durumVeAciklama[0].equals("1")) {
-                                p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
+                        try{JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                            if (json.get("durum").toString().equals("0")) {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                            } else {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString());
                                 claimListesi.hissedarlaraEkleHepsi(p.getName(), args[2]);
-                            } else
-                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
 
                     }else
@@ -164,14 +182,16 @@ public class claimKomutlar implements CommandExecutor {
                 if (args.length == 3){
                     if (args[1].equals("cikar")){
                             String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"hissedar","sil-heryer",p.getWorld().toString(),p.getLocation().getChunk().toString(),args[2]};
-                            String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
-                            if (!durumVeAciklama[0].equals("null")) {
-                                if (durumVeAciklama[0].equals("1")) {
-                                    p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
-                                    claimListesi.hissedarlardanCikarHepsi(p.getName(), args[2]);
-                                } else
-                                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
+                        try{JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                            if (json.get("durum").toString().equals("0")) {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                            } else {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString());
+                                claimListesi.hissedarlardanCikarHepsi(p.getName(), args[2]);
                             }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
 
                     }else
                         p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanim /claim heryerden cikar <oyuncuismi>");
@@ -190,12 +210,18 @@ public class claimKomutlar implements CommandExecutor {
                         }
                         if (aciklama.length()<25){
                             String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsalar","hepsi-aciklama",aciklama,"",""};
-                            String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
-                            if (durumVeAciklama[0].equals("1")){
-                                claimListesi.arsaAciklamaDegisHepsi(p,aciklama);
-                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
-                            }else
-                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);}
+                            try{JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                                if (json.get("durum").toString().equals("0")) {
+                                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                                } else {
+                                    p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString());
+                                    claimListesi.arsaAciklamaDegisHepsi(p,aciklama);
+                                }
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                        }
                         else
                             p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arsa açıklaması 25 karakterden uzun olamaz.");
                     }else
@@ -208,12 +234,16 @@ public class claimKomutlar implements CommandExecutor {
                     }
                     if (aciklama.length()<25){
                     String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsalar","aciklama",aciklama,p.getLocation().getChunk().toString(),p.getWorld().toString()};
-                    String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
-                    if (durumVeAciklama[0].equals("1")){
-                        claimListesi.arsaAciklamaDegisBir(p,aciklama,p.getWorld().toString(),p.getLocation().getChunk().toString());
-                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
-                    }else
-                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);}
+                        try{JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                            if (json.get("durum").toString().equals("0")) {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                            } else {
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString());
+                                claimListesi.arsaAciklamaDegisBir(p,aciklama,p.getWorld().toString(),p.getLocation().getChunk().toString());
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }}
                     else
                         p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arsa açıklaması 25 karakterden uzun olamaz.");
 
@@ -229,14 +259,17 @@ public class claimKomutlar implements CommandExecutor {
             } else if (args[0].equals("devret")) {
                 if (args.length==2){
                     String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsalar","deviret",args[1],p.getLocation().getChunk().toString(),p.getWorld().toString()};
-                    String[] durumVeAciklama = apiService.getDurumVeAciklama(p,linkElemanlar);
-                    if (!durumVeAciklama[0].equals("null")) {
-                        if (durumVeAciklama[0].equals("1")) {
-                            p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1]);
+                    try{JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                        if (json.get("durum").toString().equals("0")) {
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                        } else {
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString());
                             claimListesi.arsaDevret(p.getLocation().getChunk().toString(),p.getName(),args[1],p.getWorld().toString());
-                        } else
-                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1]);
+                        }
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
+
                 }else
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanım /claim devret oyuncuismi");
             }

@@ -45,7 +45,7 @@ public Players oyuncu(Player p){
                 return new String[]{oyuncu.getOyuncuadi(), oyuncu.getOyuncuparola()};
         }
 
-        return new String[]{"bulunamadi","bulunamadi"};
+        return new String[]{"",""};
     }
 
 

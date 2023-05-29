@@ -78,12 +78,12 @@ public class Komutlar  implements CommandExecutor {
             }else if(args[0].equals("ayril")){
                 try {
                     String[] arrayLink = {oyuncuAdiSifresi[0],oyuncuAdiSifresi[1],"klan","ayril"};
-                    String[] durumVeAciklama = apiService.getDurumVeAciklama(oyuncu,arrayLink);
-                    if(durumVeAciklama[0].equals("1")){
+                    JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(arrayLink));
+                    if(json.get("durum").toString().equals("1")){
                         klanListesi.klandanAyril(oyuncu.getName());
-                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1] );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString() );
                     }else{
-                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1] );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString() );
                     }
                 } catch (Exception err) {
                     Bukkit.getLogger().info("[ARMOYU] Sunucuya bağlanılamadı.");
@@ -95,9 +95,9 @@ public class Komutlar  implements CommandExecutor {
                 }
                 try {
                     String[] linkElemanlar = {oyuncuAdiSifresi[0],oyuncuAdiSifresi[1],"klan","olustur",args[1],args[1]};
-                    String[] durumVeAciklama = apiService.getDurumVeAciklama(oyuncu,linkElemanlar);
-                    if(durumVeAciklama[0].equals("1")){
-                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + durumVeAciklama[1] );
+                    JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
+                    if(json.get("durum").toString().equals("1")){
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.GREEN + json.get("aciklama").toString() );
                         klanListesi.klanOlustur(oyuncu.getName(),args[1]);
 
 //                        //OP KONTROL ET
@@ -253,7 +253,7 @@ public class Komutlar  implements CommandExecutor {
 //                        }
 
                     }else{
-                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + durumVeAciklama[1] );
+                        oyuncu.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString() );
 
                     }
 
