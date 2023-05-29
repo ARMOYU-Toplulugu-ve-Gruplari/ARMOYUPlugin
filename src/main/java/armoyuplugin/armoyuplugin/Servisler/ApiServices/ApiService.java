@@ -71,8 +71,8 @@ public class ApiService {
             String arsaAciklamasi = "Arsa açıklaması";
             JSONObject json = readJsonFromUrl(link);
 
-            if (!json.get("arsalar").toString().equals("null")) {
-                JSONArray recs = json.getJSONArray("arsalar");
+            if (!json.get("icerik").toString().equals("null")) {
+                JSONArray recs = json.getJSONArray("icerik");
                 for (int i = 0; i < recs.length(); ++i) {
                     JSONObject rec = recs.getJSONObject(i);
                     if (!rec.isNull("arsaoyuncuadi")){
