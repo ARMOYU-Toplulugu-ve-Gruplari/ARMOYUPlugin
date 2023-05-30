@@ -1,9 +1,10 @@
-package armoyuplugin.armoyuplugin.Pluginler.Claim.Komutlar;
+package armoyuplugin.armoyuplugin.Pluginler.Claim;
 
 import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.ArsaBilgiLink;
 
 import armoyuplugin.armoyuplugin.Pluginler.Claim.menuler.AnaMenu;
 
+import armoyuplugin.armoyuplugin.Servisler.CommandService.ClaimCommandsService;
 import me.kodysimpson.simpapi.exceptions.MenuManagerException;
 import me.kodysimpson.simpapi.exceptions.MenuManagerNotSetupException;
 import me.kodysimpson.simpapi.menu.MenuManager;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.*;
 
 public class claimKomutlar implements CommandExecutor {
+
     String ARMOYUMESAJ = ChatColor.RED + "[ARMOYU Claim] ";
 
     @Override
@@ -42,36 +44,8 @@ public class claimKomutlar implements CommandExecutor {
                 }
             } else if (args[0].equals("al")) {
 
-                int claimkontrol = 0;
-
-
                 if (args.length == 1) {
-
-                    ArsaBilgiLink temp = claimListesi.listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
-                    if (temp!=null){
-                        claimkontrol++;
-                    }
-                    if (claimkontrol != 0) {
-                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Bu arsa sahipli");
-                    } else {
-
-                        p.sendMessage(oyuncuAdiVeParola[0] + " " + oyuncuAdiVeParola[1]);
-                        String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsaal","0","0","0",p.getWorld().toString(),p.getLocation().getChunk().toString()};
-                        try {
-                            JSONObject json = apiService.readJsonFromUrl(apiService.linkOlustur(linkElemanlar));
-                            if (json.get("durum").toString().equals("0")) {
-                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                            } else {
-                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                                claimListesi.arsaAl(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString());
-                            }
-                        } catch (IOException e) {
-                            System.out.println("claim al hatası");
-                        }
-
-
-
-                    }
+                    claimCommandsService.claimAl(p,oyuncuAdiVeParola);
                 } else
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Doğru kullanım şekli /claim al");
             } else if (args[0].equals("trust")) {
@@ -199,7 +173,6 @@ public class claimKomutlar implements CommandExecutor {
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Örnek kullanim /claim heryerden cikar <oyuncuismi>");
 
             }
-
 
             else if (args[0].equals("aciklama")) {
                 if (args[1].equals("hepsi")){

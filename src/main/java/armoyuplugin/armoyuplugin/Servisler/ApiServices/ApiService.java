@@ -3,6 +3,15 @@ package armoyuplugin.armoyuplugin.Servisler.ApiServices;
 import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.ArsaBilgiLink;
 import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanBilgiLink;
 import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanRutbeleri;
+import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -13,6 +22,8 @@ import org.json.JSONObject;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.*;
 
@@ -34,6 +45,27 @@ public class ApiService {
             return new JSONObject(jsonText);
         } finally {
             is.close();
+        }
+    }
+    public JSONObject postYolla(String Link,JSONObject yollancaklar){
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            final HttpPost httpPost = new HttpPost(Link);
+            final List<NameValuePair> nameValuePairs = new ArrayList<>();
+            for (int i = 0; i < yollancaklar.names().length(); i++) {
+                nameValuePairs.add(new BasicNameValuePair(yollancaklar.names().get(i).toString(),yollancaklar.get(yollancaklar.names().get(i).toString()).toString()));
+            }
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            try (final CloseableHttpResponse response = httpClient.execute(httpPost)) {
+                StatusLine statusLine = response.getStatusLine();
+                System.out.println(statusLine.getStatusCode() + " " + statusLine.getReasonPhrase());
+                String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+                System.out.println("Response body: " + responseBody);
+
+                return new JSONObject(responseBody);
+            }
+        }catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

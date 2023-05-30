@@ -4,7 +4,7 @@ import armoyuplugin.armoyuplugin.ARMOYUPlugin;
 import armoyuplugin.armoyuplugin.Pluginler.Genel.GenelKomutlar;
 import armoyuplugin.armoyuplugin.Pluginler.Klan.Komutlar;
 import armoyuplugin.armoyuplugin.Pluginler.Klan.Tabtamamlama;
-import armoyuplugin.armoyuplugin.Pluginler.Claim.Komutlar.claimKomutlar;
+import armoyuplugin.armoyuplugin.Pluginler.Claim.claimKomutlar;
 
 public class SetupCommandsService {
     public void setupCommands(ARMOYUPlugin plugin){

@@ -22,8 +22,6 @@ public class LinkList {
     }
 
     public void arsaAl(String chunk, String pName,String dunya) {
-        ArsaBilgiLink current = listedeAraziBul(dunya,chunk);
-        if (current == null){
             ArsaBilgiLink arazi = new ArsaBilgiLink();
             arazi.arsaoyuncuadi=pName;
             arazi.arsaChunk=chunk;
@@ -34,7 +32,6 @@ public class LinkList {
 
             arazi.next=head;
             head=arazi;
-            }
     }
     public void arsaAlSite(String chunk, String pName,String dunya,String arsaKlanAdi,String arsaAciklaması) {
         ArsaBilgiLink current = listedeAraziBul(dunya,chunk);
@@ -56,7 +53,6 @@ public class LinkList {
         ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
         if (temp!=null){
             if (temp.arsaoyuncuadi.equals(silen)){
-
                 for (int i = 0; i < temp.hissedarlar.size(); i++) {
                     if (temp.hissedarlar.get(i).equals(silinen)){
                         temp.hissedarlar.remove(i);
