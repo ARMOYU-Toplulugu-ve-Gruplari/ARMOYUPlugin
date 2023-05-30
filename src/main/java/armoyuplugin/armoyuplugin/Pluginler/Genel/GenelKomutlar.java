@@ -120,7 +120,7 @@ public class GenelKomutlar implements CommandExecutor {
             }
 
             try {
-                String[] arrayLink = {oyuncuAdiSifresi[0],oyuncuAdiSifresi[1],"sunucubilgi","baslangicayarla",String.valueOf(p.getLocation().getX()),String.valueOf(p.getLocation().getY()),String.valueOf(p.getLocation().getZ())};
+                String[] arrayLink = {oyuncuAdiSifresi[0],oyuncuAdiSifresi[1],"sunucubilgi","baslangicayarla",String.valueOf(p.getLocation().getX()),String.valueOf(p.getLocation().getY()),String.valueOf(p.getLocation().getZ()),p.getWorld().toString()};
                 String link = apiService.linkOlustur(arrayLink);
                 JSONObject json = apiService.readJsonFromUrl(link);
 

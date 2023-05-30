@@ -29,7 +29,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
     public static final ApiService apiService = new ApiService();
     private static final ArmoyuScoreBoard tablo = new ArmoyuScoreBoard();
     private static final SetupCommandsService commandsService = new SetupCommandsService();
-    public static ClaimCommandsService claimCommandsService = new ClaimCommandsService();
+    public static final ClaimCommandsService claimCommandsService = new ClaimCommandsService();
     String ARMOYUMESAJ = "[ARMOYU] ";
 
 

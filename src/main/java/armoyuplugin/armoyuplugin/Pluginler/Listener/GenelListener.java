@@ -199,6 +199,10 @@ public class GenelListener implements Listener {
                 cekozelliky = Integer.parseInt(ozellik.get("sunucuy").toString());
                 cekozellikz = Integer.parseInt(ozellik.get("sunucuz").toString());
 
+
+            }
+            if (!ozellik.isNull("sunucudunya")){
+                dunya = ozellik.get("sunucudunya").toString();
             }
 
 

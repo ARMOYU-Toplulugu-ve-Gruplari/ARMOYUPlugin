@@ -108,7 +108,7 @@ public class ApiService {
 
                     for (int k = 1; k < recsTwo.length(); k++) {
                         JSONObject recThree = recsTwo.getJSONObject(k);
-                        claimListesi.hissedarlaraEkleBir(rec.get("arsachunk").toString(), rec.get("arsaoyuncuadi").toString(), recThree.get("oyuncuadi").toString(), rec.get("arsadunya").toString());
+                        claimListesi.hissedarEkle(rec.get("arsachunk").toString(), rec.get("arsaoyuncuadi").toString(), recThree.get("oyuncuadi").toString(), rec.get("arsadunya").toString());
                     }
                 }
             }

@@ -48,7 +48,7 @@ public class LinkList {
             head=arazi;
         }
     }
-    public void hissedarlardanCikar(String chunk,String silen,String silinen,String dunya){
+    public void hissedarSil(String chunk,String silen,String silinen,String dunya){
 
         ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
         if (temp!=null){
@@ -59,24 +59,20 @@ public class LinkList {
                         break;
                     }
                 }
-
-            }
-        }
-        }
-
-    public void hissedarlaraEkleBir(String chunk,String ekleyen, String eklenen,String dunya){
-        ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
-        if (temp!=null){
-            if (temp.arsaoyuncuadi.equals(ekleyen)) {
-                int trustuVarmi = trustuVarmi(eklenen, dunya, chunk);
-                if (trustuVarmi == 0) {
-                    temp.hissedarlar.add(eklenen);
-                }
             }
         }
     }
 
-    public void hissedarlaraEkleHepsi(String ekleyen,String eklenen){
+    public void hissedarEkle(String chunk,String ekleyen, String eklenen,String dunya){
+        ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
+        if (temp!=null){
+            if (temp.arsaoyuncuadi.equals(ekleyen)) {
+                    temp.hissedarlar.add(eklenen);
+            }
+        }
+    }
+
+    public void hissedarEkleHeryer(String ekleyen,String eklenen){
         int trustdurum;
         ArsaBilgiLink temp=head;
         while (temp!=null){
@@ -96,7 +92,7 @@ public class LinkList {
         }
     }
 
-    public void hissedarlardanCikarHepsi(String ekleyen, String silinen){
+    public void hissedarSilHeryer(String ekleyen, String silinen){
         ArsaBilgiLink temp=head;
         while (temp!=null){
             if (temp.arsaoyuncuadi.equals(ekleyen)){
@@ -293,16 +289,16 @@ public class LinkList {
     //Genel
 
 
-    private int trustuVarmi(String kimin,String dunya,String chunk){
+    public boolean kontrolTrustuVarmi(String kimin,String dunya,String chunk){
         ArsaBilgiLink temp = listedeAraziBul(dunya,chunk);
         if (temp != null) {
             for (int i = 0; i < temp.hissedarlar.size(); i++) {
                 if (temp.hissedarlar.get(i).equals(kimin)){
-                    return 1;
+                    return true;
                 }
             }
         }
-        return 0;
+        return false;
     }
 
     public ArsaBilgiLink listedeAraziBul(String dunya, String chunk){
