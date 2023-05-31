@@ -1,13 +1,13 @@
 package armoyuplugin.armoyuplugin;
-import armoyuplugin.armoyuplugin.OyuncuBilgiListesi.OyuncuLinkList;
-import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.LinkList;
-import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanLinkList;
-import armoyuplugin.armoyuplugin.Pluginler.Listener.GenelListener;
+import armoyuplugin.armoyuplugin.Listeler.OyuncuBilgiListesi.OyuncuLinkList;
+import armoyuplugin.armoyuplugin.Listeler.ClaimListesi.ArsaLinkList;
+import armoyuplugin.armoyuplugin.Listeler.KlanListesi.KlanLinkList;
+import armoyuplugin.armoyuplugin.Genel.Dinleyici;
 import armoyuplugin.armoyuplugin.Servisler.ApiServices.ApiService;
-import armoyuplugin.armoyuplugin.Servisler.CommandService.ClaimCommandsService;
-import armoyuplugin.armoyuplugin.Servisler.CommandService.SetupCommandsService;
+import armoyuplugin.armoyuplugin.Servisler.CommandServices.ClaimCommandsService;
+import armoyuplugin.armoyuplugin.Servisler.CommandServices.SetupCommandsService;
 import armoyuplugin.armoyuplugin.Servisler.JsonFileServices.JsonService;
-import armoyuplugin.armoyuplugin.Pluginler.ScoreBoard.ArmoyuScoreBoard;
+import armoyuplugin.armoyuplugin.Genel.ScoreBoard.ArmoyuScoreBoard;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.kodysimpson.simpapi.menu.MenuManager;
@@ -19,7 +19,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
     private BukkitAudiences adventure;
     public static KlanLinkList klanListesi = new KlanLinkList();
-    public static LinkList claimListesi = new LinkList();
+    public static ArsaLinkList claimListesi = new ArsaLinkList();
     public static OyuncuLinkList oyuncuListesi = new OyuncuLinkList();
     private static ARMOYUPlugin plugin;
     public static ARMOYUPlugin getPlugin(){
@@ -46,7 +46,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
 
 
         MenuManager.setup(getServer(),plugin);
-        getServer().getPluginManager().registerEvents(new GenelListener(), plugin);
+        getServer().getPluginManager().registerEvents(new Dinleyici(), plugin);
         Bukkit.getLogger().info(ARMOYUMESAJ + "----Aktif---- aramizdakioyuncu.com");
 
 

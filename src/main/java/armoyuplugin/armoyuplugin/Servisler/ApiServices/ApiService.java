@@ -1,8 +1,7 @@
 package armoyuplugin.armoyuplugin.Servisler.ApiServices;
 
-import armoyuplugin.armoyuplugin.Pluginler.Claim.ClaimListesi.ArsaBilgiLink;
-import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanBilgiLink;
-import armoyuplugin.armoyuplugin.Pluginler.Klan.KlanListesi.KlanRutbeleri;
+import armoyuplugin.armoyuplugin.Listeler.KlanListesi.KlanBilgiLink;
+import armoyuplugin.armoyuplugin.Listeler.KlanListesi.KlanRutbeleri;
 import org.apache.http.NameValuePair;
 import org.apache.http.StatusLine;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -13,8 +12,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -136,12 +133,12 @@ public class ApiService {
 
             JSONObject json = readJsonFromUrl(link);
 
-            if (!json.get("klanlar").toString().equals("null")) {
+            if (!json.isNull("icerik")) {
 
-                JSONArray recs = json.getJSONArray("klanlar");
+                JSONArray recs = json.getJSONArray("icerik");
                 for (int i = 0; i < recs.length(); ++i) {
                     JSONObject rec = recs.getJSONObject(i);
-                    KlanBilgiLink klan = klanListesi.apiKlanOlustur(rec.get("klankurucu").toString(),rec.get("klanadi").toString());
+                    KlanBilgiLink klan = klanListesi.apiKlanOlustur(rec.get("klankurucu").toString(),rec.get("klanadi").toString(),rec.get("klanaciklama").toString());
 
 
                     JSONArray recsTwo = rec.getJSONArray("klanrutbeler");
