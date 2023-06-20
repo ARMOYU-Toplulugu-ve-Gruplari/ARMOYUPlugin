@@ -54,10 +54,7 @@ public class ApiService {
             }
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             try (final CloseableHttpResponse response = httpClient.execute(httpPost)) {
-                StatusLine statusLine = response.getStatusLine();
-                System.out.println(statusLine.getStatusCode() + " " + statusLine.getReasonPhrase());
                 String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-                System.out.println("Response body: " + responseBody);
 
                 return new JSONObject(responseBody);
             }
@@ -105,7 +102,7 @@ public class ApiService {
 
                     for (int k = 1; k < recsTwo.length(); k++) {
                         JSONObject recThree = recsTwo.getJSONObject(k);
-                        claimListesi.hissedarEkle(rec.get("arsachunk").toString(), rec.get("arsaoyuncuadi").toString(), recThree.get("oyuncuadi").toString(), rec.get("arsadunya").toString());
+                        claimListesi.hissedarEkleSite(rec.get("arsachunk").toString(), rec.get("arsaoyuncuadi").toString(), recThree.get("oyuncuadi").toString(), rec.get("arsadunya").toString());
                     }
                 }
             }

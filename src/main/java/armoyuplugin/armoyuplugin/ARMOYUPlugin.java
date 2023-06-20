@@ -5,6 +5,7 @@ import armoyuplugin.armoyuplugin.Listeler.KlanListesi.KlanLinkList;
 import armoyuplugin.armoyuplugin.Genel.Dinleyici;
 import armoyuplugin.armoyuplugin.Servisler.ApiServices.ApiService;
 import armoyuplugin.armoyuplugin.Servisler.CommandServices.ClaimCommandsService;
+import armoyuplugin.armoyuplugin.Servisler.CommandServices.ClanCommandsService;
 import armoyuplugin.armoyuplugin.Servisler.CommandServices.SetupCommandsService;
 import armoyuplugin.armoyuplugin.Servisler.JsonFileServices.JsonService;
 import armoyuplugin.armoyuplugin.Genel.ScoreBoard.ArmoyuScoreBoard;
@@ -30,6 +31,7 @@ public final class ARMOYUPlugin extends JavaPlugin {
     private static final ArmoyuScoreBoard tablo = new ArmoyuScoreBoard();
     private static final SetupCommandsService commandsService = new SetupCommandsService();
     public static final ClaimCommandsService claimCommandsService = new ClaimCommandsService();
+    public static final ClanCommandsService clanCommandsService = new ClanCommandsService();
     String ARMOYUMESAJ = "[ARMOYU] ";
 
 

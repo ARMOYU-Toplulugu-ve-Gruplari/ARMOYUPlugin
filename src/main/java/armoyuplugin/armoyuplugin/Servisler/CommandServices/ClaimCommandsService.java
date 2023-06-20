@@ -11,11 +11,8 @@ public class ClaimCommandsService {
 
 
     public void claimAl(Player p,String[] oyuncuAdiVeParola){
-        if (claimListesi.listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString()) == null){
             try {
-
                 String[] linkElemanlar = {oyuncuAdiVeParola[0],oyuncuAdiVeParola[1],"arsaal","0","0","0","0","0"};
-
                 JSONObject yollanacaklar = new JSONObject();
 
                 yollanacaklar.put("kordinatX","0");
@@ -23,24 +20,17 @@ public class ClaimCommandsService {
                 yollanacaklar.put("kordinatZ","0");
                 yollanacaklar.put("kordinatDunya",p.getWorld().toString());
                 yollanacaklar.put("arsaChunk",p.getLocation().getChunk().toString());
-                JSONObject json = apiService.postYolla(apiService.linkOlustur(linkElemanlar),yollanacaklar);
 
-                if (json.get("durum").toString().equals("0")) {
-                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                } else {
-                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                    claimListesi.arsaAl(p.getLocation().getChunk().toString(), p.getName(), p.getWorld().toString());
-                }
+                claimListesi.arsaAl(p,yollanacaklar,apiService.linkOlustur(linkElemanlar));
+
             } catch (Exception e) {
                 System.out.println("claim al hatası");
             }
-        }else
-            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "arsa zaten alınmış.");
+
     }
 
     public void hissedarEkle(Player p,String[] oyuncuAdiVeParola,String eklenilen){
 
-            if (!claimListesi.kontrolTrustuVarmi(eklenilen, p.getWorld().toString(), p.getLocation().getChunk().toString())) {
                 try {
                 String[] linkElemanlar = {oyuncuAdiVeParola[0], oyuncuAdiVeParola[1], "hissedar", "ekle", "0", "0", "0"};
                 JSONObject yollanacaklar = new JSONObject();
@@ -49,20 +39,10 @@ public class ClaimCommandsService {
                 yollanacaklar.put("arsaChunk", p.getLocation().getChunk().toString());
                 yollanacaklar.put("eklenecekoyuncuAdi", eklenilen);
 
-                    JSONObject json = apiService.postYolla(apiService.linkOlustur(linkElemanlar), yollanacaklar);
-                    if (json.get("durum").toString().equals("0")) {
-                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                    } else {
-                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                        claimListesi.hissedarEkle(p.getLocation().getChunk().toString(), p.getName(), eklenilen, p.getWorld().toString());
-                    }
+                claimListesi.hissedarEkle(p,eklenilen,yollanacaklar,apiService.linkOlustur(linkElemanlar));
                 } catch (Exception e) {
                     System.out.println("hissedar ekle hatası");
                 }
-
-            } else
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Kullanıcı zaten hissedarlara ekli.");
-
     }
 
 
@@ -75,14 +55,7 @@ public class ClaimCommandsService {
             yollanacaklar.put("arsaChunk", p.getLocation().getChunk().toString());
             yollanacaklar.put("silinecekoyuncuAdi", cikarilan);
 
-
-            JSONObject json = apiService.postYolla(apiService.linkOlustur(linkElemanlar), yollanacaklar);
-            if (json.get("durum").toString().equals("0")) {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-            } else {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                claimListesi.hissedarSil(p.getLocation().getChunk().toString(), p.getName(), cikarilan, p.getWorld().toString());
-            }
+            claimListesi.hissedarSil(p,yollanacaklar,apiService.linkOlustur(linkElemanlar),cikarilan);
         } catch (Exception e) {
             System.out.println("hissedar sil hatası");
         }
@@ -94,7 +67,6 @@ public class ClaimCommandsService {
             JSONObject yollanacaklar = new JSONObject();
 
             yollanacaklar.put("eklenecekoyuncuAdi", eklenilen);
-
 
             JSONObject json = apiService.postYolla(apiService.linkOlustur(linkElemanlar), yollanacaklar);
             if (json.get("durum").toString().equals("0")) {
@@ -138,14 +110,8 @@ public class ClaimCommandsService {
             yollanacaklar.put("kordinatDunya",p.getWorld().toString());
             yollanacaklar.put("arsaChunk",p.getLocation().getChunk().toString());
 
+            claimListesi.claimSil(p,yollanacaklar,apiService.linkOlustur(linkElemanlar));
 
-            JSONObject json = apiService.postYolla(apiService.linkOlustur(linkElemanlar), yollanacaklar);
-            if (json.get("durum").toString().equals("0")) {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-            } else {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                claimListesi.claimSil(p.getName(),p.getLocation().getChunk().toString(),p.getWorld().toString());
-            }
         } catch (Exception e) {
             System.out.println("arsa sil hatası");
         }
@@ -182,13 +148,8 @@ public class ClaimCommandsService {
             yollanacaklar.put("arsaChunk", p.getLocation().getChunk().toString());
             yollanacaklar.put("arsaDunya",p.getWorld().toString());
 
-            JSONObject json = apiService.postYolla(apiService.linkOlustur(linkElemanlar), yollanacaklar);
-            if (json.get("durum").toString().equals("0")) {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-            } else {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                claimListesi.claimAciklama(p.getName(),aciklama,p.getWorld().toString(),p.getLocation().getChunk().toString());
-            }
+            claimListesi.claimAciklama(p,yollanacaklar,apiService.linkOlustur(linkElemanlar),aciklama);
+
         } catch (Exception e) {
             System.out.println("claim aciklama hatası");
         }
@@ -228,13 +189,8 @@ public class ClaimCommandsService {
                 yollanacaklar.put("arsaChunk", p.getLocation().getChunk().toString());
                 yollanacaklar.put("arsaDunya", p.getWorld().toString());
 
-                JSONObject json = apiService.postYolla(apiService.linkOlustur(linkElemanlar), yollanacaklar);
-                if (json.get("durum").toString().equals("0")) {
-                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                } else {
-                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                    claimListesi.claimRehin(p.getName(),p.getWorld().toString(),p.getLocation().getChunk().toString(),klanAdi);
-                }
+                claimListesi.claimRehin(p,yollanacaklar,apiService.linkOlustur(linkElemanlar),klanAdi);
+
             }else
                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Önce bir klana üye olmalısın.");
         } catch (Exception e) {
@@ -254,14 +210,8 @@ public class ClaimCommandsService {
             yollanacaklar.put("arsaChunk", p.getLocation().getChunk().toString());
             yollanacaklar.put("arsaDunya", p.getWorld().toString());
 
+            claimListesi.claimDevret(p,yollanacaklar,apiService.linkOlustur(linkElemanlar),devredilen);
 
-            JSONObject json = apiService.postYolla(apiService.linkOlustur(linkElemanlar), yollanacaklar);
-            if (json.get("durum").toString().equals("0")) {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-            } else {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                claimListesi.claimDevret(p.getLocation().getChunk().toString(),p.getName(),devredilen,p.getWorld().toString());
-            }
 
         } catch (Exception e) {
             System.out.println("claim devret hatası");

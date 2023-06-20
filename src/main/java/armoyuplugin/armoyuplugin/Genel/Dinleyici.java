@@ -116,7 +116,7 @@ public class Dinleyici implements Listener {
 
             if (timeElapsed > 2000){
                 this.cooldown.put(p.getUniqueId(),System.currentTimeMillis());
-                claimListesi.chunkControlOnScreen(p,p.getLocation().getChunk(),p.getWorld().toString(),plugin);
+                claimListesi.EkranaAraziBilgiYazdirma(p,p.getLocation().getChunk(),p.getWorld().toString(),plugin);
             }
 
         }
