@@ -52,10 +52,12 @@ public class ApiService {
             for (int i = 0; i < yollancaklar.names().length(); i++) {
                 nameValuePairs.add(new BasicNameValuePair(yollancaklar.names().get(i).toString(),yollancaklar.get(yollancaklar.names().get(i).toString()).toString()));
             }
+
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             try (final CloseableHttpResponse response = httpClient.execute(httpPost)) {
+                StatusLine statusLine = response.getStatusLine();
+                System.out.println(statusLine.getStatusCode() + " " + statusLine.getReasonPhrase());
                 String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
-
                 return new JSONObject(responseBody);
             }
         }catch (Exception e) {

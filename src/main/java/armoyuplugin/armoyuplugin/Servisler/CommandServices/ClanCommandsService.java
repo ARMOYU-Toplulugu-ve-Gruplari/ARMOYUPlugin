@@ -20,7 +20,7 @@ public class ClanCommandsService {
             klanListesi.klanKatil(p,yollanacaklar,apiService.linkOlustur(linkElemanlar),klanAdi);
 
         } catch (Exception e) {
-            System.out.println("klanKatil hatası");
+            System.out.println("klan katil hatası");
         }
     }
     public void klanOlustur(Player p,String[] oyuncuAdiVeParola,String klanAdi){
@@ -34,7 +34,7 @@ public class ClanCommandsService {
             klanListesi.klanOlustur(p,yollanacaklar,apiService.linkOlustur(linkElemanlar),klanAdi);
 
         } catch (Exception e) {
-            System.out.println("klanKatil hatası");
+            System.out.println("klan oluştur hatası");
         }
     }
     public void klanAyril(Player p,String[] oyuncuAdiVeParola){
@@ -45,7 +45,7 @@ public class ClanCommandsService {
             klanListesi.klanAyril(p,yollanacaklar,apiService.linkOlustur(linkElemanlar));
 
         } catch (Exception e) {
-            System.out.println("klanKatil hatası");
+            System.out.println("klan Ayrıl hatası");
         }
     }
     public void klanDagit(Player p,String[] oyuncuAdiVeParola){
@@ -56,7 +56,7 @@ public class ClanCommandsService {
             klanListesi.klanDagit(p,yollanacaklar,apiService.linkOlustur(linkElemanlar));
 
         } catch (Exception e) {
-            System.out.println("klanKatil hatası");
+            System.out.println("klan Dagit hatası");
         }
     }
     public void klanGit(Player p,String[] oyuncuAdiVeParola){
@@ -66,7 +66,7 @@ public class ClanCommandsService {
 
             klanListesi.klanGit(p,yollanacaklar,apiService.linkOlustur(linkElemanlar));
         } catch (Exception e) {
-            System.out.println("klanKatil hatası");
+            System.out.println("klan Git hatası");
         }
     }
 
@@ -82,7 +82,7 @@ public class ClanCommandsService {
 
             klanListesi.klanBaslangicNoktasi(p,yollanacaklar,apiService.linkOlustur(linkElemanlar));
         } catch (Exception e) {
-            System.out.println("klanKatil hatası");
+            System.out.println("klan Baslangic hatası");
         }
     }
 
@@ -95,7 +95,7 @@ public class ClanCommandsService {
 
             klanListesi.klanDavet(p,yollanacaklar,apiService.linkOlustur(linkElemanlar));
         } catch (Exception e) {
-            System.out.println("klanKatil hatası");
+            System.out.println("klan Davet hatası");
         }
     }
 
@@ -114,7 +114,7 @@ public class ClanCommandsService {
 
             klanListesi.klanAciklama(p,yollanacaklar,apiService.linkOlustur(linkElemanlar));
         } catch (Exception e) {
-            System.out.println("klanKatil hatası");
+            System.out.println("klan Aciklama hatası");
         }
     }
 

@@ -85,7 +85,7 @@ public class KlanLinkList {
     }
 
     public void klanAyril(Player p,JSONObject yollanacaklar,String link){
-        if (hangiKlanaUye(p.getName()).isEmpty()){
+        if (!hangiKlanaUye(p.getName()).isEmpty()){
             JSONObject json = apiService.postYolla(link, yollanacaklar);
             if (json.get("durum").toString().equals("0")) {
                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
@@ -111,7 +111,8 @@ public class KlanLinkList {
                 klan.klanRutbeleri.clear();
                 klan.arsaAciklamasi = "";
             }
-        }
+        }else
+            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Önce bir klana üye olmalısın.");
     }
 
     public void klanGit(Player p,JSONObject yollanacaklar,String link){
@@ -155,8 +156,8 @@ public class KlanLinkList {
             } else {
                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
             }
-
-        }
+        }else
+            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Önce bir klana üye olmalısın.");
     }
     public void klanAciklama(Player p,JSONObject yollanacaklar,String link){
         String klanAdi = hangiKlanaUye(p.getName());
