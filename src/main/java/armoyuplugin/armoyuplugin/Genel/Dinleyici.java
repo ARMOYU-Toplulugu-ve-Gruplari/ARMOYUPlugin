@@ -396,7 +396,7 @@ public class Dinleyici implements Listener {
 
         try{
             //Oyuncu hiç oyuna girmiş mi kontrol
-
+//Kontroller
             String oyuncuparola = jsonService.getOyuncuAdiVeParola(e.getEntity().getKiller())[1];
 
             JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/"+APIKEY+"/"+killer+"/"+oyuncuparola+"/olumbilgi/"+killed+"/0/");
