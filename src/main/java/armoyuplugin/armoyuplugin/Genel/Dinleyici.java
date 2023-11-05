@@ -387,7 +387,7 @@ public class Dinleyici implements Listener {
 
         //BASE PLUGİN
         e.setDeathMessage("");
-
+//asd
         String killed="";
         String killer="";
 
