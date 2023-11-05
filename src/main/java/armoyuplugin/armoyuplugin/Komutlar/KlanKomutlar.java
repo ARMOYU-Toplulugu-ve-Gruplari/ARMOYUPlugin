@@ -1,17 +1,10 @@
 package armoyuplugin.armoyuplugin.Komutlar;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import java.io.*;
 
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.*;
 import static org.bukkit.Bukkit.*;
@@ -27,14 +20,12 @@ public class KlanKomutlar implements CommandExecutor {
             return true;
         }
 
-
         Player p = (Player) sender;
 
         String[] oyuncuAdiVeParola = jsonService.getOyuncuAdiVeParola(p);
 
         if (cmd.getName().equalsIgnoreCase("klan")) {
             if (args.length==0){
-
             }else if (args[0].equals("katil")){
                 if (args.length == 2){
                     clanCommandsService.klanKatil(p,oyuncuAdiVeParola,args[1]);
@@ -58,23 +49,25 @@ public class KlanKomutlar implements CommandExecutor {
                 clanCommandsService.klanBaslangicNoktasi(p,oyuncuAdiVeParola);
                 return true;
             }else if (args[0].equals("acil")) {
-
-            }else if (args[0].equals("devret")) {
-
+                return true;
+            }else if(args[0].equals("at")){
+                if (args.length == 2)
+                    clanCommandsService.klanAt(p,oyuncuAdiVeParola,args[1]);
             }else if (args[0].equals("davet")) {
                 if (args.length == 2){
-                    clanCommandsService.klanDavet(p,oyuncuAdiVeParola,args[1]);
-                    return true;
+                        clanCommandsService.klanDavet(p,oyuncuAdiVeParola,args[1], getServer());
                 }
-
             }else if(args[0].equals("arsa")){
                 if (args[1].equals("devret")){
-
+                    clanCommandsService.klanArsaDevret(p,oyuncuAdiVeParola,args[2]);
+                    return true;
                 }else if (args[1].equals("sil")) {
-
-                }else if (args[1].equals("liste")){
-
+                    clanCommandsService.klanArsaSil(p,oyuncuAdiVeParola);
+                    return true;
                 }
+//                else if (args[1].equals("liste")){
+//
+//                }
             }else if (args[0].equals("aciklama")) {
                 if (args.length!=1){
                     clanCommandsService.klanAciklama(p,oyuncuAdiVeParola,args);

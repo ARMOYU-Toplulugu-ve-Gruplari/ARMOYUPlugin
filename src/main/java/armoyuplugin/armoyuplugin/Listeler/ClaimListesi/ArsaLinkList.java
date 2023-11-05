@@ -1,6 +1,7 @@
 package armoyuplugin.armoyuplugin.Listeler.ClaimListesi;
 
 import armoyuplugin.armoyuplugin.ARMOYUPlugin;
+import armoyuplugin.armoyuplugin.Listeler.KlanListesi.Yetkiler;
 import armoyuplugin.armoyuplugin.Listeler.OyuncuBilgiListesi.OyuncuBilgiLink;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.json.JSONObject;
 
 import java.time.Duration;
+import java.util.List;
 
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.*;
 import static armoyuplugin.armoyuplugin.ARMOYUPlugin.apiService;
@@ -46,6 +48,8 @@ public class ArsaLinkList {
             p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arazi zaten alınmış.");
 
     }
+
+
     public void arsaAlSite(String chunk, String pName,String dunya,String arsaKlanAdi,String arsaAciklaması) {
         ArsaBilgiLink current = listedeAraziBul(dunya,chunk);
         if (current == null){
@@ -61,11 +65,15 @@ public class ArsaLinkList {
             head=arazi;
         }
     }
+
     public void hissedarSil(Player p,JSONObject yollanacaklar,String link,String cikarilan){
 
         ArsaBilgiLink temp = listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
         if (temp!=null){
             if (temp.arsaoyuncuadi.equals(p.getName())){
+
+//                if (arsaKlanaBagliMi(p.getWorld().toString(),p.getLocation().getChunk().toString()))
+
                 for (int i = 0; i < temp.hissedarlar.size(); i++) {
                     if (temp.hissedarlar.get(i).equals(cikarilan)){
                         JSONObject json = apiService.postYolla(link, yollanacaklar);
@@ -79,6 +87,9 @@ public class ArsaLinkList {
                     }
                 }
                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Çıkarmak istediğin oyuncu hissedarlarına dahil değil.");
+
+
+
             }else
                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arazi sana ait değil.");
         }else
@@ -89,6 +100,9 @@ public class ArsaLinkList {
         ArsaBilgiLink temp = listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
         if (temp!=null){
             if (temp.arsaoyuncuadi.equals(p.getName())) {
+
+                if (ayniKlandaMi(p.getName(),eklenilen)){
+
                 JSONObject json = apiService.postYolla(link, yollanacaklar);
                 if (json.get("durum").toString().equals("0")) {
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
@@ -96,6 +110,10 @@ public class ArsaLinkList {
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
                     temp.hissedarlar.add(eklenilen);
                 }
+
+                }else
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arazi klana bağlandığı için sadece klandakilere trust verebilirsin.");
+
             }else
                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arazi sana ait değil.");
         }else
@@ -145,24 +163,36 @@ public class ArsaLinkList {
         }
     }
 
-
     public void claimSil(Player p,JSONObject yollanacaklar,String link) {
         ArsaBilgiLink temp = head;
+        if (head.arsaoyuncuadi.equals(p.getName())){
+            if (head.arsaChunk.equals(p.getLocation().getChunk().toString())){
+                if (head.arsaDunya.equals(p.getWorld().toString())){
+                    if (head.arsaKlan.isEmpty()){
+                        JSONObject json = apiService.postYolla(link, yollanacaklar);
+                        if (json.get("durum").toString().equals("0")) {
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                            return;
+                        } else {
+                            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                            head = head.next;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
         while (temp != null) {
-            if (temp.arsaoyuncuadi.equals(p.getName())){
-                if (temp.arsaChunk.equals(p.getLocation().getChunk().toString())){
-                    if (temp.arsaDunya.equals(p.getWorld().toString())){
-                        if (temp.arsaKlan.isEmpty()){
+            if (temp.next.arsaoyuncuadi.equals(p.getName())){
+                if (temp.next.arsaChunk.equals(p.getLocation().getChunk().toString())){
+                    if (temp.next.arsaDunya.equals(p.getWorld().toString())){
+                        if (temp.next.arsaKlan.isEmpty()){
                             JSONObject json = apiService.postYolla(link, yollanacaklar);
                             if (json.get("durum").toString().equals("0")) {
                                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
                             } else {
                                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                                temp.arsaDunya ="";
-                                temp.hissedarlar.clear();
-                                temp.arsaoyuncuadi = "";
-                                temp.arsaKlan = "";
-                                temp.arsaChunk = "";
+                                temp.next = temp.next.next;
                             }
                         }else
                             p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arsan klana bağlı olduğu için silemezsin.");
@@ -230,6 +260,8 @@ public class ArsaLinkList {
                     } else {
                         p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
                         temp.arsaKlan = klanAdi;
+                        temp.hissedarlar.clear();
+                        temp.hissedarlar.add(p.getName());
                     }
                 }else
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arsa zaten rehin verilmiş.");
@@ -243,16 +275,21 @@ public class ArsaLinkList {
         ArsaBilgiLink temp = listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
         if (temp!=null) {
             if (temp.arsaoyuncuadi.equals(p.getName())){
-                JSONObject json = apiService.postYolla(link, yollanacaklar);
-                if (json.get("durum").toString().equals("0")) {
-                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                } else {
-                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-                    temp.arsaoyuncuadi = devredilen;
-                    temp.hissedarlar.clear();
-                    temp.hissedarlar.add(devredilen);
-                }
 
+                if (arsaKlanaBagliMi(temp.arsaDunya,temp.arsaChunk)){
+
+                    JSONObject json = apiService.postYolla(link, yollanacaklar);
+                    if (json.get("durum").toString().equals("0")) {
+                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                    } else {
+                        p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                        temp.arsaoyuncuadi = devredilen;
+                        temp.hissedarlar.clear();
+                        temp.hissedarlar.add(devredilen);
+                    }
+
+                }else
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arsa klana bağlandığı için devredilemez.");
             }else
                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Arsa sana ait değil.");
         }else
@@ -348,14 +385,18 @@ public class ArsaLinkList {
             }
             }
             if (trustvarmi!=0){
+                System.out.println(1);
                 dostBolgeGiris(plugin.getAdventure().player(p),arsaSahibi,aciklama);
             }else if(arsadolu != 0){
+                System.out.println(2);
                 dusmanBolgeGiris(plugin.getAdventure().player(p),arsaSahibi,aciklama);
             }else
                 bosAraziGiris(plugin.getAdventure().player(p));
+            System.out.println(3);
         }
 
     }
+
 
 
 
@@ -388,14 +429,6 @@ public class ArsaLinkList {
         return "Claimsiz";
     }
 
-
-
-
-
-
-
-
-
     //Genel
 
     public ArsaBilgiLink listedeAraziBul(String dunya, String chunk){
@@ -420,7 +453,8 @@ public class ArsaLinkList {
                     if (temp.arsaKlan.isEmpty()){
                         return temp.arsaAciklamasi;
                     }else{
-                        return klanListesi.arsaAciklamaBul(temp.arsaKlan);}
+                        return klanListesi.arsaAciklamaBul(temp.arsaKlan);
+                    }
                 }
             }
             temp = temp.next;
@@ -436,6 +470,26 @@ public class ArsaLinkList {
 
     // klanla ilgili işlemler
 
+    public boolean yetkiKontrol(String oyuncuAdi, String yetki){
+        return klanListesi.yetkiKontrol(oyuncuAdi,yetki);
+    }
+
+    public boolean ayniKlandaMi(String oyuncuBir,String oyuncuIki){
+        String bir = klanListesi.hangiKlanaUye(oyuncuBir);
+        String iki = klanListesi.hangiKlanaUye(oyuncuIki);
+        boolean sonDurum = true;
+        if (!bir.isEmpty()){
+            if (!iki.isEmpty()){
+                sonDurum = bir.equals(iki);
+            }
+        }
+        return sonDurum;
+    }
+
+    public boolean arsaKlanaBagliMi(String dunya, String chunk){
+        return !(listedeAraziBul(dunya,chunk).arsaKlan.isEmpty());
+    }
+
     public void klandanAyrilClaim(String ayrilan){
         ArsaBilgiLink temp = head;
         while (temp != null){
@@ -449,5 +503,40 @@ public class ArsaLinkList {
         }
     }
 
+    public void klanDagitClaim(String klanAdi){
+        ArsaBilgiLink temp = head;
+        if (head.arsaKlan.equals(klanAdi)){
+                if (head.arsaoyuncuadi.isEmpty()){
+                    head = head.next;
+                }else {
+                    temp.arsaKlan = "";
+                }
+            return;
+        }
+        while (temp != null){
+            if (temp.next.arsaKlan.equals(klanAdi)){
+                if (temp.next.arsaoyuncuadi.isEmpty()){
+                    temp.next = temp.next.next;
+                }else {
+                    temp.next.arsaKlan = "";
+                }
+            }
+            temp = temp.next;
+        }
+    }
+
+    public void klanArsaSil(String name){
+        ArsaBilgiLink temp = head;
+        if (head.arsaoyuncuadi.equals(name)){
+            head = head.next;
+            return;
+        }
+        while (temp != null){
+            if (temp.next.arsaoyuncuadi.equals(name)){
+                temp.next = temp.next.next;
+            }
+            temp = temp.next;
+        }
+    }
 
 }

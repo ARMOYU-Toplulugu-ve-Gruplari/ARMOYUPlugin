@@ -1,4 +1,5 @@
 package armoyuplugin.armoyuplugin;
+import armoyuplugin.armoyuplugin.Listeler.KlanListesi.Yetkiler;
 import armoyuplugin.armoyuplugin.Listeler.OyuncuBilgiListesi.OyuncuLinkList;
 import armoyuplugin.armoyuplugin.Listeler.ClaimListesi.ArsaLinkList;
 import armoyuplugin.armoyuplugin.Listeler.KlanListesi.KlanLinkList;
@@ -14,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.kodysimpson.simpapi.menu.MenuManager;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 
+import java.util.List;
 
 
 public final class ARMOYUPlugin extends JavaPlugin {

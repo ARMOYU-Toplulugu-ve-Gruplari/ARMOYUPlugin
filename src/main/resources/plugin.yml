@@ -1,7 +1,7 @@
 name: ARMOYUPlugin
 version: '${project.version}'
 main: armoyuplugin.armoyuplugin.ARMOYUPlugin
-api-version: 1.19
+api-version: 1.20
 prefix: ARMOYU
 authors: [aramizdakioyuncu.com]
 loadbefore: [ClaimPlugini,V2]

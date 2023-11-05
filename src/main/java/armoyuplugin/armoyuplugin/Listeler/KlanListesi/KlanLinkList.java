@@ -1,14 +1,13 @@
 package armoyuplugin.armoyuplugin.Listeler.KlanListesi;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import armoyuplugin.armoyuplugin.Listeler.ClaimListesi.ArsaBilgiLink;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.apiService;
-import static armoyuplugin.armoyuplugin.ARMOYUPlugin.claimListesi;
+import static armoyuplugin.armoyuplugin.ARMOYUPlugin.*;
+import static org.bukkit.Bukkit.getServer;
 
 public class KlanLinkList {
     private String ARMOYUMESAJ = ChatColor.RED + "[ARMOYU Klan] ";
@@ -30,10 +29,6 @@ public class KlanLinkList {
                     KlanRutbeleri rutbe = new KlanRutbeleri();
                     rutbe.rutbeSira = 0;
                     rutbe.rutbeAdi = "Çapulcu";
-                    rutbe.davet = 0;
-                    rutbe.kurucu = 0;
-                    rutbe.uyeDuzenle = 0;
-                    rutbe.klanBaslangicAyarla = 0;
 
                     KlanOyuncuBilgi eklenilen = new KlanOyuncuBilgi();
                     eklenilen.oyuncuAdi = p.getName();
@@ -61,22 +56,26 @@ public class KlanLinkList {
                     klan.klanKurucu = p.getName();
                     klan.arsaAciklamasi = "Klan Arsa Açıklaması.";
                     KlanRutbeleri kurucuRutbesi = new KlanRutbeleri();
-                    kurucuRutbesi.kurucu = 1;
-                    kurucuRutbesi.davet = 1;
+
                     kurucuRutbesi.rutbeAdi = "Lider";
                     kurucuRutbesi.rutbeSira = 1;
-                    kurucuRutbesi.uyeDuzenle = 1;
-                    kurucuRutbesi.klanBaslangicAyarla = 1;
 
                     klan.klanRutbeleri.add(kurucuRutbesi);
 
                     KlanOyuncuBilgi kurucu = new KlanOyuncuBilgi();
-                    kurucu.oyuncuAdi=p.getName();
                     kurucu.rutbe=kurucuRutbesi;
+                    kurucu.rutbe.yetkiler.add(Yetkiler.kurucu);
+                    kurucu.oyuncuAdi=p.getName();
                     klan.klanUyeleri.add(kurucu);
 
                     klan.next = head;
                     head = klan;
+
+                    KlanBilgiLink temp = head;
+                    while (temp != null){
+                        System.out.println(temp.klanUyeleri.get(0));
+                        temp = temp.next;
+                    }
                 }
 
             }else
@@ -103,14 +102,40 @@ public class KlanLinkList {
     public void klanDagit(Player p,JSONObject yollanacaklar,String link){
         String klanAdi = hangiKlanaUye(p.getName());
         if (!klanAdi.isEmpty()){
-            KlanBilgiLink klan = klanBulKlanAdi(klanAdi);
-            if (klan.klanKurucu.equals(p.getName())){
-                klan.klanKurucu = "";
-                klan.klanAdi = "";
-                klan.klanUyeleri.clear();
-                klan.klanRutbeleri.clear();
-                klan.arsaAciklamasi = "";
-            }
+
+            if (yetkiKontrol(p.getName(),Yetkiler.kurucu)) {
+                JSONObject json = apiService.postYolla(link, yollanacaklar);
+                if (json.get("durum").toString().equals("1")) {
+//                KlanBilgiLink klan = klanBulKlanAdi(klanAdi);
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                    KlanBilgiLink temp = head;
+                    if (head.klanAdi.equals(klanAdi)) {
+                        claimListesi.klanDagitClaim(klanAdi);
+                        head = head.next;
+                        return;
+                    }
+                    while (temp != null) {
+                        if (temp.next.klanAdi.equals(klanAdi)) {
+                            claimListesi.klanDagitClaim(klanAdi);
+                            temp.next = temp.next.next;
+                            break;
+                        }
+                        temp = temp.next;
+                    }
+
+//                if (klan.klanKurucu.equals(p.getName())) {
+//                    klan.klanKurucu = "";
+//                    klan.klanAdi = "";
+//                    klan.klanUyeleri.clear();
+//                    klan.klanRutbeleri.clear();
+//                    klan.arsaAciklamasi = "";
+//                }
+
+                }else
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+            }else
+                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Yetkiniz bulunmamaktadır.");
+
         }else
             p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Önce bir klana üye olmalısın.");
     }
@@ -135,27 +160,57 @@ public class KlanLinkList {
     public void klanBaslangicNoktasi(Player p,JSONObject yollanacaklar,String link){
         String klanAdi = hangiKlanaUye(p.getName());
         if (!klanAdi.isEmpty()){
-            JSONObject json = apiService.postYolla(link, yollanacaklar);
-            if (json.get("durum").toString().equals("0")) {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-            } else {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-            }
+
+            if (yetkiKontrol(p.getName(),Yetkiler.klanBaslangicAyarla)) {
+
+                JSONObject json = apiService.postYolla(link, yollanacaklar);
+                if (json.get("durum").toString().equals("0")) {
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                } else {
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                }
+
+            }else
+                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Yetkiniz bulunmamaktadır.");
+
         }else
             p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Önce bir klana üye olmalısın.");
     }
 
-    public void klanDavet(Player p,JSONObject yollanacaklar,String link){
+    public void klanDavet(Player p, JSONObject yollanacaklar, String link, Server server){
         String klanAdi = hangiKlanaUye(p.getName());
-        if (!klanAdi.isEmpty()){
-            yollanacaklar.put("grupadi",klanAdi);
+        if (!klanAdi.isEmpty()) {
 
-            JSONObject json = apiService.postYolla(link, yollanacaklar);
-            if (json.get("durum").toString().equals("0")) {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-            } else {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-            }
+            yollanacaklar.put("klanadi", klanAdi);
+
+            if (yetkiKontrol(p.getName(), Yetkiler.davet)) {
+
+
+                int oyuncubul = 0;
+                Player oyuncuarkadas = null;
+                for (Player player : getServer().getOnlinePlayers()) {
+                    if (player.getName().equals(yollanacaklar.get("kullaniciadi"))) {
+                        oyuncubul = 1;
+                        oyuncuarkadas = player;
+                        break;
+                    }
+                }
+                if (oyuncubul == 1) {
+                    oyuncuarkadas.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + p.getName() + " adlı oyuncu seni " + klanAdi + " adlı klana davet ediyor.");
+                } else {
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + p.getName() + " davet etmek istediğin oyuncu aktif değil.");
+                    return;
+                }
+                JSONObject json = apiService.postYolla(link, yollanacaklar);
+                if (json.get("durum").toString().equals("0")) {
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                } else {
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                }
+            } else
+                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Yetkiniz bulunmamaktadır.");
+
+
         }else
             p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Önce bir klana üye olmalısın.");
     }
@@ -163,17 +218,84 @@ public class KlanLinkList {
         String klanAdi = hangiKlanaUye(p.getName());
         if (!klanAdi.isEmpty()){
             yollanacaklar.put("grupadi",klanAdi);
+            if (yetkiKontrol(p.getName(),Yetkiler.kurucu)){
+                JSONObject json = apiService.postYolla(link, yollanacaklar);
+                if (json.get("durum").toString().equals("0")) {
 
-            JSONObject json = apiService.postYolla(link, yollanacaklar);
-            if (json.get("durum").toString().equals("0")) {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-            } else {
-                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
-            }
-
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                } else {
+                    KlanBilgiLink klan = klanBulKlanAdi(klanAdi);
+                    klan.arsaAciklamasi = yollanacaklar.get("aciklama").toString();
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                }
+            }else
+                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Yetkiniz bulunmamaktadır.");
         }
     }
+    public void klanAt(Player p,JSONObject yollanacaklar,String link){
+        String klanAdi = hangiKlanaUye(p.getName());
+        if (!klanAdi.isEmpty()){
 
+            if (yetkiKontrol(p.getName(),Yetkiler.uyeSil)) {
+                JSONObject json = apiService.postYolla(link, yollanacaklar);
+                if (json.get("durum").toString().equals("1")) {
+                                klandanCikar(yollanacaklar.get("atilacakoyuncuadi").toString());
+                                claimListesi.klandanAyrilClaim(yollanacaklar.get("atilacakoyuncuadi").toString());
+                                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                } else {
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                }
+            }else
+                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Yetkiniz bulunmamaktadır.");
+
+    }else
+            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Önce bir klana üye olmalısın.");
+    }
+
+    public void klanArsaDevret(Player p,JSONObject yollanacaklar,String link,String devreden,String devredilen){
+        String klanAdi = hangiKlanaUye(devreden);
+        if (!klanAdi.isEmpty()){
+
+            if (yetkiKontrol(p.getName(),Yetkiler.klanArazi)) {
+
+                JSONObject json = apiService.postYolla(link, yollanacaklar);
+                if (json.get("durum").toString().equals("1")) {
+
+                    ArsaBilgiLink arsaBilgiLink = claimListesi.listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
+                    arsaBilgiLink.hissedarlar.clear();
+                    arsaBilgiLink.hissedarlar.add(devredilen);
+                    arsaBilgiLink.arsaoyuncuadi = devredilen;
+
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                } else {
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                }
+
+            }else
+                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Yetkiniz bulunmamaktadır.");
+
+        }else
+            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Önce bir klana üye olmalısın.");
+    }
+
+    public void klanArsaSil(Player p,JSONObject yollanacaklar,String link){
+        String klanAdi = hangiKlanaUye(p.getName());
+        if (!klanAdi.isEmpty()){
+            if (yetkiKontrol(p.getName(),Yetkiler.klanArazi)) {
+                JSONObject json = apiService.postYolla(link, yollanacaklar);
+                if (json.get("durum").toString().equals("1")) {
+                    claimListesi.klanArsaSil(p.getName());
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                } else {
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + json.get("aciklama").toString());
+                }
+
+            }else
+                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Yetkiniz bulunmamaktadır.");
+
+        }else
+            p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Önce bir klana üye olmalısın.");
+    }
 
     public KlanBilgiLink apiKlanOlustur(String olusturan,String klanAdi,String klanAciklama){
 
@@ -193,33 +315,27 @@ public class KlanLinkList {
 
 
 
-    public void klandanAt(String atan,String atilan){
-        KlanBilgiLink temp = head;
-        int atanSira = -1;
-        int atilanSira = -1;
-        while (temp != null){
-            for (int i = 0; i < temp.klanUyeleri.size(); i++) {
-                if (temp.klanUyeleri.get(i).oyuncuAdi.equals(atan)){
-                    if (temp.klanUyeleri.get(i).rutbe.uyeDuzenle == 1){
-                    atanSira = i;
-                        }
-                    }
-                if (temp.klanUyeleri.get(i).oyuncuAdi.equals(atilan)){
-                    atilanSira = i;
-                }
-                if (atanSira != -1 && atilanSira != -1){
-                    klandanCikar(atilan);
-                    claimListesi.klandanAyrilClaim(atilan);
-                }
-            }
-            temp = temp.next;
-        }
-    }
+
     public void yetkiVer(String yetkiyiVeren,String kime,String yetkiIsmi){
 
     }
     public String klanLideri(String oyuncuIsmi){
         return "";
+    }
+
+    public boolean yetkiKontrol(String oyuncuAdi,String yetki){
+            KlanOyuncuBilgi klanOyuncuBilgi = oyuncuBilgi(oyuncuAdi);
+            if (klanOyuncuBilgi != null){
+                for (int i = 0; i < klanOyuncuBilgi.rutbe.yetkiler.size(); i++) {
+                    if (klanOyuncuBilgi.rutbe.yetkiler.get(i).equals(yetki)){
+                        return true;
+                    } else if (klanOyuncuBilgi.rutbe.yetkiler.get(i).equals(Yetkiler.kurucu)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        return false;
     }
 
 
@@ -238,8 +354,10 @@ public class KlanLinkList {
         while (temp!= null){
             for (int i = 0; i < temp.klanUyeleri.size(); i++) {
                 if (temp.klanUyeleri.get(i).oyuncuAdi.equals(oyuncuIsmi)){
-                    if (temp.klanUyeleri.get(i).rutbe.kurucu == 1){
-                        return temp;
+                    for (int j = 0; j < temp.klanUyeleri.get(i).rutbe.yetkiler.size(); j++) {
+                        if (temp.klanUyeleri.get(i).rutbe.yetkiler.get(j).equals(Yetkiler.kurucu));{
+                            return temp;
+                        }
                     }
                 }
             }
@@ -294,15 +412,31 @@ public class KlanLinkList {
         return null;
     }
 
-    public KlanRutbeleri rutbeOlustur(String rutbeAdi,int rutbeSirasi,int davet,int kurucu,int baslangicAyarla,int uyeYonetim){
+    public KlanRutbeleri rutbeOlustur(int rutbeId, String rutbeAdi,int rutbeSirasi,int davet,int kurucu,int klanBaslangic,int uyeSil,
+                                      int klanArazi,int klanHazine){
         KlanRutbeleri rutbe = new KlanRutbeleri();
         rutbe.rutbeSira = rutbeSirasi;
         rutbe.rutbeAdi = rutbeAdi;
-        rutbe.klanBaslangicAyarla = baslangicAyarla;
-        rutbe.kurucu = kurucu;
-        rutbe.uyeDuzenle = uyeYonetim;
-        rutbe.davet = davet;
+        rutbe.rutbeId = rutbeId;
 
+        if (davet == 1){
+            rutbe.yetkiler.add(Yetkiler.davet);
+        }
+        if (kurucu == 1){
+            rutbe.yetkiler.add(Yetkiler.kurucu);
+        }
+        if (klanBaslangic == 1){
+            rutbe.yetkiler.add(Yetkiler.klanBaslangicAyarla);
+        }
+        if (uyeSil == 1){
+            rutbe.yetkiler.add(Yetkiler.uyeSil);
+        }
+        if (klanArazi == 1){
+            rutbe.yetkiler.add(Yetkiler.klanArazi);
+        }
+        if (klanHazine == 1){
+            rutbe.yetkiler.add(Yetkiler.klanHazine);
+        }
         return rutbe;
     }
 

@@ -24,7 +24,7 @@ public class ClaimCommandsService {
                 claimListesi.arsaAl(p,yollanacaklar,apiService.linkOlustur(linkElemanlar));
 
             } catch (Exception e) {
-                System.out.println("claim al hatası");
+                System.out.println(e);
             }
 
     }
@@ -41,7 +41,7 @@ public class ClaimCommandsService {
 
                 claimListesi.hissedarEkle(p,eklenilen,yollanacaklar,apiService.linkOlustur(linkElemanlar));
                 } catch (Exception e) {
-                    System.out.println("hissedar ekle hatası");
+                    System.out.println(e);
                 }
     }
 
@@ -57,7 +57,7 @@ public class ClaimCommandsService {
 
             claimListesi.hissedarSil(p,yollanacaklar,apiService.linkOlustur(linkElemanlar),cikarilan);
         } catch (Exception e) {
-            System.out.println("hissedar sil hatası");
+            System.out.println(e);
         }
     }
 
@@ -76,7 +76,7 @@ public class ClaimCommandsService {
                 claimListesi.hissedarEkleHeryer(p.getName(),eklenilen);
             }
         } catch (Exception e) {
-            System.out.println("hissedar ekle heryer hatası");
+            System.out.println(e);
         }
     }
 
@@ -96,7 +96,7 @@ public class ClaimCommandsService {
                 claimListesi.hissedarSilHeryer(p.getName(),cikarilan);
             }
         } catch (Exception e) {
-            System.out.println("hissedar sil heryer hatası");
+            System.out.println(e);
         }
     }
     public void claimSil(Player p,String[] oyuncuAdiVeParola){
@@ -113,7 +113,7 @@ public class ClaimCommandsService {
             claimListesi.claimSil(p,yollanacaklar,apiService.linkOlustur(linkElemanlar));
 
         } catch (Exception e) {
-            System.out.println("arsa sil hatası");
+            System.out.println(e);
         }
     }
     public void claimSilHeryer(Player p,String[] oyuncuAdiVeParola){
@@ -130,7 +130,7 @@ public class ClaimCommandsService {
                 claimListesi.claimSilHeryer(p.getName());
             }
         } catch (Exception e) {
-            System.out.println("arsa sil heryer hatası");
+            System.out.println(e);
         }
     }
 
@@ -151,7 +151,7 @@ public class ClaimCommandsService {
             claimListesi.claimAciklama(p,yollanacaklar,apiService.linkOlustur(linkElemanlar),aciklama);
 
         } catch (Exception e) {
-            System.out.println("claim aciklama hatası");
+            System.out.println(e);
         }
     }
 
@@ -175,7 +175,7 @@ public class ClaimCommandsService {
                 claimListesi.claimAciklamaHeryer(p.getName(),aciklama);
             }
         } catch (Exception e) {
-            System.out.println("claim aciklama heryer hatası");
+            System.out.println(e);
         }
     }
     public void claimRehin(Player p, String[] oyuncuAdiVeParola){
@@ -194,7 +194,7 @@ public class ClaimCommandsService {
             }else
                 p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "Önce bir klana üye olmalısın.");
         } catch (Exception e) {
-            System.out.println("claim rehin hatası");
+            System.out.println(e);
         }
     }
 
@@ -214,7 +214,8 @@ public class ClaimCommandsService {
 
 
         } catch (Exception e) {
-            System.out.println("claim devret hatası");
+            System.out.println(e);
         }
     }
+
 }

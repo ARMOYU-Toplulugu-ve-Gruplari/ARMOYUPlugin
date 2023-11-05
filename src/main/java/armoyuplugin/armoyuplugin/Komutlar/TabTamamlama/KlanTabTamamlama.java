@@ -33,6 +33,13 @@ public class KlanTabTamamlama implements TabCompleter {
                     arguments.add("git");
                     arguments.add("ayril");
                     arguments.add("davet");
+                    arguments.add("add");
+                    arguments.add("dagit");
+                    arguments.add("at");
+                    arguments.add("aciklama");
+                    arguments.add("arsa devret");
+                    arguments.add("arsa sil");
+                    arguments.add("arsa liste");
                     arguments.add("baslangicnoktasi");
                 } else {
                     arguments.add("olustur");

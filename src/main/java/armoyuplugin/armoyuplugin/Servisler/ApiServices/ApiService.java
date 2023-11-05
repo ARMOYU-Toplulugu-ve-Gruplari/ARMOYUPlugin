@@ -45,23 +45,31 @@ public class ApiService {
         }
     }
     public JSONObject postYolla(String Link,JSONObject yollancaklar){
+        System.out.println(Link);
 
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+
             final HttpPost httpPost = new HttpPost(Link);
             final List<NameValuePair> nameValuePairs = new ArrayList<>();
+            if (!yollancaklar.isEmpty()){
             for (int i = 0; i < yollancaklar.names().length(); i++) {
+                System.out.println(yollancaklar.names().get(i).toString() + "------------" + yollancaklar.get(yollancaklar.names().get(i).toString()).toString());
                 nameValuePairs.add(new BasicNameValuePair(yollancaklar.names().get(i).toString(),yollancaklar.get(yollancaklar.names().get(i).toString()).toString()));
             }
-
+            }
             httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             try (final CloseableHttpResponse response = httpClient.execute(httpPost)) {
                 StatusLine statusLine = response.getStatusLine();
                 System.out.println(statusLine.getStatusCode() + " " + statusLine.getReasonPhrase());
                 String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+                System.out.println(responseBody);
                 return new JSONObject(responseBody);
             }
         }catch (Exception e) {
-            throw new RuntimeException(e);
+            JSONObject json = new JSONObject();
+            json.put("durum",0);
+            json.put("aciklama","posthatasıakıcı");
+            return json;
         }
     }
 
@@ -143,7 +151,10 @@ public class ApiService {
                     JSONArray recsTwo = rec.getJSONArray("klanrutbeler");
                     for (int j = 0; j < recsTwo.length(); j++) {
                         JSONObject recTwo = recsTwo.getJSONObject(j);
-                        KlanRutbeleri rutbe = klanListesi.rutbeOlustur(recTwo.get("rutbeadi").toString(),(int)recTwo.get("rutbesira"),(int)recTwo.get("davet"),(int)recTwo.get("kurucu"),1,(int)recTwo.get("uyeduzenle"));
+                        KlanRutbeleri rutbe = klanListesi.rutbeOlustur((int)recTwo.get("rutbeID"),recTwo.get("rutbeadi").toString(),
+                                (int)recTwo.get("rutbesira"),(int)recTwo.get("davet"),(int)recTwo.get("kurucu"),
+                                (int)recTwo.get("klanbaslangic"),(int)recTwo.get("uyesil"),
+                                (int)recTwo.get("klanarazi"),(int)recTwo.get("klanhazine"));
                         klan.klanRutbeleri.add(rutbe);
                     }
 

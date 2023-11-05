@@ -22,6 +22,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,10 +77,14 @@ public class Dinleyici implements Listener {
         ItemStack stick = new ItemStack(Material.STICK);
         if (stick.equals(p.getInventory().getItemInMainHand())){
             if (event.getAction().toString().equals("RIGHT_CLICK_BLOCK")){
-                p.sendMessage(claimListesi.arsaninSahibiKim(p.getLocation().getChunk().toString(),p.getWorld().toString()));
+                p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + claimListesi.arsaninSahibiKim(p.getLocation().getChunk().toString(),p.getWorld().toString()));
             }
             else if ("LEFT_CLICK_BLOCK".equals(event.getAction().toString())){
                 ArsaBilgiLink temp= claimListesi.listedeAraziBul(p.getWorld().toString(),p.getLocation().getChunk().toString());
+                if (temp == null){
+                    p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + "claimsiz");
+                    return;
+                }
                 for (int i = 0; i < temp.hissedarlar.size(); i++) {
                     p.sendMessage(ARMOYUMESAJ + ChatColor.YELLOW + temp.hissedarlar.get(i));
                 }
@@ -190,7 +195,7 @@ public class Dinleyici implements Listener {
         int cekozellikz = 0;
         try {
             JSONObject json = readJsonFromUrl("https://aramizdakioyuncu.com/botlar/" + APIKEY + "/0/0/0/0");
-            JSONObject ozellik = (JSONObject)json.get("ozellik");
+            JSONObject ozellik = json.getJSONObject("ozellik");
 
             if (!ozellik.isNull("sunucux")) {
 
@@ -212,7 +217,6 @@ public class Dinleyici implements Listener {
         }
 
         player.teleport(new Location(Bukkit.getWorld(dunya),cekozellikx,cekozelliky,cekozellikz));
-
 
         try {
             File yourFile = new File(ARMOYUPlugin.getPlugin().getDataFolder().getAbsolutePath() + "/oyuncular.json");
@@ -399,9 +403,10 @@ public class Dinleyici implements Listener {
             if (json.get("durum").equals("0")){
                 e.setDeathMessage("");
             }else{
+                JSONObject rec = json.getJSONObject("icerik");
                 e.setDeathMessage(ChatColor.YELLOW + killed + " öldürüldü. Katili: " + ChatColor.RED  + " " + killer);
-                e.getEntity().sendMessage(ChatColor.RED + "-" + json.get("ortayakalanpara") + "₺");
-                e.getEntity().getKiller().sendMessage(ChatColor.GREEN +"+" + json.get("ortayakalanpara") + "₺");
+                e.getEntity().sendMessage(ChatColor.RED + "-" + rec.get("ortayakalanpara") + "₺");
+                e.getEntity().getKiller().sendMessage(ChatColor.GREEN +"+" + rec.get("ortayakalanpara") + "₺");
             }
 
         }catch (IOException ERR) {
