@@ -1,3 +1,3 @@
 # ARMOYUPlugin
 
-Minecraft Plugin Yardım okuma dosyası
+Minecraft Plugin Yardım okuma dosyası deneme
